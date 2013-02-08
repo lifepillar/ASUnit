@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# Push solution when your server does not support rsync over ssh. Invoke
+# bzr push then use brute force to update the working directory. bzr
+# push can't update the working directory on the server because its
+# expensive, or the file system may not support the file names, but this
+# prevent users from browsing your code.
+
+# copyright: (c) 2006 Nir Soffer <nirs@freeshell.org>
+# license: GNU GPL, see COPYING for details
+
+# Configuration
+
+format=tar.bz2 # see bzr help export for available formats
+user=nirs
+server=nirs.freeshell.org
+dest=html/code
+nick=`bzr nick`
+
+cleanup () {
+    rm -rf $tmp
+}
+
+fail () {
+    echo $1
+    cleanup
+    exit 1
+}
+
+echo "pushing to ${server}/${dest}/${nick} ..."
+bzr push sftp://${user}@${server}/${dest}/${nick} || \
+    fail "bzr push failed"
+
+tmp=`mktemp -d -t bzr-export`
+export="${tmp}/${nick}.${format}"
+
+echo "exporting working directory ..."
+bzr export "$export" || fail "bzr export failed"
+
+echo "removing old working directory ..."
+ssh ${user}@${server} rm -rf "${dest}/${nick}/*" || \
+    fail "remove working dir failed"
+
+echo "copying new working directory ..."    
+cat "$export" | ssh ${user}@${server} tar xjvf - -C "$dest" || \
+    fail "copy failed"
+
+cleanup
