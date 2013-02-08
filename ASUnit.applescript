@@ -420,9 +420,15 @@ on makeTextTestRunner(aSuite)
 	script TextTestRunner
 		(* I display test results in a new Script Editor document *)
 		
+		-- Creates a new AppleScript Editor document
+		on makeNewAppleScriptEditorDocument(theName)
+			tell application Â
+				"AppleScript Editor" to make new document with properties {name:theName}
+		end makeNewAppleScriptEditorDocument
+
 		property suite : aSuite
 		property _TestResult : missing value
-		property textView : make new document with properties {name:aSuite's name}
+		property textView : my makeNewAppleScriptEditorDocument(aSuite's name)
 		property separator : "----------------------------------------------------------------------"
 		property successColor : {256 * 113, 256 * 140, 256 * 0} -- RGB (113,140,0)
 		property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
