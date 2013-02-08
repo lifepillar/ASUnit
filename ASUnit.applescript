@@ -5,7 +5,7 @@ copyright: (c) 2006 Nir Soffer <nirs@freeshell.org>
 license: GNU GPL, see COPYING for details
 *)
 
-property version : "0.4.1"
+property version : "0.4.2"
 
 -- Save the current fixture while compiling test cases in a fixture
 property _currentFixture : missing value
