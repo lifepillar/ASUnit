@@ -5,13 +5,22 @@ copyright: (c) 2006 Nir Soffer <nirs@freeshell.org>
 license: GNU GPL, see COPYING for details
 *)
 
-property currentFolder : folder of file (document 1's path as POSIX file) of application "Finder"
+on _setpath()
+	if current application's name is "AppleScript Editor" then
+		(folder of file (document 1's path as POSIX file) of application "Finder") as text
+	else if current application's name is in {"osacompile", "osascript"} then
+		((POSIX file (do shell script "pwd")) as text) & ":"
+	else
+		error "This file can be compiled/run only with AppleScript Editor, osacompile or osascript"
+	end if
+end _setpath
 
 -- Required ASUnit header
--- Load  ASUnit from currnet folder using text format during development
-property parent : run script file ((currentFolder as string) & "ASUnit.applescript")
-property suite : makeTestSuite("ASUnit Tests")
+-- Load  ASUnit from current folder using text format during development
+property ASUnitPath : _setpath() & "ASUnit.applescript" -- set at compile time
+property parent : run script file ASUnitPath
 
+property suite : makeTestSuite("ASUnit Tests")
 
 script |should and shouldnt|
 	property parent : registerFixture(me)
