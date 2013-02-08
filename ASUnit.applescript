@@ -5,7 +5,7 @@ copyright: (c) 2006 Nir Soffer <nirs@freeshell.org>
 license: GNU GPL, see COPYING for details
 *)
 
-property version : "0.4"
+property version : "0.4.1"
 
 -- Save the current fixture while compiling test cases in a fixture
 property _currentFixture : missing value
@@ -620,6 +620,7 @@ end makeTestLoader
 
 
 on run
+	set ASUnit to me
 	-- Enable loading the library from text format with run script
 	return me
 end run
