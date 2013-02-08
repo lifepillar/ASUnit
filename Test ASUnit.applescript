@@ -577,3 +577,4 @@ end script
 -- Running the tests
 
 run makeTextTestRunner(suite)
+return "ASUnit v" & my version
