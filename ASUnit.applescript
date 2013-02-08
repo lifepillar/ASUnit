@@ -425,7 +425,7 @@ on makeTextTestRunner(aSuite)
 			tell application Â
 				"AppleScript Editor" to make new document with properties {name:theName}
 		end makeNewAppleScriptEditorDocument
-
+		
 		property suite : aSuite
 		property _TestResult : missing value
 		property textView : my makeNewAppleScriptEditorDocument(aSuite's name)
@@ -548,7 +548,7 @@ on makeTextTestRunner(aSuite)
 		end printColoredLine
 		
 		on printString(aString)
-			printColoredString(aString, missing value)
+			printColoredString(aString, defaultColor)
 		end printString
 		
 		on printColoredString(aString, aColor)
