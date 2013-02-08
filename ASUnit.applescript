@@ -426,6 +426,7 @@ on makeTextTestRunner(aSuite)
 		property separator : "----------------------------------------------------------------------"
 		property successColor : "green"
 		property defectColor : "red"
+		property defaultColor : "black"
 		
 		-- Configuring
 		
