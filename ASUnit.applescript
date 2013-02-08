@@ -424,9 +424,9 @@ on makeTextTestRunner(aSuite)
 		property _TestResult : missing value
 		property textView : make new document with properties {name:aSuite's name}
 		property separator : "----------------------------------------------------------------------"
-		property successColor : "green"
-		property defectColor : "red"
-		property defaultColor : "black"
+		property successColor : {256 * 113, 256 * 140, 256 * 0} -- RGB (113,140,0)
+		property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
+		property defaultColor : {256 * 77, 256 * 77, 256 * 76} -- RGB (77,77,76)
 		
 		-- Configuring
 		
