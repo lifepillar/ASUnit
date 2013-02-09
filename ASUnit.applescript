@@ -1,93 +1,121 @@
-(*
-ASUnit - AppleScript testing framework
-
-copyright: (c) 2006 Nir Soffer <nirs@freeshell.org>
-license: GNU GPL, see COPYING for details
+(*!
+ @header ASUnit
+ 	An AppleScript testing framework.
+ @abstract License: GNU GPL, see COPYING for details.
+ @author Nir Soffer
+ @copyright 2006 Nir Soffer
+ @version 0.4.2
+ @charset macintosh
 *)
 
+(*! @abstract <em>[text]</em> ASUnit's version string.  *)
 property version : "0.4.2"
 
--- Save the current fixture while compiling test cases in a fixture
+(*! @abstract <em>[script]</em> Saves the current fixture while compiling test cases in a fixture. *)
 property _currentFixture : missing value
 
+(*!
+ @abstract Sentinel object used to mark missing values.
+ @discussion This is used, in particular, to catch a missing suite property in a test script.
+*)
 script ASUnitSentinel
-	-- Sentinel object used to mark missing values
 end script
 
-(* Catch missing suite property in a test script. It a test script define its own suite property, my property will be shadowed. *)
+(*!
+ @abstract Used to automatically collect tests in a script file.
+ @discussion If a test script defines its own suite property, this property will be shadowed.
+ *)
 property suite : ASUnitSentinel
 
--- Errors
-
+(*! @abstract Error number signalling a failed test. *)
 property TestCaseFailed : 1000
+(*! @abstract Error number signalling a skipped test. *)
 property TestCaseSkipped : 1001
 
 
-(* Test Composite
-
-Test suites are a composite of components. The basic unit is a single TestCase, which may be tested as is. Several TestCases are grouped in a TestSuite, which can test all its tests. A TestSuite may contain other TestSuites, which may contain other suites.
-
-Testing a composite return a TestResult object.
+(*!
+ @class TestComponent
+ @abstract The base class for test components.
+ @discussion Test suites are a composite of components.
+ 	The basic unit is a single <tt>TestCase</tt>, which may be tested as is.
+	Several <tt>TestCase</tt>s are grouped in a <tt>TestSuite</tt>, which can test all its tests.
+	A <tt>TestSuite</tt> may contain other <tt>TestSuite</tt>s, which may contain other suites.
+	Testing a composite returns a <tt>TestResult</tt> object.
 *)
-
 script TestComponent
-	(* I'm the base class for test components *)
 	
+	(*!
+	 @abstract Runs a test.
+	 @return <em>[script]</em> A <tt>TestResult</tt> object.
+	 *)
 	on test()
 		set aTestResult to makeTestResult(name)
-		aTestResult's runTest(me)
+		tell aTestResult
+			runTest(me)
+		end tell
 		return aTestResult
 	end test
 	
+	(*!
+	 @abstract Tells whether this is a composite test.
+	 @discussion Allows transparent handling of components,
+	 	avoiding try... on error, e.g., if a's isComposite() then a's add(foo).
+	 @return <em>[boolean]</em> <tt>true</tt> if this a composite test; <tt>false</tt> otherwise.
+	*)
 	on isComposite()
-		(* Allow transparent handling of compontents, avoiding try ... on error 
-		e.g. if a's isComposite() then a's add(foo) *)
 		return false
 	end isComposite
 	
+	(*!
+	 @abstract Implemented by sub classes.
+	 @param aVisitor <em>[script]</em> A visitor.
+	*)
 	on accept(aVisitor)
-		-- implemented by sub classes
+		return
 	end accept
 	
 end script
 
-
+(*!
+ @class TestCase
+ @abstract Models a certain configuration of the system being tested.
+ @discussion TODO.
+*)
 script TestCase
-	(* I'm a certain configuration of the system being tested  *)
-	
 	property parent : TestComponent
 	
-	-- Visiting
-	
+	(*! @abstract TODO. *)
 	on accept(aVisitor)
-		aVisitor's visitTestCase(me)
+		tell aVisitor
+			visitTestCase(me)
+		end tell
 	end accept
 	
-	-- Configuration
-	
+	(*! @abstract May be implemented by a subclass. *)
 	on setUp()
-		-- may be implemented by a subclass
 	end setUp
 	
+	(*! @abstract May be implemented by a subclass. *)
 	on tearDown()
-		-- may be implemented by a subclass
 	end tearDown
 	
-	-- Aborting
-	
+	(*! @abstract TODO. *)
 	on skip(why)
 		error why number TestCaseSkipped
 	end skip
 	
+	(*! @abstract TODO. *)
 	on fail(why)
 		error why number TestCaseFailed
 	end fail
 	
-	-- Running
-	
+	(*!
+	 @abstract Runs a test case.
+	 @discussion Ensures that <tt>tearDown()</tt> is executed,
+	 	even if an error was raised. Errors are passed to the caller.
+	@return Nothing.
+	 *)
 	on runCase()
-		(* Ensure that tearDown run, even if an error was raised. Errors are  
-		passed to the caller. *)
 		try
 			setUp()
 			run
@@ -98,27 +126,35 @@ script TestCase
 		end try
 	end runCase
 	
-	-- Validation
-	
+	(*! @abstract Makes sure that the user test script has a <tt>run</tt> method. *)
 	on run
-		-- Make sure the user test script have a run method
 		error "test script does not contain any test code"
 	end run
 	
-	-- checking
-	
+	(*!
+	 @abstract TODO.
+	 @param value <em>[boolean]</em> An expression that evaluates to true or false.
+	 @param message <em>[text][</em> A message.
+	 @throws A <tt>TestCaseFailed</tt> error if the assertion fails.
+	 *)
 	on should(value, message)
-		if value is false then fail(message)
+		if value is false then
+			fail(message)			
+		end if
 	end should
 	
+	(*! @abstract TODO. *)
 	on shouldnt(value, message)
-		if value is true then fail(message)
+		if value is true then
+			fail(message)
+		end if
 	end shouldnt
 	
+	(*!
+	 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>. 
+	 @discussion Fails if an unexpected error was raised or no error was raised.
+	 *)
 	on shouldRaise(expectedErrorNumber, aScript, message)
-		(* Fail unless expectedErrorNumber is raise by running aScript  
-		
-		Fail if unexpected error was raised or no error was raised. *)
 		try
 			run aScript
 		on error why number errorNumber
@@ -128,8 +164,8 @@ script TestCase
 		fail(message)
 	end shouldRaise
 	
+	(*! @abstract Fails if <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>. *)
 	on shouldntRaise(expectedErrorNumber, aScript, message)
-		(* Fail if expectedErrorNumber is raise by running aScript  *)
 		try
 			run aScript
 		on error why number errorNumber
@@ -137,8 +173,7 @@ script TestCase
 		end try
 	end shouldntRaise
 	
-	-- accessing
-	
+	(*! @abstract TODO. *)
 	on fullName()
 		return parent's name & " - " & name
 	end fullName

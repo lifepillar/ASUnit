@@ -27,7 +27,8 @@ task :doc => [:manual] do
   # Set LANG to get rid of warnings about missing default encoding
   sh "env LANG=en_US.UTF-8 headerdoc2html -q -o #{DOC_DIR} ASUnit.applescript"
   sh "env LANG=en_US.UTF-8 gatherheaderdoc #{DOC_DIR}"
-  sh "open #{DOC_DIR}/masterTOC.html"
+  sh "open #{DOC_DIR}/ASUnit_applescript/index.html"
+end
 
 desc 'Build an HTML version of the manual.'
 task :manual do
