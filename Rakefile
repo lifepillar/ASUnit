@@ -9,7 +9,7 @@ SRC = FileList['*.applescript']
 OBJ = SRC.ext('scpt')
 
 CLEAN.include('*.scpt', '*.scptd')
-CLOBBER.include(DOC_DIR, 'ASUnit-*', '*.tar.gz')
+CLOBBER.include(DOC_DIR, 'ASUnit-*', '*.tar.gz', 'Manual.html')
 
 task :default => :build
 
@@ -23,17 +23,26 @@ desc 'Build ASUnit.'
 task :build => OBJ do; end
 
 desc 'Build the documentation.'
-task :doc do
+task :doc => [:manual] do
   # Set LANG to get rid of warnings about missing default encoding
   sh "env LANG=en_US.UTF-8 headerdoc2html -q -o #{DOC_DIR} ASUnit.applescript"
   sh "env LANG=en_US.UTF-8 gatherheaderdoc #{DOC_DIR}"
   sh "open #{DOC_DIR}/masterTOC.html"
+
+desc 'Build an HTML version of the manual.'
+task :manual do
+  unless `which multimarkdown 2>/dev/null`.chomp.empty?
+    sh 'multimarkdown -o Manual.html Manual.mmd'
+  end 
 end
 
 desc 'Prepare a directory for distribution.'
-task :dist => [:clobber, :build] do
+task :dist => [:clobber, :build, :manual] do
   mkdir DIST_DIR
   cp ['ASUnit.scpt', 'COPYING'], DIST_DIR
+  if File.exist?('Manual.html')
+    cp 'Manual.html', DIST_DIR
+  end
 end
 
 desc 'Build a gzipped tar archive.'
