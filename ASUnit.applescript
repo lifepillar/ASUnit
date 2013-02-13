@@ -7,25 +7,33 @@
  @version 0.4.5
  @charset macintosh
 *)
+
+(*!
+ @class ASUnit
+ @abstract The ASUnit framework.
+*)
 script ASUnit
 	
-	(*! @abstract <em>[text]</em> ASUnit's version string.  *)
+	(*! @abstract <em>[text]</em> ASUnit's version. *)
 	property version : "0.4.5"
 	
-	(*! @abstract <em>[script]</em> Saves the current fixture while compiling test cases in a fixture. *)
+	(*!
+	 @abstract <em>[script]</em> Saves the current fixture while compiling
+	 	test cases in a fixture.
+	*)
 	property _currentFixture : missing value
 	
 	(*!
- @abstract Sentinel object used to mark missing values.
- @discussion This is used, in particular, to catch a missing suite property in a test script.
-*)
+	 @abstract Sentinel object used to mark missing values.
+	 @discussion This is used, in particular, to catch a missing suite property in a test script.
+	*)
 	script ASUnitSentinel
 	end script
 	
 	(*!
- @abstract Used to automatically collect tests in a script file.
- @discussion If a test script defines its own suite property, this property will be shadowed.
- *)
+	 @abstract Used to automatically collect tests in a script file.
+	 @discussion If a test script defines its own suite property, this property will be shadowed.
+	*)
 	property suite : ASUnitSentinel
 	
 	(*! @abstract Error number signalling a failed test. *)
