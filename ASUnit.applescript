@@ -33,50 +33,6 @@ script ASUnit
 	(*! @abstract Error number signalling a skipped test. *)
 	property TEST_SKIPPED : 1001
 	
-	
-	(*!
- @class TestComponent
- @abstract The base class for test components.
- @discussion Test suites are a composite of components.
- 	The basic unit is a single <tt>TestCase</tt>, which may be tested as is.
-	Several <tt>TestCase</tt>s are grouped in a <tt>TestSuite</tt>, which can test all its tests.
-	A <tt>TestSuite</tt> may contain other <tt>TestSuite</tt>s, which may contain other suites.
-	Testing a composite returns a <tt>TestResult</tt> object.
-*)
-	script TestComponent
-		
-		(*!
-	 @abstract Runs a test.
-	 @return <em>[script]</em> A <tt>TestResult</tt> object.
-	 *)
-		on test()
-			set aTestResult to ASUnit's makeTestResult(name)
-			tell aTestResult
-				runTest(me)
-			end tell
-			return aTestResult
-		end test
-		
-		(*!
-	 @abstract Tells whether this is a composite test.
-	 @discussion Allows transparent handling of components,
-	 	avoiding try... on error, e.g., if a's isComposite() then a's add(foo).
-	 @return <em>[boolean]</em> <tt>true</tt> if this a composite test; <tt>false</tt> otherwise.
-	*)
-		on isComposite()
-			return false
-		end isComposite
-		
-		(*!
-	 @abstract Implemented by sub classes.
-	 @param aVisitor <em>[script]</em> A visitor.
-	*)
-		on accept(aVisitor)
-			return
-		end accept
-		
-	end script
-	
 	on makeAssertions(theParent)
 		script
 			property parent : theParent
@@ -139,6 +95,49 @@ script ASUnit
 			
 		end script
 	end makeAssertions
+	
+	(*!
+ @class TestComponent
+ @abstract The base class for test components.
+ @discussion Test suites are a composite of components.
+ 	The basic unit is a single <tt>TestCase</tt>, which may be tested as is.
+	Several <tt>TestCase</tt>s are grouped in a <tt>TestSuite</tt>, which can test all its tests.
+	A <tt>TestSuite</tt> may contain other <tt>TestSuite</tt>s, which may contain other suites.
+	Testing a composite returns a <tt>TestResult</tt> object.
+*)
+	script TestComponent
+		
+		(*!
+	 @abstract Runs a test.
+	 @return <em>[script]</em> A <tt>TestResult</tt> object.
+	 *)
+		on test()
+			set aTestResult to ASUnit's makeTestResult(name)
+			tell aTestResult
+				runTest(me)
+			end tell
+			return aTestResult
+		end test
+		
+		(*!
+	 @abstract Tells whether this is a composite test.
+	 @discussion Allows transparent handling of components,
+	 	avoiding try... on error, e.g., if a's isComposite() then a's add(foo).
+	 @return <em>[boolean]</em> <tt>true</tt> if this a composite test; <tt>false</tt> otherwise.
+	*)
+		on isComposite()
+			return false
+		end isComposite
+		
+		(*!
+	 @abstract Implemented by sub classes.
+	 @param aVisitor <em>[script]</em> A visitor.
+	*)
+		on accept(aVisitor)
+			return
+		end accept
+		
+	end script
 	
 	(*!
  @class TestCase
