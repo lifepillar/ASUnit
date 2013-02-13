@@ -10,7 +10,7 @@
 script ASUnit
 	
 	(*! @abstract <em>[text]</em> ASUnit's version string.  *)
-	property version : "0.4.3"
+	property version : "0.4.4"
 	
 	(*! @abstract <em>[script]</em> Saves the current fixture while compiling test cases in a fixture. *)
 	property _currentFixture : missing value
@@ -660,6 +660,115 @@ Test runner make it easier to run test and view progress and test results. The f
 		
 		return TestLoader
 	end makeTestLoader
+	
+	(*!
+	 @abstract A different way to run your tests.
+	*)
+	script MiniTest
+		
+		property TEST_FAILED : 1000
+		property TEST_SKIPPED : 1001
+		
+		on makeTest(aScript, aDescription)
+			script
+				property parent : aScript
+				property class : "Test"
+				property description : aDescription
+				
+				(*! @abstract Raises a TEST_SKIPPED error. *)
+				on skip(why)
+					error why number MiniTest's TEST_SKIPPED
+				end skip
+				
+				(*! @abstract Raises a TEST_FAILED error. *)
+				on fail(why)
+					error why number MiniTest's TEST_FAILED
+				end fail
+				
+				on should(cond)
+					if not cond then fail("I failed. I am a failure")
+				end should
+				
+				on accept(aVisitor)
+					tell aVisitor to visitTestCase(me)
+				end accept
+				
+				on runCase()
+					run
+				end runCase
+				
+				(*! @abstract TODO. *)
+				on fullName()
+					return my parent's name & " - " & my description
+				end fullName
+				
+			end script
+		end makeTest
+		
+		on makeTestSet(aScript, testSetDescription)
+			script TestSet
+				property parent : aScript
+				property class : "TestSet"
+				property description : testSetDescription
+				property tests : {} -- private
+				
+				on setUp()
+					try -- to invoke parent's setUp()
+						continue setUp()
+					on error errMsg number errNum
+						if errNum is not -1708 then -- -1708 = can't continue
+							error errMsg number errNum
+						end if
+					end try
+				end setUp
+				
+				on tearDown()
+					try -- to invoke parent's tearDown()
+						continue tearDown()
+					on error errMsg number errNum
+						if errNum is not -1708 then -- -1708 = can't continue
+							error errMsg number errNum
+						end if
+					end try
+				end tearDown
+				
+				on accept(aVisitor)
+					aVisitor's visitTestSuite(me)
+					repeat with aTest in tests
+						try
+							setUp()
+							aTest's accept(aVisitor)
+							tearDown()
+						on error errMsg number errNum
+							tearDown()
+							error errMsg number errNum
+						end try
+					end repeat
+				end accept
+				
+				on |@Test|(scriptName, aDescription)
+					set the end of tests to MiniTest's makeTest(scriptName, aDescription)
+					return "Test"
+				end |@Test|
+				
+				on |@TestSet|(scriptName, aDescription)
+					set the end of tests to MiniTest's makeTestSet(scriptName, aDescription)
+					return "TestSet"
+				end |@TestSet|
+				
+			end script -- TestSet
+			
+			run TestSet -- Register the tests
+			return TestSet
+			
+		end makeTestSet
+		
+		on autorun(aTestSet)
+			set coll to makeTestSet(aTestSet)
+			coll's accept(ASUnit's makeTestResult("foo"))
+		end autorun
+		
+	end script -- ASMiniTest
 	
 end script -- ASUnit
 
