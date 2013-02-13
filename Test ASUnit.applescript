@@ -19,7 +19,7 @@ end _setpath
 -- Load  ASUnit from current folder using text format during development
 property ASUnitPath : _setpath() & "ASUnit.applescript" -- set at compile time
 property parent : run script file ASUnitPath
-
+property ASUnit : me -- Needed to refer to top level entities from some tests
 property suite : makeTestSuite("ASUnit Tests")
 
 script |should and shouldnt|
@@ -361,7 +361,7 @@ script |analyze results|
 	
 	script |check counts|
 		property parent : registerTestCase(me)
-		set aSuite to makeTestSuite(name)
+		set aSuite to ASUnit's makeTestSuite(name)
 		aSuite's add(|analyze helper|'s success)
 		aSuite's add(|analyze helper|'s success)
 		aSuite's add(|analyze helper|'s skip)
@@ -377,7 +377,7 @@ script |analyze results|
 	
 	script |suite with success should pass|
 		property parent : registerTestCase(me)
-		set aSuite to makeTestSuite(name)
+		set aSuite to ASUnit's makeTestSuite(name)
 		aSuite's add(|analyze helper|'s success)
 		aSuite's add(|analyze helper|'s success)
 		set aResult to aSuite's test()
@@ -386,7 +386,7 @@ script |analyze results|
 	
 	script |suite with skips should pass|
 		property parent : registerTestCase(me)
-		set aSuite to makeTestSuite(name)
+		set aSuite to ASUnit's makeTestSuite(name)
 		aSuite's add(|analyze helper|'s success)
 		aSuite's add(|analyze helper|'s skip)
 		aSuite's add(|analyze helper|'s skip)
@@ -396,7 +396,7 @@ script |analyze results|
 	
 	script |suite with a failure should fail|
 		property parent : registerTestCase(me)
-		set aSuite to makeTestSuite(name)
+		set aSuite to ASUnit's makeTestSuite(name)
 		aSuite's add(|analyze helper|'s success)
 		aSuite's add(|analyze helper|'s skip)
 		aSuite's add(|analyze helper|'s failure)
@@ -406,7 +406,7 @@ script |analyze results|
 	
 	script |suite with an error should fail|
 		property parent : registerTestCase(me)
-		set aSuite to makeTestSuite(name)
+		set aSuite to ASUnit's makeTestSuite(name)
 		aSuite's add(|analyze helper|'s success)
 		aSuite's add(|analyze helper|'s skip)
 		aSuite's add(|analyze helper|'s |error|)
