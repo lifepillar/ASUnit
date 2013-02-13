@@ -792,7 +792,7 @@ Test runner make it easier to run test and view progress and test results. The f
 				
 				(*! @abstract TODO. *)
 				on fullName()
-					return my parent's name & " - " & my description
+					return my description
 				end fullName
 				
 			end script
@@ -841,7 +841,8 @@ Test runner make it easier to run test and view progress and test results. The f
 				end accept
 				
 				on UnitTest(scriptName, aDescription)
-					set the end of tests to MiniTest's makeUnitTest(scriptName, aDescription)
+					set the end of tests to Â
+						MiniTest's makeUnitTest(scriptName, my description & " - " & aDescription)
 					return "UnitTest"
 				end UnitTest
 				
