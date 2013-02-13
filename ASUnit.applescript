@@ -425,7 +425,7 @@ Your custom visitor should inherit from one of the framework visitors or from Vi
 			property name : aName
 			
 			-- An observer will be notified on visiting progress
-			property observer : missing value
+			property observers : {}
 			
 			property startDate : missing value
 			property stopDate : missing value
@@ -436,9 +436,9 @@ Your custom visitor should inherit from one of the framework visitors or from Vi
 			
 			-- Configuring
 			
-			on setObserver(anObject)
-				set observer to anObject
-			end setObserver
+			on addObserver(anObject)
+				set the end of observers to anObject
+			end addObserver
 			
 			-- Running
 			
@@ -513,7 +513,9 @@ Your custom visitor should inherit from one of the framework visitors or from Vi
 			end addError
 			
 			on notify(anEvent)
-				if observer is not missing value then observer's update(anEvent)
+				repeat with obs in (a reference to observers)
+					obs's update(anEvent)
+				end repeat
 			end notify
 			
 			-- Testing
@@ -589,7 +591,7 @@ Test runner make it easier to run test and view progress and test results. The f
 			on run
 				-- Create TestResult and set me as its observer
 				if _TestResult is missing value then set _TestResult to ASUnit's makeTestResult(suite's name)
-				_TestResult's setObserver(me)
+				_TestResult's addObserver(me)
 				
 				-- Test the suite and print results.
 				_TestResult's runTest(suite)
