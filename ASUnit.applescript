@@ -41,47 +41,96 @@ script ASUnit
 	(*! @abstract Error number signalling a skipped test. *)
 	property TEST_SKIPPED : 1001
 	
+	(*!
+	 @abstract Factory handler to generate a test script.
+	 @discussion This handler is used to create a script inheriting
+	 	from the given script, which implements testing assertions.
+		This handler is used with both ASUnit's <tt>TestCase</tt>s
+		and MiniTest's <tt>UnitTest</tt>s.
+	 @param theParent <em>[script]</em> The script to inherit from.
+	 @return A script inheriting from the given script and implementing assertions.
+	*)
 	on makeAssertions(theParent)
 		script
 			property parent : theParent
 			
-			(*! @abstract Raises a TEST_SKIPPED error. *)
+			on test_failed_error_number()
+				return TEST_FAILED
+			end test_failed_error_number
+			
+			on test_skipped_error_number()
+				return TEST_SKIPPED
+			end test_skipped_error_number
+			
+			(*!
+			 @abstract Raises a TEST_SKIPPED error.
+			 @param why <em>[text]</em> A message.
+			 @throws A TEST_SKIPPED error.
+			*)
 			on skip(why)
 				error why number TEST_SKIPPED
 			end skip
 			
-			(*! @abstract Raises a TEST_FAILED error. *)
+			(*!
+			 @abstract Raises a TEST_FAILED error.
+			 @param why <em>[text]</em> A message.
+			 @throws A TEST_FAILED error.
+			*)
 			on fail(why)
 				error why number TEST_FAILED
 			end fail
 			
-			-- Borrowed from ASTest
-			on |==|(val1, val2) -- performs more precise check than AS 'equals' operator alone
-				considering case, diacriticals, hyphens, punctuation and white space
-					-- class check ensures that (e.g.) 1.0=1 will fail
-					return (val1's class is val2's class) and (val1 is val2)
-				end considering
-			end |==|
+			(*!
+			 @abstract Succeeds when its argument is true.
+			 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+			*)
+			on ok(expr)
+				if not expr then fail("The given expression did not evaluate to true")
+			end ok
 			
 			(*!
-	 @abstract TODO.
-	 @param value <em>[boolean]</em> An expression that evaluates to true or false.
-	 @param message <em>[text][</em> A message.
-	 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
-	 *)
-			on should(value, message)
-				if value is false then fail(message)
+			 @abstract Succeeds when its argument is false.
+			 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+			*)
+			on notOk(expr)
+				if expr then fail("The given expression did not evaluate to false")
+			end notOk
+			
+			(*!
+			 @abstract Succeeds when the given expression is true.
+			 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+			 @param message <em>[text][</em> A message.
+			 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+			*)
+			on assert(expr, message)
+				if not expr then fail(message)
+			end assert
+			
+			(*! @abstract A synonym for <tt>assert()</tt>. *)
+			on should(expr, message)
+				assert(expr, message)
 			end should
 			
-			(*! @abstract TODO. *)
-			on shouldnt(value, message)
-				if value is true then fail(message)
+			(*!
+			 @abstract Succeeds when the given expression is false.
+			 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+			 @param message <em>[text][</em> A message.
+			 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+			*)
+			on refute(expr, message)
+				if expr then fail(message)
+			end refute
+			
+			(*! @abstract A synonym for <tt>refute()</tt>. *)
+			on shouldnt(expr, message)
+				refute(expr, message)
 			end shouldnt
 			
 			(*!
-	 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>. 
-	 @discussion Fails if an unexpected error was raised or no error was raised.
-	 *)
+			 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised
+			 	by running <tt>aScript</tt>.
+			 @discussion Fails if an unexpected error was raised or no error was raised.
+			*)
 			on shouldRaise(expectedErrorNumber, aScript, message)
 				try
 					run aScript
@@ -92,7 +141,10 @@ script ASUnit
 				fail(message)
 			end shouldRaise
 			
-			(*! @abstract Fails if <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>. *)
+			(*!
+			 @abstract Fails if <tt>expectedErrorNumber</tt> is raised
+			 	by running <tt>aScript</tt>.
+			*)
 			on shouldntRaise(expectedErrorNumber, aScript, message)
 				try
 					run aScript
