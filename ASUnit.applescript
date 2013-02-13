@@ -666,10 +666,10 @@ Test runner make it easier to run test and view progress and test results. The f
 	*)
 	script MiniTest
 		
-		on makeTest(aScript, aDescription)
+		on makeUnitTest(aScript, aDescription)
 			script
 				property parent : aScript
-				property class : "Test"
+				property class : "UnitTest"
 				property description : aDescription
 				
 				(*! @abstract Raises a TEST_SKIPPED error. *)
@@ -751,12 +751,12 @@ Test runner make it easier to run test and view progress and test results. The f
 					end repeat
 				end accept
 				
-				on |@Test|(scriptName, aDescription)
-					set the end of tests to MiniTest's makeTest(scriptName, aDescription)
+				on UnitTest(scriptName, aDescription)
+					set the end of tests to MiniTest's makeUnitTest(scriptName, aDescription)
 					return "Test"
-				end |@Test|
+				end 
 				
-				on |@TestSet|(scriptName, aDescription)
+				on TestSet(scriptName, aDescription)
 					set the end of tests to MiniTest's makeTestSet(scriptName, aDescription)
 					return "TestSet"
 				end |@TestSet|
