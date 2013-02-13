@@ -682,6 +682,14 @@ Test runner make it easier to run test and view progress and test results. The f
 					error why number ASUnit's TEST_FAILED
 				end fail
 				
+				-- Borrowed from ASTest
+				on |==|(val1, val2) -- performs more precise check than AS 'equals' operator alone
+					considering case, diacriticals, hyphens, punctuation and white space
+						-- class check ensures that (e.g.) 1.0=1 will fail
+						return (val1's class is val2's class) and (val1 is val2)
+					end considering
+				end |==|
+				
 				on should(cond)
 					if not cond then fail("I failed. I am a failure")
 				end should
