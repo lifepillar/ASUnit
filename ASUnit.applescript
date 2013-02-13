@@ -10,7 +10,7 @@
 script ASUnit
 	
 	(*! @abstract <em>[text]</em> ASUnit's version string.  *)
-	property version : "0.4.4"
+	property version : "0.4.5"
 	
 	(*! @abstract <em>[script]</em> Saves the current fixture while compiling test cases in a fixture. *)
 	property _currentFixture : missing value
@@ -77,6 +77,69 @@ script ASUnit
 		
 	end script
 	
+	on makeAssertions(theParent)
+		script
+			property parent : theParent
+			
+			(*! @abstract Raises a TEST_SKIPPED error. *)
+			on skip(why)
+				error why number TEST_SKIPPED
+			end skip
+			
+			(*! @abstract Raises a TEST_FAILED error. *)
+			on fail(why)
+				error why number TEST_FAILED
+			end fail
+			
+			-- Borrowed from ASTest
+			on |==|(val1, val2) -- performs more precise check than AS 'equals' operator alone
+				considering case, diacriticals, hyphens, punctuation and white space
+					-- class check ensures that (e.g.) 1.0=1 will fail
+					return (val1's class is val2's class) and (val1 is val2)
+				end considering
+			end |==|
+			
+			(*!
+	 @abstract TODO.
+	 @param value <em>[boolean]</em> An expression that evaluates to true or false.
+	 @param message <em>[text][</em> A message.
+	 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+	 *)
+			on should(value, message)
+				if value is false then fail(message)
+			end should
+			
+			(*! @abstract TODO. *)
+			on shouldnt(value, message)
+				if value is true then fail(message)
+			end shouldnt
+			
+			(*!
+	 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>. 
+	 @discussion Fails if an unexpected error was raised or no error was raised.
+	 *)
+			on shouldRaise(expectedErrorNumber, aScript, message)
+				try
+					run aScript
+				on error why number errorNumber
+					if errorNumber is not expectedErrorNumber then fail(message & ": " & why)
+					return
+				end try
+				fail(message)
+			end shouldRaise
+			
+			(*! @abstract Fails if <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>. *)
+			on shouldntRaise(expectedErrorNumber, aScript, message)
+				try
+					run aScript
+				on error why number errorNumber
+					if errorNumber is expectedErrorNumber then fail(message & ": " & why)
+				end try
+			end shouldntRaise
+			
+		end script
+	end makeAssertions
+	
 	(*!
  @class TestCase
  @abstract Models a certain configuration of the system being tested.
@@ -100,16 +163,6 @@ script ASUnit
 		on tearDown()
 		end tearDown
 		
-		(*! @abstract TODO. *)
-		on skip(why)
-			error why number TEST_SKIPPED
-		end skip
-		
-		(*! @abstract TODO. *)
-		on fail(why)
-			error why number TEST_FAILED
-		end fail
-		
 		(*!
 	 @abstract Runs a test case.
 	 @discussion Ensures that <tt>tearDown()</tt> is executed,
@@ -131,48 +184,6 @@ script ASUnit
 		on run
 			error "test script does not contain any test code"
 		end run
-		
-		(*!
-	 @abstract TODO.
-	 @param value <em>[boolean]</em> An expression that evaluates to true or false.
-	 @param message <em>[text][</em> A message.
-	 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
-	 *)
-		on should(value, message)
-			if value is false then
-				fail(message)
-			end if
-		end should
-		
-		(*! @abstract TODO. *)
-		on shouldnt(value, message)
-			if value is true then
-				fail(message)
-			end if
-		end shouldnt
-		
-		(*!
-	 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>. 
-	 @discussion Fails if an unexpected error was raised or no error was raised.
-	 *)
-		on shouldRaise(expectedErrorNumber, aScript, message)
-			try
-				run aScript
-			on error why number errorNumber
-				if errorNumber is not expectedErrorNumber then fail(message & ": " & why)
-				return
-			end try
-			fail(message)
-		end shouldRaise
-		
-		(*! @abstract Fails if <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>. *)
-		on shouldntRaise(expectedErrorNumber, aScript, message)
-			try
-				run aScript
-			on error why number errorNumber
-				if errorNumber is expectedErrorNumber then fail(message & ": " & why)
-			end try
-		end shouldntRaise
 		
 		(*! @abstract TODO. *)
 		on fullName()
@@ -211,7 +222,7 @@ TestCase script::
 	
 	on makeFixture()
 		(* Create an unregistered fixture inheriting from TestCase *)
-		return TestCase
+		return makeAssertions(TestCase)
 	end makeFixture
 	
 	on registerFixtureOfKind(aUserFixture, aParent)
@@ -223,7 +234,7 @@ TestCase script::
 	
 	on registerFixture(aUserFixture)
 		(* Convenience  handler for registering fixture inheriting from TestCase *)
-		return registerFixtureOfKind(aUserFixture, TestCase)
+		return registerFixtureOfKind(aUserFixture, ASUnit's makeAssertions(TestCase))
 	end registerFixture
 	
 	on makeTestCase()
@@ -667,32 +678,10 @@ Test runner make it easier to run test and view progress and test results. The f
 	script MiniTest
 		
 		on makeUnitTest(aScript, aDescription)
-			script
+			script UnitTest
 				property parent : aScript
 				property class : "UnitTest"
 				property description : aDescription
-				
-				(*! @abstract Raises a TEST_SKIPPED error. *)
-				on skip(why)
-					error why number ASUnit's TEST_SKIPPED
-				end skip
-				
-				(*! @abstract Raises a TEST_FAILED error. *)
-				on fail(why)
-					error why number ASUnit's TEST_FAILED
-				end fail
-				
-				-- Borrowed from ASTest
-				on |==|(val1, val2) -- performs more precise check than AS 'equals' operator alone
-					considering case, diacriticals, hyphens, punctuation and white space
-						-- class check ensures that (e.g.) 1.0=1 will fail
-						return (val1's class is val2's class) and (val1 is val2)
-					end considering
-				end |==|
-				
-				on should(cond)
-					if not cond then fail("I failed. I am a failure")
-				end should
 				
 				on accept(aVisitor)
 					tell aVisitor to visitTestCase(me)
@@ -708,7 +697,8 @@ Test runner make it easier to run test and view progress and test results. The f
 				end fullName
 				
 			end script
-		end makeTest
+			return ASUnit's makeAssertions(UnitTest)
+		end makeUnitTest
 		
 		on makeTestSet(aScript, testSetDescription)
 			script TestSet
@@ -754,12 +744,12 @@ Test runner make it easier to run test and view progress and test results. The f
 				on UnitTest(scriptName, aDescription)
 					set the end of tests to MiniTest's makeUnitTest(scriptName, aDescription)
 					return "Test"
-				end 
+				end UnitTest
 				
 				on TestSet(scriptName, aDescription)
 					set the end of tests to MiniTest's makeTestSet(scriptName, aDescription)
 					return "TestSet"
-				end |@TestSet|
+				end TestSet
 				
 			end script -- TestSet
 			
