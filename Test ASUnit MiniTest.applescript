@@ -56,19 +56,7 @@ script OuterTestSuite
 end script
 
 -------------------------------------------------
-
-on run
-	set ASUnit to (run script file Â
-		((folder of file (path to me) of application "Finder" as text) & "ASUnit.applescript"))
-	--tell ASMiniTest to autorun(OuterTestSuite)
-	tell ASUnit
-		run makeTextTestRunner(ASUnit's MiniTest's makeTestSet(OuterTestSuite, "Da Tests"))
-	end tell
-	(*
-	tell ASMiniTest
-		set x to makeTestResult("Trying")
-		tell x to runTest(ASMiniTest's makeMiniTestSet(OuterTestSuite, "The Tests"))
-	end tell
-	*)
-end run
+set MiniTest to MiniTest of (run script file Â
+	((folder of file (path to me) of application "Finder" as text) & "ASUnit.applescript"))
+MiniTest's autorun(OuterTestSuite)
 

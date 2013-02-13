@@ -769,8 +769,7 @@ Test runner make it easier to run test and view progress and test results. The f
 		end makeTestSet
 		
 		on autorun(aTestSet)
-			set coll to makeTestSet(aTestSet)
-			coll's accept(ASUnit's makeTestResult("foo"))
+			run ASUnit's makeTextTestRunner(makeTestSet(aTestSet, aTestSet's name))
 		end autorun
 		
 	end script -- ASMiniTest
