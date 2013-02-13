@@ -1,62 +1,78 @@
 set MiniTest to MiniTest of (run script file Â
 	((folder of file (path to me) of application "Finder" as text) & "ASUnit.applescript"))
-MiniTest's autorun(OuterTestSuite)
+MiniTest's autorun(MiniTestSuite)
 
-
-script OuterTestSuite
+script MiniTestSuite
 	
-	UnitTest(S1, "This is test S1")
-	script S1
-		log "S1"
-		should(true, "true should be true")
+	UnitTest(T1, "Unit test inside suite")
+	script T1
+		ok(true)
 	end script
 	
-	TestSet(UserTestSuite, "This is UserTestSuite")
-	script UserTestSuite
+	TestSet(InnerTestSuite, "Nested test suite")
+	script InnerTestSuite
 		
-		UnitTest(W1, "This is test W1")
-		script W1
-			log "W1"
-			should(false, "this fails")
+		UnitTest(T1, "Unit test inside nested suite")
+		script T1
+			notOk(false)
 		end script
 		
-		TestSet(UserTestCase, "This is UserTestCase")
-		script UserTestCase
-			property x : missing value
+		TestSet(TCAssert, "Test assert() et al.")
+		script TCAssert
 			
-			on setUp()
-				set x to 3
-			end setUp
-			
-			UnitTest(T1, "And this is test T1")
-			script T1
-				log "T1"
-				should(x = 3, "x=3")
+			UnitTest(AssertTrue, "assert() succeeds with true argument")
+			script AssertTrue
+				assert(true, "true should be true")
 			end script
 			
-			UnitTest(T2, "This is test T2")
-			script T2
-				log "T2"
-				should(true, "true should be true")
-				fail("I fail")
-			end script
-		end script
-		
-		TestSet(UserTestCaseBis, "This is UserTestCaseBis")
-		script UserTestCaseBis
-			
-			UnitTest(T3, "This is the description of test T3")
-			script T3
-				log "T3"
-				should(1 + 1 = 2, "1+1=2")
-			end script
-			
-			UnitTest(T4, "Finally, test T4!")
-			script T4
-				log "T4"
+			UnitTest(ShouldTrue, "should() succeeds with true argument")
+			script ShouldTrue
 				should(true, "true should be true")
 			end script
-		end script
+			
+			UnitTest(RefuteFalse, "refute() succeeds with false argument")
+			script RefuteFalse
+				refute(false, "false should not be true")
+			end script
+			
+			UnitTest(ShouldntFalse, "shouldnt() succeeds with false argument")
+			script ShouldntFalse
+				shouldnt(false, "false should not be true")
+			end script
+			
+			UnitTest(ShouldFalse, "should() fails with false argument")
+			script ShouldFalse
+				try
+					should(false, "false should not be true")
+				on error errMsg number errNum
+					if errNum is not test_failed_error_number() then
+						error errMsg number errNum
+					end if
+				end try
+			end script
+			
+			UnitTest(ShouldntTrue, "shouldnt() fails with true argument")
+			script ShouldntTrue
+				try
+					shouldnt(true, "true shouldn't be false")
+				on error errMsg number errNum
+					if errNum is not test_failed_error_number() then
+						error errMsg number errNum
+					end if
+				end try
+			end script
+			
+		end script -- TCAssert
 		
-	end script -- UserTestSuite
-end script
+		TestSet(TCAssertEqual, "Test assertEqual()")
+		script TCAssertEqual
+			
+			UnitTest(compareInts, "Compare two integers")
+			script compareInts
+				assertEqual(2, 1 + 1)
+			end script
+			
+		end script -- TCAssertEqual
+		
+	end script -- InnerTestSuite
+end script -- MiniTestSuite
