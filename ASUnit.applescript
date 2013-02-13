@@ -153,6 +153,44 @@ script ASUnit
 				end try
 			end shouldntRaise
 			
+			(*!
+			 @abstract Succeeds when two given expressions have the same value.
+			 @param expected <em>[anything]</em> The expected value.
+			 @param value <em>[anything]</em> Some other value.
+			 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+			*)
+			on assertEqual(expected, value)
+				local msg, got, wanted, errMsg
+				if value's class is not expected's class then
+					try -- to coerce classes to text (this may not succeed)
+						set wanted to (expected's class) as text
+						set got to (value's class) as text
+						set msg to "Expected a value of class " & wanted & Â
+							" but got a value of class " & got
+					on error -- produce a more generic message
+						set msg to "The value does not belong to the expected class."
+					end try
+					fail(msg)
+				end if
+				considering case, diacriticals, hyphens, punctuation and white space
+					if (value is not expected) then
+						try -- to coerce the values to text (this may not succeed)
+							set wanted to (expected as text)
+							set got to (value as text)
+							set msg to "Expected " & wanted & " but got " & got
+						on error errMsg -- produce a more generic message
+							set msg to "Got an unexpected value"
+						end try
+						fail(msg)
+					end if
+				end considering
+			end assertEqual
+			
+			(*! @abstract A synonym for <tt>assertEqual()</tt>. *)
+			on shouldEqual(expected, value)
+				assertEqual(expected, value)
+			end shouldEqual
+
 		end script
 	end makeAssertions
 	
