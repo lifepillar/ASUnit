@@ -195,20 +195,20 @@ script ASUnit
 	end makeAssertions
 	
 	(*!
- @class TestComponent
- @abstract The base class for test components.
- @discussion Test suites are a composite of components.
- 	The basic unit is a single <tt>TestCase</tt>, which may be tested as is.
-	Several <tt>TestCase</tt>s are grouped in a <tt>TestSuite</tt>, which can test all its tests.
-	A <tt>TestSuite</tt> may contain other <tt>TestSuite</tt>s, which may contain other suites.
-	Testing a composite returns a <tt>TestResult</tt> object.
-*)
+	 @abstract The base class for test components.
+	 @discussion Test suites are a composite of components.
+	 	The basic unit is a single <tt>TestCase</tt>, which may be tested as is.
+		Several <tt>TestCase</tt>s are grouped in a <tt>TestSuite</tt>,
+		which can test all its tests. A <tt>TestSuite</tt> may contain other
+		<tt>TestSuite</tt>s, which may contain other suites.
+		Testing a composite returns a <tt>TestResult</tt> object.
+	*)
 	script TestComponent
 		
 		(*!
-	 @abstract Runs a test.
-	 @return <em>[script]</em> A <tt>TestResult</tt> object.
-	 *)
+		 @abstract Runs a test.
+		 @return <em>[script]</em> A <tt>TestResult</tt> object.
+		*)
 		on test()
 			set aTestResult to ASUnit's makeTestResult(name)
 			tell aTestResult
@@ -218,19 +218,20 @@ script ASUnit
 		end test
 		
 		(*!
-	 @abstract Tells whether this is a composite test.
-	 @discussion Allows transparent handling of components,
-	 	avoiding try... on error, e.g., if a's isComposite() then a's add(foo).
-	 @return <em>[boolean]</em> <tt>true</tt> if this a composite test; <tt>false</tt> otherwise.
-	*)
+		 @abstract Tells whether this is a composite test.
+		 @discussion Allows transparent handling of components,
+		 	avoiding try... on error, e.g., if a's isComposite() then a's add(foo).
+		 @return <em>[boolean]</em> <tt>true</tt> if this a composite test;
+		 	returns <tt>false</tt> otherwise.
+		*)
 		on isComposite()
 			return false
 		end isComposite
 		
 		(*!
-	 @abstract Implemented by sub classes.
-	 @param aVisitor <em>[script]</em> A visitor.
-	*)
+		 @abstract Implemented by sub classes.
+		 @param aVisitor <em>[script]</em> A visitor.
+		*)
 		on accept(aVisitor)
 			return
 		end accept
@@ -238,10 +239,9 @@ script ASUnit
 	end script
 	
 	(*!
- @class TestCase
- @abstract Models a certain configuration of the system being tested.
- @discussion TODO.
-*)
+	 @abstract Models a certain configuration of the system being tested.
+	 @discussion TODO.
+	*)
 	script TestCase
 		property parent : TestComponent
 		
@@ -261,11 +261,11 @@ script ASUnit
 		end tearDown
 		
 		(*!
-	 @abstract Runs a test case.
-	 @discussion Ensures that <tt>tearDown()</tt> is executed,
-	 	even if an error was raised. Errors are passed to the caller.
-	@return Nothing.
-	 *)
+		 @abstract Runs a test case.
+		 @discussion Ensures that <tt>tearDown()</tt> is executed,
+		 	even if an error was raised. Errors are passed to the caller.
+		 @return Nothing.
+		*)
 		on runCase()
 			try
 				setUp()
