@@ -29,9 +29,9 @@ script ASUnit
 	property suite : ASUnitSentinel
 	
 	(*! @abstract Error number signalling a failed test. *)
-	property TestCaseFailed : 1000
+	property TEST_FAILED : 1000
 	(*! @abstract Error number signalling a skipped test. *)
-	property TestCaseSkipped : 1001
+	property TEST_SKIPPED : 1001
 	
 	
 	(*!
@@ -102,12 +102,12 @@ script ASUnit
 		
 		(*! @abstract TODO. *)
 		on skip(why)
-			error why number TestCaseSkipped
+			error why number TEST_SKIPPED
 		end skip
 		
 		(*! @abstract TODO. *)
 		on fail(why)
-			error why number TestCaseFailed
+			error why number TEST_FAILED
 		end fail
 		
 		(*!
@@ -136,7 +136,7 @@ script ASUnit
 	 @abstract TODO.
 	 @param value <em>[boolean]</em> An expression that evaluates to true or false.
 	 @param message <em>[text][</em> A message.
-	 @throws A <tt>TestCaseFailed</tt> error if the assertion fails.
+	 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
 	 *)
 		on should(value, message)
 			if value is false then
@@ -372,9 +372,9 @@ Your custom visitor should inherit from one of the framework visitors or from Vi
 					aTestCase's runCase()
 					addSuccess(aTestCase)
 				on error message number errorNumber
-					if errorNumber is TestCaseSkipped then
+					if errorNumber is TEST_SKIPPED then
 						addSkip(aTestCase, message)
-					else if errorNumber is TestCaseFailed then
+					else if errorNumber is TEST_FAILED then
 						addFailure(aTestCase, message)
 					else
 						addError(aTestCase, message & " (" & errorNumber & ")")
@@ -666,9 +666,6 @@ Test runner make it easier to run test and view progress and test results. The f
 	*)
 	script MiniTest
 		
-		property TEST_FAILED : 1000
-		property TEST_SKIPPED : 1001
-		
 		on makeTest(aScript, aDescription)
 			script
 				property parent : aScript
@@ -677,12 +674,12 @@ Test runner make it easier to run test and view progress and test results. The f
 				
 				(*! @abstract Raises a TEST_SKIPPED error. *)
 				on skip(why)
-					error why number MiniTest's TEST_SKIPPED
+					error why number ASUnit's TEST_SKIPPED
 				end skip
 				
 				(*! @abstract Raises a TEST_FAILED error. *)
 				on fail(why)
-					error why number MiniTest's TEST_FAILED
+					error why number ASUnit's TEST_FAILED
 				end fail
 				
 				on should(cond)
