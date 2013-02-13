@@ -2,9 +2,9 @@
  @header ASUnit
  	An AppleScript testing framework.
  @abstract License: GNU GPL, see COPYING for details.
- @author Nir Soffer
- @copyright 2006 Nir Soffer
- @version 0.4.2
+ @author Nir Soffer, Lifepillar
+ @copyright 2013 Lifepillar, 2006 Nir Soffer
+ @version 0.4.5
  @charset macintosh
 *)
 script ASUnit
