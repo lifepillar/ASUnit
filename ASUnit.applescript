@@ -190,7 +190,7 @@ script ASUnit
 			on shouldEqual(expected, value)
 				assertEqual(expected, value)
 			end shouldEqual
-
+			
 		end script
 	end makeAssertions
 	
@@ -840,7 +840,7 @@ Test runner make it easier to run test and view progress and test results. The f
 				
 				on UnitTest(scriptName, aDescription)
 					set the end of tests to MiniTest's makeUnitTest(scriptName, aDescription)
-					return "Test"
+					return "UnitTest"
 				end UnitTest
 				
 				on TestSet(scriptName, aDescription)
