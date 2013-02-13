@@ -22,8 +22,8 @@ task :default => [:build]
 desc 'Build ASUnit.'
 task :build => OBJ do; end
 
-desc 'Build the documentation.'
-task :doc => [:manual] do
+desc 'Build the API documentation.'
+task :doc do
   # Set LANG to get rid of warnings about missing default encoding
   sh "env LANG=en_US.UTF-8 headerdoc2html -q -o #{DOC_DIR} ASUnit.applescript"
   sh "env LANG=en_US.UTF-8 gatherheaderdoc #{DOC_DIR}"
