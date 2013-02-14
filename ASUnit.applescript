@@ -782,6 +782,7 @@ Test runner make it easier to run test and view progress and test results. The f
 			script UnitTest
 				property parent : aScript
 				property class : "UnitTest"
+				property name : aScript's name
 				property description : aDescription
 				
 				on accept(aVisitor)
@@ -805,6 +806,7 @@ Test runner make it easier to run test and view progress and test results. The f
 			script TestSet
 				property parent : aScript
 				property class : "TestSet"
+				property name : aScript's name
 				property description : testSetDescription
 				property tests : {} -- private
 				
