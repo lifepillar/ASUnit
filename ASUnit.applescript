@@ -236,7 +236,7 @@ script ASUnit
 			return
 		end accept
 		
-	end script
+	end script -- TestComponent
 	
 	(*!
 	 @abstract Models a certain configuration of the system being tested.
@@ -287,90 +287,92 @@ script ASUnit
 			return parent's name & " - " & name
 		end fullName
 		
-	end script
+	end script -- TestCase
 	
-	
-	(* Creating fixtures and tests cases
-
-A user test case inherits from the user fixture, which inherit from TestCase. Test cases 
-are automatically registered while compiling a script, using two simple rules:
-
-1. Each fixture should call registerFixture to register the fixture and set its parent to 
-   TestCase.
-2. Each tests case should call registerTestCase to register the test case and set its parent 
-   to the current fixture.
+	(*!
+	 @abstract Creates an unregistered fixture inheriting from <tt>TestCase</tt>.
+	 @discussion
+	 	A user test case inherits from the user fixture, which inherit from <tt>TestCase</tt>.
+		Test cases are automatically registered while compiling a script, using two simple rules:
+		
+			1. Each fixture should call <tt>registerFixture()</tt> to register the fixture
+				and set its parent to <tt>TestCase</tt>.
+			2. Each tests case should call <tt>registerTestCase()</tt> to register the test case
+				and set its parent to the current fixture.
    
-To create a fixture inheriting from a user defined TestCase, create a script inheriting 
-from TestCase, then create the concrerte fixture script inheriting from your custom 
-TestCase script::
+		To create a fixture inheriting from a user defined <tt>TestCase</tt>,
+		create a script inheriting from <tt>TestCase</tt>, then create the concrete fixture script
+		inheriting from your custom <tt>TestCase</tt> script:
 
-	script |user defined TestCase|
-		property parent: makeFixture()
+		<pre>
+		script |user defined TestCase|
+			property parent: makeFixture()
+			-- define your custom handlers here
+		end
 		
-		-- define your custom handlers here		
-	end
-	
-	script |concrete fixture|
-		property parent: registerFixtureOfKind(me, |user defined TestCase|)
-		
-		-- define your test cases here
-	end	
-*)
-	
+		script |concrete fixture|
+			property parent: registerFixtureOfKind(me, |user defined TestCase|)
+			-- define your test cases here
+		end
+		</pre>
+	*)
 	on makeFixture()
-		(* Create an unregistered fixture inheriting from TestCase *)
 		return makeAssertions(TestCase)
 	end makeFixture
 	
+	(*!
+	 @abstract Primitive registration handler.
+	 @discussion May be used to register a fixture inheriting
+	 	from a <tt>TestCase</tt> subclass.
+	*)
 	on registerFixtureOfKind(aUserFixture, aParent)
-		(* Primitive registration handler, may be used to register a fixture inheriting 
-	from a TestCase subclass *)
 		set _currentFixture to aUserFixture
 		return aParent
 	end registerFixtureOfKind
 	
+	(*! @abstract Convenience handler for registering fixture inheriting from <tt>TestCase</tt>. *)
 	on registerFixture(aUserFixture)
-		(* Convenience  handler for registering fixture inheriting from TestCase *)
 		return registerFixtureOfKind(aUserFixture, ASUnit's makeAssertions(TestCase))
 	end registerFixture
 	
+	(*!
+	 @abstract Creates an unregistered <tt>TestCase</tt> inheriting from the current fixture.
+	 @discussion You can run the test case or add it manually to a suite.
+	 	This feature is essential for ASUnit own unit tests.
+	*)
 	on makeTestCase()
-		(* Create an unregistered text case inheriting from the curernt fixture. You can 
-	run the test case or add it manually to a suite. This feature is essential for ASUnit 
-	own unit tests. *)
 		return _currentFixture
 	end makeTestCase
 	
+	(*!
+	 @abstract Creates a test case and registers it with the main script suite.
+	 @discussion This test will run automatically when you run the suite.
+	*)
 	on registerTestCase(aUserTestCase)
-		(* Create a test case and register it with the main script suite. This test will run 
-	atomatically when you run the suite. *)
 		set aSuite to aUserTestCase's parent's suite
 		if aSuite is not ASUnitSentinel then aSuite's add(aUserTestCase)
 		return makeTestCase()
 	end registerTestCase
 	
 	
-	(* Creating test suites
-
-Each test script should define a suite property to support automatic registration of 
-test cases. If a suite is not defined, tests will have to be regitered with a suite 
-manually. You may define your own suite class, inheriting from TestSuite.
-
-* Each test script should define a suite property and initialize it with makeTestSuite(), 
-  or with a TestSuite subclass.
-*)
-	
+	(*!
+	 @abstract Creates a test suite.
+	 @discussion Each test script should define a <tt>suite</tt> property to support
+	 	automatic registration of test cases. If a suite is not defined, tests will have to be registered
+		with a suite manually. You may define your own suite class, inheriting from <tt>TestSuite</tt>.
+		Each test script should define a <tt>suite</tt> property and initialize it with <tt>makeTestSuite()</tt>,
+		or with a <tt>TestSuite</tt> subclass.
+	*)
 	on makeTestSuite(aName)
 		
+		(*! @abstract A composite of test cases and test suites. *)
 		script TestSuite
-			(* I'm a composite of test cases and test suites. *)
 			
 			property parent : TestComponent
 			property name : aName
 			property tests : {}
 			
-			-- Visiting
-			
+			(*! @abstract TODO. *)
 			on accept(aVisitor)
 				aVisitor's visitTestSuite(me)
 				repeat with aTest in tests
@@ -378,53 +380,59 @@ manually. You may define your own suite class, inheriting from TestSuite.
 				end repeat
 			end accept
 			
-			-- Accessing
-			
+			(*! @abstract TODO. *)
 			on isComposite()
 				return true
 			end isComposite
 			
+			(*!
+			 @abstract Adds a test case or test suite to this suite.
+			 @param aTest <em>[script]</em> May be a <tt>TestCase</tt>
+			 	or another <tt>TestSuite</tt> containing other <tt>TestCase</tt>s
+				and <tt>TestSuite</tt>s.
+			*)
 			on add(aTest)
-				(* aTest may be a TestCase or another TestSuite containing other TestCases 
-			and TestSuites ... *)
 				set end of tests to aTest
 			end add
 			
-		end script
+		end script -- TestSuite
 		
 		return TestSuite
 		
 	end makeTestSuite
 	
 	
-	(* Visitors
-
-To operate on a suite, you call the suite accept() with a visitor. The framework define only one visitor, TestResult, which run all the tests in a suite. You may create other visitors to do filtered testing, custom reporting and like.
-
-Your custom visitor should inherit from one of the framework visitors or from Visitor.
-*)
-	
+	(*!
+	 @abstract Base class for visitors.
+	 @discussion This script defines the interface for a Visitor object.
+	 	Subclasses are supposed to override some handlers.
+	 	To operate on a suite, you call the suite <tt>accept()</tt> with a visitor.
+		ASUnit defines only one visitor, <tt>TestResult</tt>, which runs all the tests in a suite.
+		You may create other visitors to do filtered testing, custom reporting and like.
+		Your custom visitor should inherit from one of the framework visitors or from <tt>Visitor</tt>.
+	*)
 	script Visitor
-		(* I visit components and do nothing. Subclass may override some handlers. *)
 		
+		(*! @abstract TODO *)
 		on visitTestSuite(aTestSuite)
 		end visitTestSuite
 		
+		(*! @abstract TODO *)
 		on visitTestCase(TestCase)
 		end visitTestCase
 		
-	end script
+	end script -- Visitor
 	
-	
+	(*! @abstract TODO *)
 	on makeTestResult(aName)
 		
+		(*! @abstract Runs test cases and collects the results. *)
 		script TestResult
-			(* I run test cases and collect the results *)
 			
 			property parent : Visitor
 			property name : aName
 			
-			-- An observer will be notified on visiting progress
+			(*! @abstract An observer will be notified on visiting progress. *)
 			property observers : {}
 			
 			property startDate : missing value
@@ -434,16 +442,16 @@ Your custom visitor should inherit from one of the framework visitors or from Vi
 			property failures : {}
 			property errors : {}
 			
-			-- Configuring
-			
+			(*! @abstract TODO *)
 			on addObserver(anObject)
 				set the end of observers to anObject
 			end addObserver
 			
-			-- Running
-			
+			(*!
+			 @abstract TODO.
+			 @param aTest <em>[script]</em> May be a test case or a test suite.
+			*)
 			on runTest(aTest)
-				-- aTest may be a test case or a test suite.
 				try
 					startTest()
 					aTest's accept(me)
@@ -454,27 +462,28 @@ Your custom visitor should inherit from one of the framework visitors or from Vi
 				end try
 			end runTest
 			
-			-- Events
-			
+			(*! @abstract TODO *)
 			on startTest()
 				set startDate to current date
 				notify({name:"start"})
 			end startTest
 			
+			(*! @abstract TODO *)
 			on stopTest()
 				set stopDate to current date
 				notify({name:"stop"})
 			end stopTest
 			
+			(*! @abstract TODO *)
 			on startTestCase(aTestCase)
 				notify({name:"start test case", test:aTestCase})
 			end startTestCase
 			
-			-- Visiting
-			
+			(*!
+			 @abstract Runs a test case and collects results.
+			 @param aTestCase <em>[script]</em> A test case.
+			*)
 			on visitTestCase(aTestCase)
-				(* Run aTestCase and collect results. *)
-				
 				startTestCase(aTestCase)
 				try
 					aTestCase's runCase()
@@ -490,83 +499,88 @@ Your custom visitor should inherit from one of the framework visitors or from Vi
 				end try
 			end visitTestCase
 			
-			-- Collecting results
-			
+			(*! @abstract TODO *)
 			on addSuccess(aTestCase)
 				set end of passed to aTestCase
 				notify({name:"success", test:aTestCase})
 			end addSuccess
 			
+			(*! @abstract TODO *)
 			on addSkip(aTestCase, message)
 				set end of skips to {test:aTestCase, message:message}
 				notify({name:"skip", test:aTestCase})
 			end addSkip
 			
+			(*! @abstract TODO *)
 			on addFailure(aTestCase, message)
 				set end of failures to {test:aTestCase, message:message}
 				notify({name:"fail", test:aTestCase})
 			end addFailure
 			
+			(*! @abstract TODO *)
 			on addError(aTestCase, message)
 				set end of errors to {test:aTestCase, message:message}
 				notify({name:"error", test:aTestCase})
 			end addError
 			
+			(*! @abstract TODO *)
 			on notify(anEvent)
 				repeat with obs in (a reference to observers)
 					obs's update(anEvent)
 				end repeat
 			end notify
 			
-			-- Testing
-			
+			(*! @abstract TODO *)
 			on hasPassed()
 				return (failures's length) + (errors's length) = 0
 			end hasPassed
 			
-			-- Accessing
-			
+			(*! @abstract TODO *)
 			on runCount()
 				return (passed's length) + (skips's length) + (failures's length) + (errors's length)
 			end runCount
 			
+			(*! @abstract TODO *)
 			on passCount()
 				return count of passed
 			end passCount
 			
+			(*! @abstract TODO *)
 			on skipCount()
 				return count of skips
 			end skipCount
 			
+			(*! @abstract TODO *)
 			on errorCount()
 				return count of errors
 			end errorCount
 			
+			(*! @abstract TODO *)
 			on failureCount()
 				return count of failures
 			end failureCount
 			
+			(*! @abstract TODO *)
 			on runSeconds()
 				return stopDate - startDate
 			end runSeconds
 			
-		end script
+		end script -- TestResult
 		
 		return TestResult
 		
 	end makeTestResult
 	
 	
-	(* Running tests
-
-Test runner make it easier to run test and view progress and test results. The framework supply a TextTestRunner that display progress and results in a new Script Editor document window.
-*)
-	
+	(*!
+	 @abstract Displays test results in a new AppleScript Editor document.
+	 @discussion A test runner makes it easier to run tests and view progress and test results.
+	 	A <tt>TextTestRunner</tt> displays progress and results in a new AppleScript Editor document window.
+	*)
 	on makeTextTestRunner(aSuite)
 		script TextTestRunner
-			(* I display test results in a new Script Editor document *)
 			
-			-- Creates a new AppleScript Editor document
+			(*! @abstract Creates a new AppleScript Editor document. *)
 			on makeNewAppleScriptEditorDocument(theName)
 				tell application Â
 					"AppleScript Editor" to make new document with properties {name:theName}
@@ -580,14 +594,12 @@ Test runner make it easier to run test and view progress and test results. The f
 			property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
 			property defaultColor : {256 * 77, 256 * 77, 256 * 76} -- RGB (77,77,76)
 			
-			-- Configuring
-			
+			(*! @abstract TODO *)
 			on setTestResult(aTestResult)
 				set _TestResult to aTestResult
 			end setTestResult
 			
-			-- Running
-			
+			(*! @abstract TODO *)
 			on run
 				-- Create TestResult and set me as its observer
 				if _TestResult is missing value then set _TestResult to ASUnit's makeTestResult(suite's name)
@@ -601,8 +613,7 @@ Test runner make it easier to run test and view progress and test results. The f
 				printResult()
 			end run
 			
-			-- Updating
-			
+			(*! @abstract TODO *)
 			on update(anEvent)
 				set eventName to anEvent's name
 				if eventName is "start" then
@@ -620,33 +631,38 @@ Test runner make it easier to run test and view progress and test results. The f
 				end if
 			end update
 			
-			-- Printing
-			
+			(*! @abstract TODO *)
 			on printTitle()
 				printLine(((_TestResult's startDate) as text) & return)
 				printLine(_TestResult's name & return)
 			end printTitle
 			
+			(*! @abstract TODO *)
 			on printTestCase(aTestCase)
 				printString(aTestCase's fullName() & " ... ")
 			end printTestCase
 			
+			(*! @abstract TODO *)
 			on printSuccess()
 				printColoredLine("ok", successColor)
 			end printSuccess
 			
+			(*! @abstract TODO *)
 			on printSkip()
 				printColoredLine("skip", successColor)
 			end printSkip
 			
+			(*! @abstract TODO *)
 			on printFail()
 				printColoredLine("FAIL", defectColor)
 			end printFail
 			
+			(*! @abstract TODO *)
 			on printError()
 				printColoredLine("ERROR", defectColor)
 			end printError
 			
+			(*! @abstract TODO *)
 			on printDefects(title, defects)
 				if (count of defects) is 0 then return
 				
@@ -662,6 +678,7 @@ Test runner make it easier to run test and view progress and test results. The f
 				printLine(separator)
 			end printDefects
 			
+			(*! @abstract TODO *)
 			on printCounts()
 				printLine("")
 				tell _TestResult
@@ -678,6 +695,7 @@ Test runner make it easier to run test and view progress and test results. The f
 				printLine(counts as text)
 			end printCounts
 			
+			(*! @abstract TODO *)
 			on printResult()
 				printLine("")
 				if _TestResult's hasPassed() then
@@ -687,20 +705,22 @@ Test runner make it easier to run test and view progress and test results. The f
 				end if
 			end printResult
 			
-			-- Printing primitives
-			
+			(*! @abstract TODO *)
 			on printLine(aString)
 				printString(aString & return)
 			end printLine
 			
+			(*! @abstract TODO *)
 			on printColoredLine(aString, aColor)
 				printColoredString(aString & return, aColor)
 			end printColoredLine
 			
+			(*! @abstract TODO *)
 			on printString(aString)
 				printColoredString(aString, defaultColor)
 			end printString
 			
+			(*! @abstract TODO *)
 			on printColoredString(aString, aColor)
 				tell textView
 					set selection to insertion point -1
@@ -711,27 +731,26 @@ Test runner make it easier to run test and view progress and test results. The f
 				end tell
 			end printColoredString
 			
-		end script
+		end script -- TextTestRunner
 		
 		return TextTestRunner
 		
 	end makeTextTestRunner
 	
 	
-	-- Loading tests
-	
+	(*! @abstract Loads tests from files and folders, and returns a suite with all tests. *)
 	on makeTestLoader()
 		
 		script TestLoader
-			(* I load tests from files and folders, and return a suite with all tests *)
 			
 			-- only files that starts with prefix will be considered as tests
 			property prefix : "Test"
 			
+			(*!
+			 @abstract Returns a test suite containing all the suites
+			 	in the tests scripts in the specified folder.
+			*)
 			on loadTestsFromFolder(aFolder)
-				(* Return a test suite containng all the suites in the tests scripts 
-			in aFolder *)
-				
 				set suite to ASUnit's makeTestSuite("All Tests in " & (aFolder as text))
 				
 				tell application "Finder"
@@ -745,16 +764,14 @@ Test runner make it easier to run test and view progress and test results. The f
 				return suite
 			end loadTestsFromFolder
 			
-			on loadTestsFromFile(aFile)
-				(* Return a test suite from aFile or the default suite. 
-		
-			Raise error if a test file does not have a suite property.
-		
-			TODO:
-			- should check for comforming suite?
-			- how to load tests from text format (.applescript)?
+			(*!
+			 @abstract Returns a test suite from aFile or the default suite.
+			 @throws An error if a test file does not have a suite property.
 			*)
-				
+			on loadTestsFromFile(aFile)
+				-- TODOs:
+				-- - Should check for comforming suite?
+				-- - How to load tests from text format (.applescript)?
 				set testScript to load script file (aFile as text)
 				try
 					set aSuite to testScript's suite
@@ -766,20 +783,31 @@ Test runner make it easier to run test and view progress and test results. The f
 				
 			end loadTestsFromFile
 			
+			(*! @abstract TODO *)
 			on MissingSuiteError(aFile)
 				error (aFile as text) & " does not have a suite property"
 			end MissingSuiteError
 			
-		end script
+		end script -- TestLoader
 		
 		return TestLoader
 	end makeTestLoader
 	
 	(*!
 	 @abstract A different way to run your tests.
+	 @discussion Differently from ÒstandardÓ ASUnit tests, MiniTest
+	 	allows you to write tests that are registered at runtime. This makes it easier
+		to load ASUnit and to run tests in different environments (e.g., AppleScript Editor,
+		osascript, etcÉ). Instead of using the Composite design pattern to build test cases
+		and test suites, MiniTest adopts a more ÒhackishÓ approach, better suited to the way
+		AppleScript works, in which the framework's script objects inherit from the user tests,
+		rather than vice versa. In other words, instead of writing a test that inherits from
+		the framework's <tt>TestCase</tt>, using MiniTest you write a test
+		and ÒinjectÓ it into a <tt>UnitTest</tt> script, which inherits from it.
 	*)
 	script MiniTest
 		
+		(*! @abstract TODO *)
 		on makeUnitTest(aScript, aDescription)
 			script UnitTest
 				property parent : aScript
@@ -787,10 +815,12 @@ Test runner make it easier to run test and view progress and test results. The f
 				property name : aScript's name
 				property description : aDescription
 				
+				(*! @abstract TODO *)
 				on accept(aVisitor)
 					tell aVisitor to visitTestCase(me)
 				end accept
 				
+				(*! @abstract TODO *)
 				on runCase()
 					run
 				end runCase
@@ -800,10 +830,13 @@ Test runner make it easier to run test and view progress and test results. The f
 					return my description
 				end fullName
 				
-			end script
+			end script -- UnitTest
+			
 			return ASUnit's makeAssertions(UnitTest)
+			
 		end makeUnitTest
 		
+		(*! @abstract TODO *)
 		on makeTestSet(aScript, testSetDescription)
 			script TestSet
 				property parent : aScript
@@ -812,6 +845,7 @@ Test runner make it easier to run test and view progress and test results. The f
 				property description : testSetDescription
 				property tests : {} -- private
 				
+				(*! @abstract TODO *)
 				on setUp()
 					try -- to invoke parent's setUp()
 						continue setUp()
@@ -823,6 +857,7 @@ Test runner make it easier to run test and view progress and test results. The f
 					end try
 				end setUp
 				
+				(*! @abstract TODO *)
 				on tearDown()
 					try -- to invoke parent's tearDown()
 						continue tearDown()
@@ -834,6 +869,7 @@ Test runner make it easier to run test and view progress and test results. The f
 					end try
 				end tearDown
 				
+				(*! @abstract TODO *)
 				on accept(aVisitor)
 					aVisitor's visitTestSuite(me)
 					repeat with aTest in tests
@@ -848,12 +884,14 @@ Test runner make it easier to run test and view progress and test results. The f
 					end repeat
 				end accept
 				
+				(*! @abstract TODO *)
 				on UnitTest(scriptName, aDescription)
 					set the end of tests to Â
 						MiniTest's makeUnitTest(scriptName, my description & " - " & aDescription)
 					return "UnitTest"
 				end UnitTest
 				
+				(*! @abstract TODO *)
 				on TestSet(scriptName, aDescription)
 					set the end of tests to MiniTest's makeTestSet(scriptName, aDescription)
 					return "TestSet"
@@ -866,6 +904,7 @@ Test runner make it easier to run test and view progress and test results. The f
 			
 		end makeTestSet
 		
+		(*! @abstract TODO *)
 		on autorun(aTestSet)
 			run ASUnit's makeTextTestRunner(makeTestSet(aTestSet, aTestSet's name))
 		end autorun
