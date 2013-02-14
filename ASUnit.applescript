@@ -623,10 +623,8 @@ Test runner make it easier to run test and view progress and test results. The f
 			-- Printing
 			
 			on printTitle()
-				printLine((_TestResult's startDate) as text)
-				printLine("")
-				printLine(_TestResult's name)
-				printLine("")
+				printLine(((_TestResult's startDate) as text) & return)
+				printLine(_TestResult's name & return)
 			end printTitle
 			
 			on printTestCase(aTestCase)
@@ -657,7 +655,7 @@ Test runner make it easier to run test and view progress and test results. The f
 				repeat with aResult in defects
 					printLine(separator)
 					printLine("test: " & aResult's test's fullName())
-					printLine("message: " & aResult's message)
+					printLine("      " & aResult's message)
 				end repeat
 				printLine(separator)
 			end printDefects
