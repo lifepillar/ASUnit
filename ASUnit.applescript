@@ -8,15 +8,506 @@
  @charset macintosh
 *)
 
+(*! @abstract <em>[text]</em> ASUnit's version. *)
+property version : "0.4.5"
+(*! @abstract Error number signalling a failed test. *)
+property TEST_FAILED : 1000
+(*! @abstract Error number signalling a skipped test. *)
+property TEST_SKIPPED : 1001
+
 (*!
- @class ASUnit
- @abstract The ASUnit framework.
+ @abstract Base class for observers.
+ @discussion Observers are objects that may get notified by visitors.
+ 	Concrete observers are supposed to inherit from this script.
 *)
+script Observer
+	
+	(*! @abstract TODO *)
+	on setNotifier(aNotifier)
+	end setNotifier
+	
+end script -- Observer
+
+(*!
+	 @abstract Base class for visitors.
+	 @discussion This script defines the interface for a Visitor object.
+	 	Subclasses are supposed to override some handlers.
+	 	To operate on a suite, you call the suite <tt>accept()</tt> with a visitor.
+		ASUnit defines only one visitor, <tt>TestResult</tt>, which runs all the tests in a suite.
+		You may create other visitors to do filtered testing, custom reporting and like.
+		Your custom visitor should inherit from one of the framework visitors or from <tt>Visitor</tt>.
+	*)
+script Visitor
+	
+	(*! @abstract TODO *)
+	on visitTestSuite(aTestSuite)
+	end visitTestSuite
+	
+	(*! @abstract TODO *)
+	on visitTestCase(TestCase)
+	end visitTestCase
+	
+end script -- Visitor
+
+(*! @abstract Creates a new AppleScript Editor document. *)
+on makeNewAppleScriptEditorDocument(theName)
+	tell application "AppleScript Editor"
+		make new document with properties {name:theName}
+	end tell
+end makeNewAppleScriptEditorDocument
+
+(*! @abstract TODO *)
+on makeTestResult(aName)
+	
+	(*! @abstract Runs test cases and collects the results. *)
+	script TestResult
+		
+		property parent : Visitor
+		property name : aName
+		
+		(*! @abstract An observer will be notified on visiting progress. *)
+		property observers : {}
+		
+		property startDate : missing value
+		property stopDate : missing value
+		property passed : {}
+		property skips : {}
+		property failures : {}
+		property errors : {}
+		
+		(*! @abstract TODO *)
+		on addObserver(anObject)
+			anObject's setNotifier(me)
+			set the end of observers to anObject
+		end addObserver
+		
+		(*!
+			 @abstract TODO.
+			 @param aTest <em>[script]</em> May be a test case or a test suite.
+			*)
+		on runTest(aTest)
+			try
+				startTest()
+				aTest's accept(me)
+				stopTest()
+			on error msg number n
+				stopTest()
+				error msg number n
+			end try
+		end runTest
+		
+		(*! @abstract TODO *)
+		on startTest()
+			set startDate to current date
+			notify({name:"start"})
+		end startTest
+		
+		(*! @abstract TODO *)
+		on stopTest()
+			set stopDate to current date
+			notify({name:"stop"})
+		end stopTest
+		
+		(*! @abstract TODO *)
+		on startTestCase(aTestCase)
+			notify({name:"start test case", test:aTestCase})
+		end startTestCase
+		
+		(*!
+			 @abstract Runs a test case and collects results.
+			 @param aTestCase <em>[script]</em> A test case.
+			*)
+		on visitTestCase(aTestCase)
+			startTestCase(aTestCase)
+			try
+				aTestCase's runCase()
+				addSuccess(aTestCase)
+			on error message number errorNumber
+				if errorNumber is TEST_SKIPPED then
+					addSkip(aTestCase, message)
+				else if errorNumber is TEST_FAILED then
+					addFailure(aTestCase, message)
+				else
+					addError(aTestCase, message & " (" & errorNumber & ")")
+				end if
+			end try
+		end visitTestCase
+		
+		(*! @abstract TODO *)
+		on addSuccess(aTestCase)
+			set end of passed to aTestCase
+			notify({name:"success", test:aTestCase})
+		end addSuccess
+		
+		(*! @abstract TODO *)
+		on addSkip(aTestCase, message)
+			set end of skips to {test:aTestCase, message:message}
+			notify({name:"skip", test:aTestCase})
+		end addSkip
+		
+		(*! @abstract TODO *)
+		on addFailure(aTestCase, message)
+			set end of failures to {test:aTestCase, message:message}
+			notify({name:"fail", test:aTestCase})
+		end addFailure
+		
+		(*! @abstract TODO *)
+		on addError(aTestCase, message)
+			set end of errors to {test:aTestCase, message:message}
+			notify({name:"error", test:aTestCase})
+		end addError
+		
+		(*! @abstract TODO *)
+		on notify(anEvent)
+			repeat with obs in (a reference to observers)
+				obs's update(anEvent)
+			end repeat
+		end notify
+		
+		(*! @abstract TODO *)
+		on hasPassed()
+			return (failures's length) + (errors's length) = 0
+		end hasPassed
+		
+		(*! @abstract TODO *)
+		on runCount()
+			return (passed's length) + (skips's length) + (failures's length) + (errors's length)
+		end runCount
+		
+		(*! @abstract TODO *)
+		on passCount()
+			return count of passed
+		end passCount
+		
+		(*! @abstract TODO *)
+		on skipCount()
+			return count of skips
+		end skipCount
+		
+		(*! @abstract TODO *)
+		on errorCount()
+			return count of errors
+		end errorCount
+		
+		(*! @abstract TODO *)
+		on failureCount()
+			return count of failures
+		end failureCount
+		
+		(*! @abstract TODO *)
+		on runSeconds()
+			return stopDate - startDate
+		end runSeconds
+		
+	end script -- TestResult
+	
+	return TestResult
+	
+end makeTestResult
+
+(*!
+	 @abstract Factory handler to generate a test script.
+	 @discussion This handler is used to create a script inheriting
+	 	from the given script, which implements testing assertions.
+		This handler is used with both ASUnit's <tt>TestCase</tt>s
+		and MiniTest's <tt>UnitTest</tt>s.
+	 @param theParent <em>[script]</em> The script to inherit from.
+	 @return A script inheriting from the given script and implementing assertions.
+	*)
+on makeAssertions(theParent)
+	script
+		property parent : theParent
+		
+		on test_failed_error_number()
+			return TEST_FAILED
+		end test_failed_error_number
+		
+		on test_skipped_error_number()
+			return TEST_SKIPPED
+		end test_skipped_error_number
+		
+		(*!
+		 @abstract Raises a TEST_SKIPPED error.
+		 @param why <em>[text]</em> A message.
+		 @throws A TEST_SKIPPED error.
+		*)
+		on skip(why)
+			error why number TEST_SKIPPED
+		end skip
+		
+		(*!
+		 @abstract Raises a TEST_FAILED error.
+		 @param why <em>[text]</em> A message.
+		 @throws A TEST_FAILED error.
+		*)
+		on fail(why)
+			error why number TEST_FAILED
+		end fail
+		
+		(*!
+		 @abstract Succeeds when its argument is true.
+		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+		*)
+		on ok(expr)
+			if not expr then fail("The given expression did not evaluate to true")
+		end ok
+		
+		(*!
+		 @abstract Succeeds when its argument is false.
+		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+		*)
+		on notOk(expr)
+			if expr then fail("The given expression did not evaluate to false")
+		end notOk
+		
+		(*!
+		 @abstract Succeeds when the given expression is true.
+		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+		 @param message <em>[text][</em> A message.
+		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+		*)
+		on assert(expr, message)
+			if not expr then fail(message)
+		end assert
+		
+		(*! @abstract A synonym for <tt>assert()</tt>. *)
+		on should(expr, message)
+			assert(expr, message)
+		end should
+		
+		(*!
+		 @abstract Succeeds when the given expression is false.
+		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+		 @param message <em>[text][</em> A message.
+		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+		*)
+		on refute(expr, message)
+			if expr then fail(message)
+		end refute
+		
+		(*! @abstract A synonym for <tt>refute()</tt>. *)
+		on shouldnt(expr, message)
+			refute(expr, message)
+		end shouldnt
+		
+		(*!
+		 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised
+		 	by running <tt>aScript</tt>.
+		 @discussion Fails if an unexpected error was raised or no error was raised.
+		*)
+		on shouldRaise(expectedErrorNumber, aScript, message)
+			try
+				run aScript
+			on error why number errorNumber
+				if errorNumber is not expectedErrorNumber then fail(message & ": " & why)
+				return
+			end try
+			fail(message)
+		end shouldRaise
+		
+		(*!
+		 @abstract Fails if <tt>expectedErrorNumber</tt> is raised
+		 	by running <tt>aScript</tt>.
+		*)
+		on shouldntRaise(expectedErrorNumber, aScript, message)
+			try
+				run aScript
+			on error why number errorNumber
+				if errorNumber is expectedErrorNumber then fail(message & ": " & why)
+			end try
+		end shouldntRaise
+		
+		(*!
+		 @abstract Succeeds when two given expressions have the same value.
+		 @param expected <em>[anything]</em> The expected value.
+		 @param value <em>[anything]</em> Some other value.
+		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+		*)
+		on assertEqual(expected, value)
+			local msg, got, wanted, errMsg
+			if value's class is not expected's class then
+				try -- to coerce classes to text (this may not succeed)
+					set wanted to (expected's class) as text
+					set got to (value's class) as text
+					set msg to "Expected class: " & wanted & return & Â
+						"Actual class: " & got
+				on error -- produce a more generic message
+					set msg to "The value does not belong to the expected class."
+				end try
+				fail(msg)
+			end if
+			considering case, diacriticals, hyphens, punctuation and white space
+				if (value is not expected) then
+					try -- to coerce the values to text (this may not succeed)
+						set wanted to (expected as text)
+						set got to (value as text)
+						set msg to "Expected: " & wanted & return & "Actual: " & got
+					on error errMsg -- produce a more generic message
+						set msg to "Got an unexpected value"
+					end try
+					fail(msg)
+				end if
+			end considering
+		end assertEqual
+		
+		(*! @abstract A synonym for <tt>assertEqual()</tt>. *)
+		on shouldEqual(expected, value)
+			assertEqual(expected, value)
+		end shouldEqual
+		
+	end script
+end makeAssertions
+
+(*!
+ @abstract Displays test results in a new AppleScript Editor document.
+*)
+script AppleScriptEditorLogger
+	property parent : Observer
+	property _TestResult : missing value
+	property textView : missing value
+	property separator : "----------------------------------------------------------------------"
+	property successColor : {256 * 113, 256 * 140, 256 * 0} -- RGB (113,140,0)
+	property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
+	property defaultColor : {256 * 77, 256 * 77, 256 * 76} -- RGB (77,77,76)
+	
+	(*! @abstract TODO *)
+	on setNotifier(aTestResult)
+		set my _TestResult to aTestResult
+	end setNotifier
+	
+	(*! @abstract TODO *)
+	on update(anEvent)
+		set eventName to anEvent's name
+		if eventName is "start" then
+			set textView to my makeNewAppleScriptEditorDocument("TESTING")
+			printTitle()
+		else if eventName is "stop" then
+			printSummary()
+		else if eventName is "start test case" then
+			printTestCase(anEvent's test)
+		else if eventName is "success" then
+			printSuccess()
+		else if eventName is "skip" then
+			printSkip()
+		else if eventName is "fail" then
+			printFail()
+		else if eventName is "error" then
+			printError()
+		end if
+	end update
+	
+	(*! @abstract TODO *)
+	on printTitle()
+		printLine(((_TestResult's startDate) as text) & return)
+		printLine(_TestResult's name & return)
+	end printTitle
+	
+	(*! @abstract TODO *)
+	on printSummary()
+		printDefects("ERRORS", _TestResult's errors)
+		printDefects("FAILURES", _TestResult's failures)
+		printCounts()
+		printResult()
+	end printSummary
+	
+	(*! @abstract TODO *)
+	on printTestCase(aTestCase)
+		printString(aTestCase's fullName() & " ... ")
+	end printTestCase
+	
+	(*! @abstract TODO *)
+	on printSuccess()
+		printColoredLine("ok", successColor)
+	end printSuccess
+	
+	(*! @abstract TODO *)
+	on printSkip()
+		printColoredLine("skip", successColor)
+	end printSkip
+	
+	(*! @abstract TODO *)
+	on printFail()
+		printColoredLine("FAIL", defectColor)
+	end printFail
+	
+	(*! @abstract TODO *)
+	on printError()
+		printColoredLine("ERROR", defectColor)
+	end printError
+	
+	(*! @abstract TODO *)
+	on printDefects(title, defects)
+		if (count of defects) is 0 then return
+		
+		printLine("")
+		printLine(title)
+		repeat with aResult in defects
+			printLine(separator)
+			printLine("test: " & aResult's test's fullName())
+			repeat with aLine in every paragraph of aResult's message
+				printLine("      " & aLine)
+			end repeat
+		end repeat
+		printLine(separator)
+	end printDefects
+	
+	(*! @abstract TODO *)
+	on printCounts()
+		printLine("")
+		tell _TestResult
+			set elapsed to runSeconds()
+			set timeMsg to (elapsed as text) & " second"
+			if elapsed is not 1 then set timeMsg to timeMsg & "s"
+			set counts to {runCount() & " tests, ", Â
+				passCount() & " passed, ", Â
+				failureCount() & " failures, ", Â
+				errorCount() & " errors, ", Â
+				skipCount() & " skips."}
+		end tell
+		printLine("Finished in " & timeMsg & "." & return)
+		printLine(counts as text)
+	end printCounts
+	
+	(*! @abstract TODO *)
+	on printResult()
+		printLine("")
+		if _TestResult's hasPassed() then
+			printColoredLine("OK", successColor)
+		else
+			printColoredLine("FAILED", defectColor)
+		end if
+	end printResult
+	
+	(*! @abstract TODO *)
+	on printLine(aString)
+		printString(aString & return)
+	end printLine
+	
+	(*! @abstract TODO *)
+	on printColoredLine(aString, aColor)
+		printColoredString(aString & return, aColor)
+	end printColoredLine
+	
+	(*! @abstract TODO *)
+	on printString(aString)
+		printColoredString(aString, defaultColor)
+	end printString
+	
+	(*! @abstract TODO *)
+	on printColoredString(aString, aColor)
+		tell textView
+			set selection to insertion point -1
+			set contents of selection to aString
+			if aColor is not missing value then Â
+				set color of contents of selection to aColor
+			set selection to insertion point -1
+		end tell
+	end printColoredString
+	
+end script -- AppleScriptEditorLogger		
+
+(*! @abstract The ASUnit framework. *)
 script ASUnit
-	
-	(*! @abstract <em>[text]</em> ASUnit's version. *)
-	property version : "0.4.5"
-	
 	(*!
 	 @abstract <em>[script]</em> Saves the current fixture while compiling
 	 	test cases in a fixture.
@@ -36,164 +527,6 @@ script ASUnit
 	*)
 	property suite : ASUnitSentinel
 	
-	(*! @abstract Error number signalling a failed test. *)
-	property TEST_FAILED : 1000
-	(*! @abstract Error number signalling a skipped test. *)
-	property TEST_SKIPPED : 1001
-	
-	(*!
-	 @abstract Factory handler to generate a test script.
-	 @discussion This handler is used to create a script inheriting
-	 	from the given script, which implements testing assertions.
-		This handler is used with both ASUnit's <tt>TestCase</tt>s
-		and MiniTest's <tt>UnitTest</tt>s.
-	 @param theParent <em>[script]</em> The script to inherit from.
-	 @return A script inheriting from the given script and implementing assertions.
-	*)
-	on makeAssertions(theParent)
-		script
-			property parent : theParent
-			
-			on test_failed_error_number()
-				return TEST_FAILED
-			end test_failed_error_number
-			
-			on test_skipped_error_number()
-				return TEST_SKIPPED
-			end test_skipped_error_number
-			
-			(*!
-			 @abstract Raises a TEST_SKIPPED error.
-			 @param why <em>[text]</em> A message.
-			 @throws A TEST_SKIPPED error.
-			*)
-			on skip(why)
-				error why number TEST_SKIPPED
-			end skip
-			
-			(*!
-			 @abstract Raises a TEST_FAILED error.
-			 @param why <em>[text]</em> A message.
-			 @throws A TEST_FAILED error.
-			*)
-			on fail(why)
-				error why number TEST_FAILED
-			end fail
-			
-			(*!
-			 @abstract Succeeds when its argument is true.
-			 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
-			*)
-			on ok(expr)
-				if not expr then fail("The given expression did not evaluate to true")
-			end ok
-			
-			(*!
-			 @abstract Succeeds when its argument is false.
-			 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
-			*)
-			on notOk(expr)
-				if expr then fail("The given expression did not evaluate to false")
-			end notOk
-			
-			(*!
-			 @abstract Succeeds when the given expression is true.
-			 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
-			 @param message <em>[text][</em> A message.
-			 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
-			*)
-			on assert(expr, message)
-				if not expr then fail(message)
-			end assert
-			
-			(*! @abstract A synonym for <tt>assert()</tt>. *)
-			on should(expr, message)
-				assert(expr, message)
-			end should
-			
-			(*!
-			 @abstract Succeeds when the given expression is false.
-			 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
-			 @param message <em>[text][</em> A message.
-			 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
-			*)
-			on refute(expr, message)
-				if expr then fail(message)
-			end refute
-			
-			(*! @abstract A synonym for <tt>refute()</tt>. *)
-			on shouldnt(expr, message)
-				refute(expr, message)
-			end shouldnt
-			
-			(*!
-			 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised
-			 	by running <tt>aScript</tt>.
-			 @discussion Fails if an unexpected error was raised or no error was raised.
-			*)
-			on shouldRaise(expectedErrorNumber, aScript, message)
-				try
-					run aScript
-				on error why number errorNumber
-					if errorNumber is not expectedErrorNumber then fail(message & ": " & why)
-					return
-				end try
-				fail(message)
-			end shouldRaise
-			
-			(*!
-			 @abstract Fails if <tt>expectedErrorNumber</tt> is raised
-			 	by running <tt>aScript</tt>.
-			*)
-			on shouldntRaise(expectedErrorNumber, aScript, message)
-				try
-					run aScript
-				on error why number errorNumber
-					if errorNumber is expectedErrorNumber then fail(message & ": " & why)
-				end try
-			end shouldntRaise
-			
-			(*!
-			 @abstract Succeeds when two given expressions have the same value.
-			 @param expected <em>[anything]</em> The expected value.
-			 @param value <em>[anything]</em> Some other value.
-			 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
-			*)
-			on assertEqual(expected, value)
-				local msg, got, wanted, errMsg
-				if value's class is not expected's class then
-					try -- to coerce classes to text (this may not succeed)
-						set wanted to (expected's class) as text
-						set got to (value's class) as text
-						set msg to "Expected class: " & wanted & return & Â
-							"Actual class: " & got
-					on error -- produce a more generic message
-						set msg to "The value does not belong to the expected class."
-					end try
-					fail(msg)
-				end if
-				considering case, diacriticals, hyphens, punctuation and white space
-					if (value is not expected) then
-						try -- to coerce the values to text (this may not succeed)
-							set wanted to (expected as text)
-							set got to (value as text)
-							set msg to "Expected: " & wanted & return & "Actual: " & got
-						on error errMsg -- produce a more generic message
-							set msg to "Got an unexpected value"
-						end try
-						fail(msg)
-					end if
-				end considering
-			end assertEqual
-			
-			(*! @abstract A synonym for <tt>assertEqual()</tt>. *)
-			on shouldEqual(expected, value)
-				assertEqual(expected, value)
-			end shouldEqual
-			
-		end script
-	end makeAssertions
-	
 	(*!
 	 @abstract The base class for test components.
 	 @discussion Test suites are a composite of components.
@@ -210,7 +543,7 @@ script ASUnit
 		 @return <em>[script]</em> A <tt>TestResult</tt> object.
 		*)
 		on test()
-			set aTestResult to ASUnit's makeTestResult(name)
+			set aTestResult to makeTestResult(name)
 			tell aTestResult
 				runTest(me)
 			end tell
@@ -332,7 +665,7 @@ script ASUnit
 	
 	(*! @abstract Convenience handler for registering fixture inheriting from <tt>TestCase</tt>. *)
 	on registerFixture(aUserFixture)
-		return registerFixtureOfKind(aUserFixture, ASUnit's makeAssertions(TestCase))
+		return registerFixtureOfKind(aUserFixture, makeAssertions(TestCase))
 	end registerFixture
 	
 	(*!
@@ -353,7 +686,6 @@ script ASUnit
 		if aSuite is not ASUnitSentinel then aSuite's add(aUserTestCase)
 		return makeTestCase()
 	end registerTestCase
-	
 	
 	(*!
 	 @abstract Creates a test suite.
@@ -400,357 +732,6 @@ script ASUnit
 		return TestSuite
 		
 	end makeTestSuite
-	
-	
-	(*!
-	 @abstract Base class for visitors.
-	 @discussion This script defines the interface for a Visitor object.
-	 	Subclasses are supposed to override some handlers.
-	 	To operate on a suite, you call the suite <tt>accept()</tt> with a visitor.
-		ASUnit defines only one visitor, <tt>TestResult</tt>, which runs all the tests in a suite.
-		You may create other visitors to do filtered testing, custom reporting and like.
-		Your custom visitor should inherit from one of the framework visitors or from <tt>Visitor</tt>.
-	*)
-	script Visitor
-		
-		(*! @abstract TODO *)
-		on visitTestSuite(aTestSuite)
-		end visitTestSuite
-		
-		(*! @abstract TODO *)
-		on visitTestCase(TestCase)
-		end visitTestCase
-		
-	end script -- Visitor
-	
-	(*! @abstract TODO *)
-	on makeTestResult(aName)
-		
-		(*! @abstract Runs test cases and collects the results. *)
-		script TestResult
-			
-			property parent : Visitor
-			property name : aName
-			
-			(*! @abstract An observer will be notified on visiting progress. *)
-			property observers : {}
-			
-			property startDate : missing value
-			property stopDate : missing value
-			property passed : {}
-			property skips : {}
-			property failures : {}
-			property errors : {}
-			
-			(*! @abstract TODO *)
-			on addObserver(anObject)
-				anObject's setNotifier(me)
-				set the end of observers to anObject
-			end addObserver
-			
-			(*!
-			 @abstract TODO.
-			 @param aTest <em>[script]</em> May be a test case or a test suite.
-			*)
-			on runTest(aTest)
-				try
-					startTest()
-					aTest's accept(me)
-					stopTest()
-				on error msg number n
-					stopTest()
-					error msg number n
-				end try
-			end runTest
-			
-			(*! @abstract TODO *)
-			on startTest()
-				set startDate to current date
-				notify({name:"start"})
-			end startTest
-			
-			(*! @abstract TODO *)
-			on stopTest()
-				set stopDate to current date
-				notify({name:"stop"})
-			end stopTest
-			
-			(*! @abstract TODO *)
-			on startTestCase(aTestCase)
-				notify({name:"start test case", test:aTestCase})
-			end startTestCase
-			
-			(*!
-			 @abstract Runs a test case and collects results.
-			 @param aTestCase <em>[script]</em> A test case.
-			*)
-			on visitTestCase(aTestCase)
-				startTestCase(aTestCase)
-				try
-					aTestCase's runCase()
-					addSuccess(aTestCase)
-				on error message number errorNumber
-					if errorNumber is TEST_SKIPPED then
-						addSkip(aTestCase, message)
-					else if errorNumber is TEST_FAILED then
-						addFailure(aTestCase, message)
-					else
-						addError(aTestCase, message & " (" & errorNumber & ")")
-					end if
-				end try
-			end visitTestCase
-			
-			(*! @abstract TODO *)
-			on addSuccess(aTestCase)
-				set end of passed to aTestCase
-				notify({name:"success", test:aTestCase})
-			end addSuccess
-			
-			(*! @abstract TODO *)
-			on addSkip(aTestCase, message)
-				set end of skips to {test:aTestCase, message:message}
-				notify({name:"skip", test:aTestCase})
-			end addSkip
-			
-			(*! @abstract TODO *)
-			on addFailure(aTestCase, message)
-				set end of failures to {test:aTestCase, message:message}
-				notify({name:"fail", test:aTestCase})
-			end addFailure
-			
-			(*! @abstract TODO *)
-			on addError(aTestCase, message)
-				set end of errors to {test:aTestCase, message:message}
-				notify({name:"error", test:aTestCase})
-			end addError
-			
-			(*! @abstract TODO *)
-			on notify(anEvent)
-				repeat with obs in (a reference to observers)
-					obs's update(anEvent)
-				end repeat
-			end notify
-			
-			(*! @abstract TODO *)
-			on hasPassed()
-				return (failures's length) + (errors's length) = 0
-			end hasPassed
-			
-			(*! @abstract TODO *)
-			on runCount()
-				return (passed's length) + (skips's length) + (failures's length) + (errors's length)
-			end runCount
-			
-			(*! @abstract TODO *)
-			on passCount()
-				return count of passed
-			end passCount
-			
-			(*! @abstract TODO *)
-			on skipCount()
-				return count of skips
-			end skipCount
-			
-			(*! @abstract TODO *)
-			on errorCount()
-				return count of errors
-			end errorCount
-			
-			(*! @abstract TODO *)
-			on failureCount()
-				return count of failures
-			end failureCount
-			
-			(*! @abstract TODO *)
-			on runSeconds()
-				return stopDate - startDate
-			end runSeconds
-			
-		end script -- TestResult
-		
-		return TestResult
-		
-	end makeTestResult
-	
-	(*!
-	 @abstract Abstract class for observers.
-	 @discussion Concrete observers are supposed to inherit from this script.
-	*)
-	script Observer
-		
-		(*! @abstract TODO *)
-		on setNotifier(aNotifier)
-		end setNotifier
-		
-	end script -- Observer
-	
-	(*!
-	 @abstract Displays test results in a new AppleScript Editor document.
-	*)
-	script AppleScriptEditorLogger
-		property parent : Observer
-		
-		(*! @abstract Creates a new AppleScript Editor document. *)
-		on makeNewAppleScriptEditorDocument(theName)
-			tell application Â
-				"AppleScript Editor" to make new document with properties {name:theName}
-		end makeNewAppleScriptEditorDocument
-		
-		property _TestResult : missing value
-		property textView : missing value
-		property separator : "----------------------------------------------------------------------"
-		property successColor : {256 * 113, 256 * 140, 256 * 0} -- RGB (113,140,0)
-		property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
-		property defaultColor : {256 * 77, 256 * 77, 256 * 76} -- RGB (77,77,76)
-		
-		(*! @abstract TODO *)
-		on setNotifier(aTestResult)
-			set my _TestResult to aTestResult
-		end setNotifier
-		
-		(*! @abstract TODO *)
-		on update(anEvent)
-			set eventName to anEvent's name
-			if eventName is "start" then
-				set textView to my makeNewAppleScriptEditorDocument("TESTING")
-				printTitle()
-			else if eventName is "stop" then
-				printSummary()
-			else if eventName is "start test case" then
-				printTestCase(anEvent's test)
-			else if eventName is "success" then
-				printSuccess()
-			else if eventName is "skip" then
-				printSkip()
-			else if eventName is "fail" then
-				printFail()
-			else if eventName is "error" then
-				printError()
-			end if
-		end update
-		
-		(*! @abstract TODO *)
-		on printTitle()
-			printLine(((_TestResult's startDate) as text) & return)
-			printLine(_TestResult's name & return)
-		end printTitle
-		
-		on printSummary()
-			printDefects("ERRORS", _TestResult's errors)
-			printDefects("FAILURES", _TestResult's failures)
-			printCounts()
-			printResult()
-		end printSummary
-		
-		
-		(*! @abstract TODO *)
-		on printTestCase(aTestCase)
-			printString(aTestCase's fullName() & " ... ")
-		end printTestCase
-		
-		(*! @abstract TODO *)
-		on printSuccess()
-			printColoredLine("ok", successColor)
-		end printSuccess
-		
-		(*! @abstract TODO *)
-		on printSkip()
-			printColoredLine("skip", successColor)
-		end printSkip
-		
-		(*! @abstract TODO *)
-		on printFail()
-			printColoredLine("FAIL", defectColor)
-		end printFail
-		
-		(*! @abstract TODO *)
-		on printError()
-			printColoredLine("ERROR", defectColor)
-		end printError
-		
-		(*! @abstract TODO *)
-		on printDefects(title, defects)
-			if (count of defects) is 0 then return
-			
-			printLine("")
-			printLine(title)
-			repeat with aResult in defects
-				printLine(separator)
-				printLine("test: " & aResult's test's fullName())
-				repeat with aLine in every paragraph of aResult's message
-					printLine("      " & aLine)
-				end repeat
-			end repeat
-			printLine(separator)
-		end printDefects
-		
-		(*! @abstract TODO *)
-		on printCounts()
-			printLine("")
-			tell _TestResult
-				set elapsed to runSeconds()
-				set timeMsg to (elapsed as text) & " second"
-				if elapsed is not 1 then set timeMsg to timeMsg & "s"
-				set counts to {runCount() & " tests, ", Â
-					passCount() & " passed, ", Â
-					failureCount() & " failures, ", Â
-					errorCount() & " errors, ", Â
-					skipCount() & " skips."}
-			end tell
-			printLine("Finished in " & timeMsg & "." & return)
-			printLine(counts as text)
-		end printCounts
-		
-		(*! @abstract TODO *)
-		on printResult()
-			printLine("")
-			if _TestResult's hasPassed() then
-				printColoredLine("OK", successColor)
-			else
-				printColoredLine("FAILED", defectColor)
-			end if
-		end printResult
-		
-		(*! @abstract TODO *)
-		on printLine(aString)
-			printString(aString & return)
-		end printLine
-		
-		(*! @abstract TODO *)
-		on printColoredLine(aString, aColor)
-			printColoredString(aString & return, aColor)
-		end printColoredLine
-		
-		(*! @abstract TODO *)
-		on printString(aString)
-			printColoredString(aString, defaultColor)
-		end printString
-		
-		(*! @abstract TODO *)
-		on printColoredString(aString, aColor)
-			tell textView
-				set selection to insertion point -1
-				set contents of selection to aString
-				if aColor is not missing value then Â
-					set color of contents of selection to aColor
-				set selection to insertion point -1
-			end tell
-		end printColoredString
-		
-	end script -- AppleScriptEditorLogger		
-	
-	
-	on autorun(aTestSuite)
-		set TR to makeTestResult(aTestSuite's name)
-		if current application's name is "AppleScript Editor" then
-			TR's addObserver(AppleScriptEditorLogger)
-		else
-			log "NOT IMPLEMENTED"
-			--TR's addObserver(ConsoleLogger)
-			return
-		end if
-		TR's runTest(aTestSuite)
-	end autorun
 	
 	(*! @abstract Loads tests from files and folders, and returns a suite with all tests. *)
 	on makeTestLoader()
@@ -805,9 +786,12 @@ script ASUnit
 		end script -- TestLoader
 		
 		return TestLoader
+		
 	end makeTestLoader
 	
-	(*!
+end script -- ASUnit
+
+(*!
 	 @abstract A different way to run your tests.
 	 @discussion Differently from ÒstandardÓ ASUnit tests, MiniTest
 	 	allows you to write tests that are registered at runtime. This makes it easier
@@ -817,117 +801,128 @@ script ASUnit
 		AppleScript works, in which the framework's script objects inherit from the user tests,
 		rather than vice versa. In other words, instead of writing a test that inherits from
 		the framework's <tt>TestCase</tt>, using MiniTest you write a test
-		and ÒinjectÓ it into a <tt>UnitTest</tt> script, which inherits from it.
+		and ÒinjectÓ it at runtime into a <tt>UnitTest</tt> script, which inherits from it.
 	*)
-	script MiniTest
-		
-		(*! @abstract TODO *)
-		on makeUnitTest(aScript, aDescription)
-			script UnitTest
-				property parent : aScript
-				property class : "UnitTest"
-				property name : aScript's name
-				property description : aDescription
-				
-				(*! @abstract TODO *)
-				on accept(aVisitor)
-					tell aVisitor to visitTestCase(me)
-				end accept
-				
-				(*! @abstract TODO *)
-				on runCase()
-					run
-				end runCase
-				
-				(*! @abstract TODO. *)
-				on fullName()
-					return my description
-				end fullName
-				
-			end script -- UnitTest
-			
-			return ASUnit's makeAssertions(UnitTest)
-			
-		end makeUnitTest
-		
-		(*! @abstract TODO *)
-		on makeTestSet(aScript, testSetDescription)
-			script TestSet
-				property parent : aScript
-				property class : "TestSet"
-				property name : aScript's name
-				property description : testSetDescription
-				property tests : {} -- private
-				
-				(*! @abstract TODO *)
-				on setUp()
-					try -- to invoke parent's setUp()
-						continue setUp()
-					on error errMsg number errNum
-						if errNum is not -1708 or Â
-							errMsg does not contain "CanÕt continue setUp" then
-							error errMsg number errNum
-						end if
-					end try
-				end setUp
-				
-				(*! @abstract TODO *)
-				on tearDown()
-					try -- to invoke parent's tearDown()
-						continue tearDown()
-					on error errMsg number errNum
-						if errNum is not -1708 or Â
-							errMsg does not contain "CanÕt continue tearDown" then
-							error errMsg number errNum
-						end if
-					end try
-				end tearDown
-				
-				(*! @abstract TODO *)
-				on accept(aVisitor)
-					aVisitor's visitTestSuite(me)
-					repeat with aTest in tests
-						try
-							setUp()
-							aTest's accept(aVisitor)
-							tearDown()
-						on error errMsg number errNum
-							tearDown()
-							error errMsg number errNum
-						end try
-					end repeat
-				end accept
-				
-				(*! @abstract TODO *)
-				on UnitTest(scriptName, aDescription)
-					set the end of tests to Â
-						MiniTest's makeUnitTest(scriptName, my description & " - " & aDescription)
-					return "UnitTest"
-				end UnitTest
-				
-				(*! @abstract TODO *)
-				on TestSet(scriptName, aDescription)
-					set the end of tests to MiniTest's makeTestSet(scriptName, aDescription)
-					return "TestSet"
-				end TestSet
-				
-			end script -- TestSet
-			
-			run TestSet -- Register the tests
-			return TestSet
-			
-		end makeTestSet
-		
-		(*! @abstract TODO *)
-		on autorun(aTestSet)
-			ASUnit's autorun(makeTestSet(aTestSet, aTestSet's name))
-		end autorun
-		
-	end script -- ASMiniTest
+script MiniTest
 	
-end script -- ASUnit
+	(*! @abstract TODO *)
+	on makeUnitTest(aScript, aDescription)
+		script UnitTest
+			property parent : aScript
+			property class : "UnitTest"
+			property name : aScript's name
+			property description : aDescription
+			
+			(*! @abstract TODO *)
+			on accept(aVisitor)
+				tell aVisitor to visitTestCase(me)
+			end accept
+			
+			(*! @abstract TODO *)
+			on runCase()
+				run
+			end runCase
+			
+			(*! @abstract TODO. *)
+			on fullName()
+				return my description
+			end fullName
+			
+		end script -- UnitTest
+		
+		return makeAssertions(UnitTest)
+		
+	end makeUnitTest
+	
+	(*! @abstract TODO *)
+	on makeTestSet(aScript, testSetDescription)
+		script TestSet
+			property parent : aScript
+			property class : "TestSet"
+			property name : aScript's name
+			property description : testSetDescription
+			property tests : {} -- private
+			
+			(*! @abstract TODO *)
+			on setUp()
+				try -- to invoke parent's setUp()
+					continue setUp()
+				on error errMsg number errNum
+					if errNum is not -1708 or Â
+						errMsg does not contain "CanÕt continue setUp" then
+						error errMsg number errNum
+					end if
+				end try
+			end setUp
+			
+			(*! @abstract TODO *)
+			on tearDown()
+				try -- to invoke parent's tearDown()
+					continue tearDown()
+				on error errMsg number errNum
+					if errNum is not -1708 or Â
+						errMsg does not contain "CanÕt continue tearDown" then
+						error errMsg number errNum
+					end if
+				end try
+			end tearDown
+			
+			(*! @abstract TODO *)
+			on accept(aVisitor)
+				aVisitor's visitTestSuite(me)
+				repeat with aTest in tests
+					try
+						setUp()
+						aTest's accept(aVisitor)
+						tearDown()
+					on error errMsg number errNum
+						tearDown()
+						error errMsg number errNum
+					end try
+				end repeat
+			end accept
+			
+			(*! @abstract TODO *)
+			on UnitTest(scriptName, aDescription)
+				set the end of tests to Â
+					MiniTest's makeUnitTest(scriptName, my description & " - " & aDescription)
+				return "UnitTest"
+			end UnitTest
+			
+			(*! @abstract TODO *)
+			on TestSet(scriptName, aDescription)
+				set the end of tests to MiniTest's makeTestSet(scriptName, aDescription)
+				return "TestSet"
+			end TestSet
+			
+		end script -- TestSet
+		
+		run TestSet -- Register the tests
+		return TestSet
+		
+	end makeTestSet
+	
+	(*! @abstract TODO *)
+	on autorun(aTestSet)
+		continue autorun(makeTestSet(aTestSet, aTestSet's name))
+	end autorun
+	
+end script -- ASMiniTest
+
+(*! @abstract TODO *)
+on autorun(aTestSuite)
+	set TR to makeTestResult(aTestSuite's name)
+	if current application's name is "AppleScript Editor" then
+		TR's addObserver(AppleScriptEditorLogger)
+	else
+		log "NOT IMPLEMENTED"
+		--TR's addObserver(ConsoleLogger)
+		return
+	end if
+	TR's runTest(aTestSuite)
+end autorun
 
 on run
 	-- Enable loading the library from text format with run script
-	return ASUnit
+	return me
 end run
