@@ -814,7 +814,8 @@ Test runner make it easier to run test and view progress and test results. The f
 					try -- to invoke parent's setUp()
 						continue setUp()
 					on error errMsg number errNum
-						if errNum is not -1708 then -- -1708 = can't continue
+						if errNum is not -1708 or Â
+							errMsg does not contain "CanÕt continue setUp" then
 							error errMsg number errNum
 						end if
 					end try
@@ -824,7 +825,8 @@ Test runner make it easier to run test and view progress and test results. The f
 					try -- to invoke parent's tearDown()
 						continue tearDown()
 					on error errMsg number errNum
-						if errNum is not -1708 then -- -1708 = can't continue
+						if errNum is not -1708 or Â
+							errMsg does not contain "CanÕt continue tearDown" then
 							error errMsg number errNum
 						end if
 					end try
