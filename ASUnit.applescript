@@ -623,7 +623,7 @@ Test runner make it easier to run test and view progress and test results. The f
 			-- Printing
 			
 			on printTitle()
-				printLine((_TestResult's startDate) as string)
+				printLine((_TestResult's startDate) as text)
 				printLine("")
 				printLine(_TestResult's name)
 				printLine("")
@@ -732,7 +732,7 @@ Test runner make it easier to run test and view progress and test results. The f
 				(* Return a test suite containng all the suites in the tests scripts 
 			in aFolder *)
 				
-				set suite to ASUnit's makeTestSuite("All Tests in " & (aFolder as string))
+				set suite to ASUnit's makeTestSuite("All Tests in " & (aFolder as text))
 				
 				tell application "Finder"
 					set testFiles to files of aFolder Â
@@ -755,7 +755,7 @@ Test runner make it easier to run test and view progress and test results. The f
 			- how to load tests from text format (.applescript)?
 			*)
 				
-				set testScript to load script file (aFile as string)
+				set testScript to load script file (aFile as text)
 				try
 					set aSuite to testScript's suite
 					if testScript's suite is my ASUnitSentinel then MissingSuiteError(aFile)
@@ -767,7 +767,7 @@ Test runner make it easier to run test and view progress and test results. The f
 			end loadTestsFromFile
 			
 			on MissingSuiteError(aFile)
-				error (aFile as string) & " does not have a suite property"
+				error (aFile as text) & " does not have a suite property"
 			end MissingSuiteError
 			
 		end script
