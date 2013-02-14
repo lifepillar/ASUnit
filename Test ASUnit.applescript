@@ -573,8 +573,6 @@ script |concrete fixture|
 	
 end script
 
-
 -- Running the tests
-
-run makeTextTestRunner(suite)
+autorun(suite)
 return "ASUnit v" & my version

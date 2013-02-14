@@ -444,6 +444,7 @@ script ASUnit
 			
 			(*! @abstract TODO *)
 			on addObserver(anObject)
+				anObject's setNotifier(me)
 				set the end of observers to anObject
 			end addObserver
 			
@@ -571,172 +572,185 @@ script ASUnit
 		
 	end makeTestResult
 	
+	(*!
+	 @abstract Abstract class for observers.
+	 @discussion Concrete observers are supposed to inherit from this script.
+	*)
+	script Observer
+		
+		(*! @abstract TODO *)
+		on setNotifier(aNotifier)
+		end setNotifier
+		
+	end script -- Observer
 	
 	(*!
 	 @abstract Displays test results in a new AppleScript Editor document.
-	 @discussion A test runner makes it easier to run tests and view progress and test results.
-	 	A <tt>TextTestRunner</tt> displays progress and results in a new AppleScript Editor document window.
 	*)
-	on makeTextTestRunner(aSuite)
-		script TextTestRunner
+	script AppleScriptEditorLogger
+		property parent : Observer
+		
+		(*! @abstract Creates a new AppleScript Editor document. *)
+		on makeNewAppleScriptEditorDocument(theName)
+			tell application Â
+				"AppleScript Editor" to make new document with properties {name:theName}
+		end makeNewAppleScriptEditorDocument
+		
+		property _TestResult : missing value
+		property textView : missing value
+		property separator : "----------------------------------------------------------------------"
+		property successColor : {256 * 113, 256 * 140, 256 * 0} -- RGB (113,140,0)
+		property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
+		property defaultColor : {256 * 77, 256 * 77, 256 * 76} -- RGB (77,77,76)
+		
+		(*! @abstract TODO *)
+		on setNotifier(aTestResult)
+			set my _TestResult to aTestResult
+		end setNotifier
+		
+		(*! @abstract TODO *)
+		on update(anEvent)
+			set eventName to anEvent's name
+			if eventName is "start" then
+				set textView to my makeNewAppleScriptEditorDocument("TESTING")
+				printTitle()
+			else if eventName is "stop" then
+				printSummary()
+			else if eventName is "start test case" then
+				printTestCase(anEvent's test)
+			else if eventName is "success" then
+				printSuccess()
+			else if eventName is "skip" then
+				printSkip()
+			else if eventName is "fail" then
+				printFail()
+			else if eventName is "error" then
+				printError()
+			end if
+		end update
+		
+		(*! @abstract TODO *)
+		on printTitle()
+			printLine(((_TestResult's startDate) as text) & return)
+			printLine(_TestResult's name & return)
+		end printTitle
+		
+		on printSummary()
+			printDefects("ERRORS", _TestResult's errors)
+			printDefects("FAILURES", _TestResult's failures)
+			printCounts()
+			printResult()
+		end printSummary
+		
+		
+		(*! @abstract TODO *)
+		on printTestCase(aTestCase)
+			printString(aTestCase's fullName() & " ... ")
+		end printTestCase
+		
+		(*! @abstract TODO *)
+		on printSuccess()
+			printColoredLine("ok", successColor)
+		end printSuccess
+		
+		(*! @abstract TODO *)
+		on printSkip()
+			printColoredLine("skip", successColor)
+		end printSkip
+		
+		(*! @abstract TODO *)
+		on printFail()
+			printColoredLine("FAIL", defectColor)
+		end printFail
+		
+		(*! @abstract TODO *)
+		on printError()
+			printColoredLine("ERROR", defectColor)
+		end printError
+		
+		(*! @abstract TODO *)
+		on printDefects(title, defects)
+			if (count of defects) is 0 then return
 			
-			(*! @abstract Creates a new AppleScript Editor document. *)
-			on makeNewAppleScriptEditorDocument(theName)
-				tell application Â
-					"AppleScript Editor" to make new document with properties {name:theName}
-			end makeNewAppleScriptEditorDocument
-			
-			property suite : aSuite
-			property _TestResult : missing value
-			property textView : my makeNewAppleScriptEditorDocument(aSuite's name)
-			property separator : "----------------------------------------------------------------------"
-			property successColor : {256 * 113, 256 * 140, 256 * 0} -- RGB (113,140,0)
-			property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
-			property defaultColor : {256 * 77, 256 * 77, 256 * 76} -- RGB (77,77,76)
-			
-			(*! @abstract TODO *)
-			on setTestResult(aTestResult)
-				set _TestResult to aTestResult
-			end setTestResult
-			
-			(*! @abstract TODO *)
-			on run
-				-- Create TestResult and set me as its observer
-				if _TestResult is missing value then set _TestResult to ASUnit's makeTestResult(suite's name)
-				_TestResult's addObserver(me)
-				
-				-- Test the suite and print results.
-				_TestResult's runTest(suite)
-				printDefects("ERRORS", _TestResult's errors)
-				printDefects("FAILURES", _TestResult's failures)
-				printCounts()
-				printResult()
-			end run
-			
-			(*! @abstract TODO *)
-			on update(anEvent)
-				set eventName to anEvent's name
-				if eventName is "start" then
-					printTitle()
-				else if eventName is "start test case" then
-					printTestCase(anEvent's test)
-				else if eventName is "success" then
-					printSuccess()
-				else if eventName is "skip" then
-					printSkip()
-				else if eventName is "fail" then
-					printFail()
-				else if eventName is "error" then
-					printError()
-				end if
-			end update
-			
-			(*! @abstract TODO *)
-			on printTitle()
-				printLine(((_TestResult's startDate) as text) & return)
-				printLine(_TestResult's name & return)
-			end printTitle
-			
-			(*! @abstract TODO *)
-			on printTestCase(aTestCase)
-				printString(aTestCase's fullName() & " ... ")
-			end printTestCase
-			
-			(*! @abstract TODO *)
-			on printSuccess()
-				printColoredLine("ok", successColor)
-			end printSuccess
-			
-			(*! @abstract TODO *)
-			on printSkip()
-				printColoredLine("skip", successColor)
-			end printSkip
-			
-			(*! @abstract TODO *)
-			on printFail()
-				printColoredLine("FAIL", defectColor)
-			end printFail
-			
-			(*! @abstract TODO *)
-			on printError()
-				printColoredLine("ERROR", defectColor)
-			end printError
-			
-			(*! @abstract TODO *)
-			on printDefects(title, defects)
-				if (count of defects) is 0 then return
-				
-				printLine("")
-				printLine(title)
-				repeat with aResult in defects
-					printLine(separator)
-					printLine("test: " & aResult's test's fullName())
-					repeat with aLine in every paragraph of aResult's message
-						printLine("      " & aLine)
-					end repeat
-				end repeat
+			printLine("")
+			printLine(title)
+			repeat with aResult in defects
 				printLine(separator)
-			end printDefects
-			
-			(*! @abstract TODO *)
-			on printCounts()
-				printLine("")
-				tell _TestResult
-					set elapsed to runSeconds()
-					set timeMsg to (elapsed as text) & " second"
-					if elapsed is not 1 then set timeMsg to timeMsg & "s"
-					set counts to {runCount() & " tests, ", Â
-						passCount() & " passed, ", Â
-						failureCount() & " failures, ", Â
-						errorCount() & " errors, ", Â
-						skipCount() & " skips."}
-				end tell
-				printLine("Finished in " & timeMsg & "." & return)
-				printLine(counts as text)
-			end printCounts
-			
-			(*! @abstract TODO *)
-			on printResult()
-				printLine("")
-				if _TestResult's hasPassed() then
-					printColoredLine("OK", successColor)
-				else
-					printColoredLine("FAILED", defectColor)
-				end if
-			end printResult
-			
-			(*! @abstract TODO *)
-			on printLine(aString)
-				printString(aString & return)
-			end printLine
-			
-			(*! @abstract TODO *)
-			on printColoredLine(aString, aColor)
-				printColoredString(aString & return, aColor)
-			end printColoredLine
-			
-			(*! @abstract TODO *)
-			on printString(aString)
-				printColoredString(aString, defaultColor)
-			end printString
-			
-			(*! @abstract TODO *)
-			on printColoredString(aString, aColor)
-				tell textView
-					set selection to insertion point -1
-					set contents of selection to aString
-					if aColor is not missing value then Â
-						set color of contents of selection to aColor
-					set selection to insertion point -1
-				end tell
-			end printColoredString
-			
-		end script -- TextTestRunner
+				printLine("test: " & aResult's test's fullName())
+				repeat with aLine in every paragraph of aResult's message
+					printLine("      " & aLine)
+				end repeat
+			end repeat
+			printLine(separator)
+		end printDefects
 		
-		return TextTestRunner
+		(*! @abstract TODO *)
+		on printCounts()
+			printLine("")
+			tell _TestResult
+				set elapsed to runSeconds()
+				set timeMsg to (elapsed as text) & " second"
+				if elapsed is not 1 then set timeMsg to timeMsg & "s"
+				set counts to {runCount() & " tests, ", Â
+					passCount() & " passed, ", Â
+					failureCount() & " failures, ", Â
+					errorCount() & " errors, ", Â
+					skipCount() & " skips."}
+			end tell
+			printLine("Finished in " & timeMsg & "." & return)
+			printLine(counts as text)
+		end printCounts
 		
-	end makeTextTestRunner
+		(*! @abstract TODO *)
+		on printResult()
+			printLine("")
+			if _TestResult's hasPassed() then
+				printColoredLine("OK", successColor)
+			else
+				printColoredLine("FAILED", defectColor)
+			end if
+		end printResult
+		
+		(*! @abstract TODO *)
+		on printLine(aString)
+			printString(aString & return)
+		end printLine
+		
+		(*! @abstract TODO *)
+		on printColoredLine(aString, aColor)
+			printColoredString(aString & return, aColor)
+		end printColoredLine
+		
+		(*! @abstract TODO *)
+		on printString(aString)
+			printColoredString(aString, defaultColor)
+		end printString
+		
+		(*! @abstract TODO *)
+		on printColoredString(aString, aColor)
+			tell textView
+				set selection to insertion point -1
+				set contents of selection to aString
+				if aColor is not missing value then Â
+					set color of contents of selection to aColor
+				set selection to insertion point -1
+			end tell
+		end printColoredString
+		
+	end script -- AppleScriptEditorLogger		
 	
+	
+	on autorun(aTestSuite)
+		set TR to makeTestResult(aTestSuite's name)
+		if current application's name is "AppleScript Editor" then
+			TR's addObserver(AppleScriptEditorLogger)
+		else
+			log "NOT IMPLEMENTED"
+			--TR's addObserver(ConsoleLogger)
+			return
+		end if
+		TR's runTest(aTestSuite)
+	end autorun
 	
 	(*! @abstract Loads tests from files and folders, and returns a suite with all tests. *)
 	on makeTestLoader()
@@ -906,7 +920,7 @@ script ASUnit
 		
 		(*! @abstract TODO *)
 		on autorun(aTestSet)
-			run ASUnit's makeTextTestRunner(makeTestSet(aTestSet, aTestSet's name))
+			ASUnit's autorun(makeTestSet(aTestSet, aTestSet's name))
 		end autorun
 		
 	end script -- ASMiniTest
