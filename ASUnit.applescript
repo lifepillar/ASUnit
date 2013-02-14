@@ -486,14 +486,14 @@ script TestLogger
 	end printString
 	
 	(*! @abstract TODO *)
-	on printLine(aString)
-		printString(aString & return)
-	end printLine
-	
-	(*! @abstract TODO *)
 	on printColoredLine(aString, aColor)
 		printColoredString(aString & return, aColor)
 	end printColoredLine
+	
+	(*! @abstract TODO *)
+	on printLine(aString)
+		printColoredLine(aString, defaultColor)
+	end printLine
 	
 end script -- TestLogger		
 
@@ -527,11 +527,17 @@ end script -- AppleScriptEditorLogger
 *)
 script ConsoleLogger
 	property parent : TestLogger
+	property _buffer : ""
 	
-	(*! @abstract TODO *)
 	on printColoredString(aString, aColor)
-		log aString
+		set _buffer to _buffer & aString
 	end printColoredString
+	
+	on printColoredLine(aString, aColor)
+		printColoredString(aString & return, aColor)
+		log _buffer
+		set _buffer to ""
+	end printColoredLine
 	
 end script -- ConsoleLogger		
 
