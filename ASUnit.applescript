@@ -165,8 +165,8 @@ script ASUnit
 					try -- to coerce classes to text (this may not succeed)
 						set wanted to (expected's class) as text
 						set got to (value's class) as text
-						set msg to "Expected a value of class " & wanted & Â
-							" but got a value of class " & got
+						set msg to "Expected class: " & wanted & return & Â
+							"Actual class: " & got
 					on error -- produce a more generic message
 						set msg to "The value does not belong to the expected class."
 					end try
@@ -177,7 +177,7 @@ script ASUnit
 						try -- to coerce the values to text (this may not succeed)
 							set wanted to (expected as text)
 							set got to (value as text)
-							set msg to "Expected " & wanted & " but got " & got
+							set msg to "Expected: " & wanted & return & "Actual: " & got
 						on error errMsg -- produce a more generic message
 							set msg to "Got an unexpected value"
 						end try
@@ -655,7 +655,9 @@ Test runner make it easier to run test and view progress and test results. The f
 				repeat with aResult in defects
 					printLine(separator)
 					printLine("test: " & aResult's test's fullName())
-					printLine("      " & aResult's message)
+					repeat with aLine in every paragraph of aResult's message
+						printLine("      " & aLine)
+					end repeat
 				end repeat
 				printLine(separator)
 			end printDefects
