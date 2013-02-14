@@ -665,13 +665,17 @@ Test runner make it easier to run test and view progress and test results. The f
 			on printCounts()
 				printLine("")
 				tell _TestResult
-					set counts to {"Ran " & runCount() & " tests in " & runSeconds() & " seconds.", Â
-						"  passed: " & passCount(), Â
-						"  skips: " & skipCount(), Â
-						"  errors: " & errorCount(), Â
-						"  failures: " & failureCount()}
+					set elapsed to runSeconds()
+					set timeMsg to (elapsed as text) & " second"
+					if elapsed is not 1 then set timeMsg to timeMsg & "s"
+					set counts to {runCount() & " tests, ", Â
+						passCount() & " passed, ", Â
+						failureCount() & " failures, ", Â
+						errorCount() & " errors, ", Â
+						skipCount() & " skips."}
 				end tell
-				printLine(counts as string)
+				printLine("Finished in " & timeMsg & "." & return)
+				printLine(counts as text)
 			end printCounts
 			
 			on printResult()
