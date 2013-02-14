@@ -534,7 +534,7 @@ script ConsoleLogger
 	end printColoredString
 	
 	on printColoredLine(aString, aColor)
-		printColoredString(aString & return, aColor)
+		printColoredString(aString, aColor)
 		log _buffer
 		set _buffer to ""
 	end printColoredLine
