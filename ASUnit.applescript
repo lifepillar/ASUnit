@@ -359,12 +359,11 @@ on makeAssertions(theParent)
 end makeAssertions
 
 (*!
- @abstract Displays test results in a new AppleScript Editor document.
+ @abstract Base class for loggers.
 *)
-script AppleScriptEditorLogger
+script Logger
 	property parent : Observer
 	property _TestResult : missing value
-	property textView : missing value
 	property separator : "----------------------------------------------------------------------"
 	property successColor : {256 * 113, 256 * 140, 256 * 0} -- RGB (113,140,0)
 	property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
@@ -379,7 +378,6 @@ script AppleScriptEditorLogger
 	on update(anEvent)
 		set eventName to anEvent's name
 		if eventName is "start" then
-			set textView to my makeNewAppleScriptEditorDocument("TESTING")
 			printTitle()
 		else if eventName is "stop" then
 			printSummary()
@@ -438,7 +436,6 @@ script AppleScriptEditorLogger
 	(*! @abstract TODO *)
 	on printDefects(title, defects)
 		if (count of defects) is 0 then return
-		
 		printLine("")
 		printLine(title)
 		repeat with aResult in defects
@@ -478,6 +475,18 @@ script AppleScriptEditorLogger
 		end if
 	end printResult
 	
+	(*!
+	 @abstract Prints the given text with the given style.
+	 @discussion This handler must be implemented by subclasses.
+	*)
+	on printColoredString(aString, aColor)
+	end printColoredString
+	
+	(*! @abstract TODO *)
+	on printString(aString)
+		printColoredString(aString, defaultColor)
+	end printString
+	
 	(*! @abstract TODO *)
 	on printLine(aString)
 		printString(aString & return)
@@ -488,10 +497,19 @@ script AppleScriptEditorLogger
 		printColoredString(aString & return, aColor)
 	end printColoredLine
 	
-	(*! @abstract TODO *)
-	on printString(aString)
-		printColoredString(aString, defaultColor)
-	end printString
+end script -- Logger		
+
+(*!
+ @abstract Displays test results in a new AppleScript Editor document.
+*)
+script AppleScriptEditorLogger
+	property parent : Logger
+	property textView : missing value
+	
+	on printTitle()
+		set textView to makeNewAppleScriptEditorDocument("Unit Testing")
+		continue printTitle()
+	end printTitle
 	
 	(*! @abstract TODO *)
 	on printColoredString(aString, aColor)
@@ -505,6 +523,19 @@ script AppleScriptEditorLogger
 	end printColoredString
 	
 end script -- AppleScriptEditorLogger		
+
+(*!
+ @abstract Displays test results in the console.
+*)
+script ConsoleLogger
+	property parent : Logger
+	
+	(*! @abstract TODO *)
+	on printColoredString(aString, aColor)
+		log aString
+	end printColoredString
+	
+end script -- ConsoleLogger		
 
 (*! @abstract The ASUnit framework. *)
 script ASUnit
@@ -915,9 +946,7 @@ on autorun(aTestSuite)
 	if current application's name is "AppleScript Editor" then
 		TR's addObserver(AppleScriptEditorLogger)
 	else
-		log "NOT IMPLEMENTED"
-		--TR's addObserver(ConsoleLogger)
-		return
+		TR's addObserver(ConsoleLogger)
 	end if
 	TR's runTest(aTestSuite)
 end autorun
