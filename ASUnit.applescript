@@ -942,6 +942,10 @@ script MiniTest
 		continue autorun(makeTestSet(aTestSet, aTestSet's name))
 	end autorun
 	
+	on runWithLoggers(aTestSet, loggers)
+		continue runWithLoggers(makeTestSet(aTestSet, aTestSet's name), loggers)
+	end runWithLoggers
+	
 end script -- ASMiniTest
 
 (*! @abstract TODO *)
@@ -954,6 +958,15 @@ on autorun(aTestSuite)
 	end if
 	TR's runTest(aTestSuite)
 end autorun
+
+(*! @abstract TODO *)
+on runWithLoggers(aTestSuite, loggers)
+	set TR to makeTestResult(aTestSuite's name)
+	repeat with aLogger in loggers
+		TR's addObserver(aLogger)
+	end repeat
+	TR's runTest(aTestSuite)
+end runWithLoggers
 
 on run
 	-- Enable loading the library from text format with run script
