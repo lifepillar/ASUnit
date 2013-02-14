@@ -358,10 +358,8 @@ on makeAssertions(theParent)
 	end script
 end makeAssertions
 
-(*!
- @abstract Base class for loggers.
-*)
-script Logger
+(*! @abstract Base class for loggers. *)
+script TestLogger
 	property parent : Observer
 	property _TestResult : missing value
 	property separator : "----------------------------------------------------------------------"
@@ -497,13 +495,13 @@ script Logger
 		printColoredString(aString & return, aColor)
 	end printColoredLine
 	
-end script -- Logger		
+end script -- TestLogger		
 
 (*!
  @abstract Displays test results in a new AppleScript Editor document.
 *)
 script AppleScriptEditorLogger
-	property parent : Logger
+	property parent : TestLogger
 	property textView : missing value
 	
 	on printTitle()
@@ -528,7 +526,7 @@ end script -- AppleScriptEditorLogger
  @abstract Displays test results in the console.
 *)
 script ConsoleLogger
-	property parent : Logger
+	property parent : TestLogger
 	
 	(*! @abstract TODO *)
 	on printColoredString(aString, aColor)
