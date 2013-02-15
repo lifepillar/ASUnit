@@ -949,9 +949,9 @@ script MiniTest
 		local prefix
 		set prefix to "Test"
 		tell application "Finder"
-			set testFiles to files of aFolder ¬
-				where name starts with prefix ¬
-				and (name ends with ".scpt" or name ends with ".applescript") ¬
+			set testFiles to files of aFolder Â
+				where name starts with prefix Â
+				and (name ends with ".scpt" or name ends with ".applescript") Â
 				and name does not start with "Test Loader"
 		end tell
 		repeat with aFile in testFiles
