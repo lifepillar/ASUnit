@@ -944,6 +944,34 @@ script MiniTest
 		
 	end makeTestSet
 	
+	(*! @abstract Runs all the test files in the specified folder. *)
+	on runTestsFromFolder(aFolder)
+		local prefix
+		set prefix to "Test"
+		tell application "Finder"
+			set testFiles to files of aFolder ¬
+				where name starts with prefix ¬
+				and (name ends with ".scpt" or name ends with ".applescript") ¬
+				and name does not start with "Test Loader"
+		end tell
+		repeat with aFile in testFiles
+			if aFile's name ends with ".applescript" then
+				try
+					run script (aFile as alias)
+				on error
+					log "Could not execute test script: " & aFile's name
+				end try
+			else
+				try
+					set miniTestScript to load script (aFile as alias)
+					run miniTestScript
+				on error
+					log "Could not load or execute test script: " & aFile's name
+				end try
+			end if
+		end repeat
+	end runTestsFromFolder
+	
 	(*! @abstract TODO *)
 	on autorun(aTestSet)
 		continue autorun(makeTestSet(aTestSet, aTestSet's name))
