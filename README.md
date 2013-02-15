@@ -67,8 +67,8 @@ and runs the tests:
 
 #### Example
 
-The following is complete self-contained example that tests a hypothetical
-script to manipulate hexadecimal strings:
+The following is a complete self-contained example that tests hypothetical
+script objects for manipulating hexadecimal strings:
 
     on makeHexString(aString)
       script
@@ -79,7 +79,7 @@ script to manipulate hexadecimal strings:
         end toUTF8
       
         on toDec() -- Converts this hexadecimal string to an integer value
-          run script "«data long" & reversebytes() & "» as text"
+          (run script "«data long" & reversebytes() & "» as text") as integer
         end toDec
       
         on reversebytes()
@@ -103,7 +103,7 @@ script to manipulate hexadecimal strings:
         property x : missing value -- To store a hex string
       
         on tearDown()
-          set x to missing value -- make sure x is initialized in each test
+          set x to missing value -- Make sure x does not retain a value from a previous test
         end tearDown
       
         UnitTest(TestAscii, "Hex string should be 'abcde'")
@@ -125,31 +125,30 @@ script to manipulate hexadecimal strings:
         property x : missing value -- To store a hex string
       
         on tearDown()
-          set x to missing value -- make sure x is initialized in each test
+          set x to missing value
         end tearDown
       
         UnitTest(TestClass, "Class of toDec()'s result")
         script TestClass
           set x to makeHexString("0")
-          assert(x's toDec()'s class is text, "class should be text")
+          assert(x's toDec()'s class is integer, "class should be integer")
         end script
       
         UnitTest(TestZero, "Convert zero")
         script TestZero
-          set x to makeHexString("0")
-          assertEqual("0", x's toDec())
+          set x to makeHexString("0000")
+          assertEqual(0, x's toDec())
         end script
       
         UnitTest(TestOneThousand, "Convert one thousand")
         script TestOneThousand
           set x to makeHexString("03E8")
-          assertEqual("1000", x's toDec())
+          assertEqual(1000, x's toDec())
         end script
       
       end script -- TestToDec
     
     end script -- HexStringTestSuite
-
     
 If you run the script above (this can be done in AppleScript Editor or
 from the command line with `osascript`), the output will be something similar to:
@@ -177,6 +176,7 @@ from the command line with `osascript`), the output will be something similar to
   
     FAILED
 
+Fixing the script and make all the tests pass is left as an exercise to the reader :)
 
 #### Running all tests inside a folder
 
@@ -228,7 +228,7 @@ Similarly, each unit test inside each test case inherits from `TestCase` by sett
 its parent property to the result of `registerTestCase(me)`. Note that all such handler
 invocations happen when the script is compiled. Note also that the names of the scripts
 are used as test descriptions for the output. For this reason, you may want to use
-short sentences as script names, as is done above.
+short sentences (enclosed between vertical bars) as script names, as done above.
 
 For a detailed description of the architecture of the original ASUnit framework,
 read the file `Manual.md`.
@@ -252,5 +252,5 @@ and it will execute all of their tests, producing a single global summary at the
 
 GNU GPL, see COPYING for details.
 
-Copyright © 2006 Nir Soffer
+Copyright © 2013 Lifepillar, 2006 Nir Soffer
 
