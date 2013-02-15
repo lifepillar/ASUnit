@@ -49,13 +49,6 @@ script Visitor
 	
 end script -- Visitor
 
-(*! @abstract Creates a new AppleScript Editor document. *)
-on makeNewAppleScriptEditorDocument(theName)
-	tell application "AppleScript Editor"
-		make new document with properties {name:theName}
-	end tell
-end makeNewAppleScriptEditorDocument
-
 (*! @abstract TODO *)
 on makeTestResult(aName)
 	
@@ -508,7 +501,17 @@ script AppleScriptEditorLogger
 	property textView : missing value
 	
 	on printTitle()
-		set textView to makeNewAppleScriptEditorDocument("Unit Testing")
+		try -- to reuse an existing window
+			tell application "AppleScript Editor"
+				set textView to get document "Unit Testing"
+				--set textView's text to ""
+				set textView's window's index to 1 -- bring to front
+			end tell
+		on error -- create a new document
+			tell application "AppleScript Editor"
+				set textView to make new document with properties {name:"Unit Testing"}
+			end tell
+		end try
 		continue printTitle()
 	end printTitle
 	
