@@ -394,8 +394,10 @@ script TestLogger
 	
 	(*! @abstract TODO *)
 	on printTitle()
-		printLine(((_TestResult's startDate) as text) & return)
-		printLine(_TestResult's name & return)
+		printLine(((_TestResult's startDate) as text))
+		printLine("")
+		printLine(_TestResult's name)
+		printLine("")
 	end printTitle
 	
 	(*! @abstract TODO *)
@@ -459,7 +461,8 @@ script TestLogger
 				errorCount() & " errors, ", Â
 				skipCount() & " skips."}
 		end tell
-		printLine("Finished in " & timeMsg & "." & return)
+		printLine("Finished in " & timeMsg & ".")
+		printLine("")
 		printLine(counts as text)
 	end printCounts
 	
