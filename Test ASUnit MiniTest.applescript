@@ -1,8 +1,10 @@
+property loggers : missing value
+
 set MiniTest to MiniTest of (run script file Â
 	((folder of file (path to me) of application "Finder" as text) & "ASUnit.applescript"))
---MiniTest's autorun(MiniTestSuite) -- Run with default logger
-MiniTest's runWithLoggers(MiniTestSuite, {MiniTest's AppleScriptEditorLogger, MiniTest's ConsoleLogger})
-return "ASUnit MiniTest v" & MiniTest's version
+log "ASUnit MiniTest v" & MiniTest's version
+set loggers to {MiniTest's AppleScriptEditorLogger, MiniTest's ConsoleLogger}
+MiniTest's autorun(MiniTestSuite)
 
 script MiniTestSuite
 	

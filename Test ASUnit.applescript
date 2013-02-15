@@ -573,6 +573,6 @@ script |concrete fixture|
 	
 end script
 
--- Running the tests
+log "ASUnit v" & my version
+set suite's loggers to {AppleScriptEditorLogger, ConsoleLogger}
 autorun(suite)
-return "ASUnit v" & my version

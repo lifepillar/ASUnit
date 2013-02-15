@@ -744,6 +744,7 @@ script ASUnit
 			property parent : TestComponent
 			property name : aName
 			property tests : {}
+			property loggers : missing value
 			
 			(*! @abstract TODO. *)
 			on accept(aVisitor)
@@ -948,31 +949,31 @@ script MiniTest
 		continue autorun(makeTestSet(aTestSet, aTestSet's name))
 	end autorun
 	
-	on runWithLoggers(aTestSet, loggers)
-		continue runWithLoggers(makeTestSet(aTestSet, aTestSet's name), loggers)
-	end runWithLoggers
-	
 end script -- ASMiniTest
 
 (*! @abstract TODO *)
 on autorun(aTestSuite)
-	set TR to makeTestResult(aTestSuite's name)
-	if current application's name is "AppleScript Editor" then
-		TR's addObserver(AppleScriptEditorLogger)
-	else
-		TR's addObserver(ConsoleLogger)
-	end if
-	TR's runTest(aTestSuite)
-end autorun
-
-(*! @abstract TODO *)
-on runWithLoggers(aTestSuite, loggers)
-	set TR to makeTestResult(aTestSuite's name)
+	local loggers
+	set theTestRunner to makeTestResult(aTestSuite's name)
+	-- If the script defines a 'loggers' property, set the loggers based on that.
+	-- Otherwise, choose a default logger.
+	try
+		set loggers to aTestSuite's loggers
+		if loggers is missing value then error
+		if loggers's class is not list then set loggers to {loggers}
+	on error
+		if current application's name is "AppleScript Editor" then
+			set loggers to {AppleScriptEditorLogger}
+		else
+			set loggers to {ConsoleLogger}
+		end if
+	end try
 	repeat with aLogger in loggers
-		TR's addObserver(aLogger)
+		tell theTestRunner to addObserver(aLogger)
 	end repeat
-	TR's runTest(aTestSuite)
-end runWithLoggers
+	tell theTestRunner to runTest(aTestSuite)
+	return
+end autorun
 
 on run
 	-- Enable loading the library from text format with run script
