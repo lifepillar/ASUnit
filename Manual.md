@@ -1,4 +1,10 @@
-# ASUnit, an AppleScript testing framework
+# ASUnit, an AppleScript testing framework #
+
+- - -
+**As of version 0.5, this document is partially obsolete.**
+**Please refer to the README.**
+
+- - -
 
 ASUnit is testing framework for AppleScript, influenced by SUnit, [ASTest][ASTest]
 and Python [unittest][unittest] module.
@@ -39,15 +45,14 @@ was installed in the global Library folder (local domain):
 
 Here is a simple pattern system for writing tests. The patterns are:
 
-|            |                                      |
- :---------- | :----------------------------------- |
- Fixture     | create a common test fixture         |
- Test Case   | create the stimulus for a test case  |
- Check       | check the response for a test case   |
- Test Suite  | aggregate Test Cases                 |
- Test Runner | run a test suite and display results |
- Test Loader | aggregate test scripts               |
- 
+<table>
+	<tr><td>Fixture</td><td>create a common test fixture</td></tr>
+	<tr><td>Test Case</td><td>create the stimulus for a test case</td></tr>
+	<tr><td>Check</td><td>check the response for a test case</td></tr>
+	<tr><td>Test Suite</td><td>aggregate Test Cases</td></tr>
+	<tr><td>Test Runner</td><td>run a test suite and display results</td></tr>
+	<tr><td>Test Loader</td><td>aggregate test scripts</td></tr>
+</table>
 
 ### Fixture
 

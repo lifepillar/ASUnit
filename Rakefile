@@ -32,8 +32,11 @@ end
 
 desc 'Build an HTML version of the manual.'
 task :manual do
-  unless `which multimarkdown 2>/dev/null`.chomp.empty?
-    sh 'multimarkdown -o Manual.html Manual.mmd'
+  if `which markdown 2>/dev/null`.chomp.empty?
+    puts 'markdown command not found.'
+  else
+    sh 'markdown Manual.md >Manual.html'
+    sh 'open Manual.html'
   end 
 end
 
