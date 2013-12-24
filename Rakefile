@@ -2,7 +2,7 @@
 require 'rubygems' if RUBY_VERSION < '1.9'
 require 'rake/clean'
 
-ASUNIT_VERSION = File.open('ASUnit.applescript').read.match(/property +version *: *"(.+)"/)[1]
+ASUNIT_VERSION = File.open('ASUnit.applescript', 'r:macRoman').read.match(/property +version *: *"(.+)"/)[1]
 DIST_DIR = 'ASUnit-' + ASUNIT_VERSION
 DOC_DIR = 'Documentation'
 SRC = FileList['*.applescript']
