@@ -19,6 +19,11 @@ end
 
 task :default => [:build]
 
+desc 'Print ASUnit\'s version.'
+task :version do
+  puts ASUNIT_VERSION
+end
+
 desc 'Build ASUnit.'
 task :build => OBJ do; end
 
