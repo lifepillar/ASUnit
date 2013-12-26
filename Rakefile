@@ -33,6 +33,13 @@ task :doc do
   sh "open #{DOC_DIR}/ASUnit_applescript/index.html"
 end
 
+desc 'Install ASUnit in ~/Library/Script Libraries.'
+task :install => [:build] do
+  libdir = File.join(ENV['HOME'], 'Library', 'Script Libaries')
+  mkdir_p libdir unless File.exist?(libdir)
+  cp 'ASUnit.scpt', libdir
+end
+
 desc 'Build an HTML version of the old manual.'
 task :manual do
   if `which markdown 2>/dev/null`.chomp.empty?
