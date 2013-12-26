@@ -3,5 +3,5 @@
 *.scpt
 ASUnit-*/
 Documentation/
-Manual.html
+OldManual.html
 *.tar.gz

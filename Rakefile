@@ -9,7 +9,7 @@ SRC = FileList['*.applescript']
 OBJ = SRC.ext('scpt')
 
 CLEAN.include('*.scpt', '*.scptd')
-CLOBBER.include(DOC_DIR, 'ASUnit-*', '*.tar.gz', 'Manual.html')
+CLOBBER.include(DOC_DIR, 'ASUnit-*', '*.tar.gz', 'OldManual.html')
 
 task :default => :build
 
@@ -35,13 +35,13 @@ task :doc do
   sh "open #{DOC_DIR}/ASUnit_applescript/index.html"
 end
 
-desc 'Build an HTML version of the manual.'
+desc 'Build an HTML version of the old manual.'
 task :manual do
   if `which markdown 2>/dev/null`.chomp.empty?
     puts 'markdown command not found.'
   else
-    sh 'markdown Manual.md >Manual.html'
-    sh 'open Manual.html'
+    sh 'markdown OldManual.md >OldManual.html'
+    sh 'open OldManual.html'
   end 
 end
 
