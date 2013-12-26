@@ -17,8 +17,6 @@ rule '.scpt' => '.applescript' do |t|
   sh "osacompile -d -x -o '#{t.name}' '#{t.source}'"
 end
 
-task :default => [:build]
-
 desc 'Print ASUnit\'s version.'
 task :version do
   puts ASUNIT_VERSION
