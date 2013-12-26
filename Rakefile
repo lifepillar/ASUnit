@@ -67,4 +67,5 @@ end
 desc 'Run tests.'
 task :test do
   sh "osascript 'Test ASUnit.applescript'"
+  sh "osascript 'Test ASUnit MiniTest.applescript'"
 end
