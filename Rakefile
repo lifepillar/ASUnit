@@ -47,8 +47,8 @@ desc 'Prepare a directory for distribution.'
 task :dist => [:clobber, :build, :manual] do
   mkdir DIST_DIR
   cp ['ASUnit.scpt', 'COPYING'], DIST_DIR
-  if File.exist?('Manual.html')
-    cp 'Manual.html', DIST_DIR
+  if File.exist?('OldManual.html')
+    cp 'OldManual.html', DIST_DIR
   end
 end
 
