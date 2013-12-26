@@ -499,17 +499,24 @@ end script -- TestLogger
 script AppleScriptEditorLogger
 	property parent : TestLogger
 	property textView : missing value
+	property windowTitle : "Test Results"
+	property loggerPath : ((path to temporary items from user domain) as text) & windowTitle
 	
 	on printTitle()
 		try -- to reuse an existing window
 			tell application "AppleScript Editor"
-				set textView to get document "Unit Testing"
-				--set textView's text to ""
+				set textView to get document windowTitle
+				set textView's text to ""
 				set textView's window's index to 1 -- bring to front
 			end tell
 		on error -- create a new document
+			-- Create a file so later we can use an alias
+			open for access file loggerPath
+			close access file loggerPath
 			tell application "AppleScript Editor"
-				set textView to make new document with properties {name:"Unit Testing"}
+				set textView to make new document Â
+					with properties {name:windowTitle, path:(POSIX path of loggerPath)}
+				save textView as "text" in (loggerPath as alias)
 			end tell
 		end try
 		continue printTitle()
@@ -519,7 +526,7 @@ script AppleScriptEditorLogger
 	on printColoredString(aString, aColor)
 		tell textView
 			set selection to insertion point -1
-			set contents of selection to aString
+			set contents of selection to "-- " & aString
 			if aColor is not missing value then Â
 				set color of contents of selection to aColor
 			set selection to insertion point -1
