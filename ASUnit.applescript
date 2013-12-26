@@ -14,6 +14,7 @@ property version : "0.5.0"
 property TEST_FAILED : 1000
 (*! @abstract Error number signalling a skipped test. *)
 property TEST_SKIPPED : 1001
+property TOP_LEVEL : me
 
 (*!
  @abstract Base class for observers.
@@ -561,6 +562,7 @@ script ASUnit
 	 	test cases in a fixture.
 	*)
 	property _currentFixture : missing value
+	property version : TOP_LEVEL's version
 	
 	(*!
 	 @abstract Sentinel object used to mark missing values.
@@ -853,7 +855,8 @@ end script -- ASUnit
 		and “inject” it at runtime into a <tt>UnitTest</tt> script, which inherits from it.
 	*)
 script MiniTest
-	
+	property version : TOP_LEVEL's version
+
 	(*! @abstract TODO *)
 	on makeUnitTest(aScript, aDescription)
 		script UnitTest
