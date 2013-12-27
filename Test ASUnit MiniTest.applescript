@@ -21,7 +21,7 @@ script MiniTestSuite
 			notOk(false)
 		end script
 		
-		TestSet(TCAssert, "Test assert() et al.")
+		TestSet(TCAssert, "assert() et al.")
 		script TCAssert
 			
 			UnitTest(AssertTrue, "assert() succeeds with true argument")
@@ -68,15 +68,34 @@ script MiniTestSuite
 			
 		end script -- TCAssert
 		
-		TestSet(TCAssertEqual, "Test assertEqual()")
+		TestSet(TCAssertEqual, "assertEqual()")
 		script TCAssertEqual
 			
-			UnitTest(compareInts, "Compare two integers")
-			script compareInts
+			UnitTest(compareEqual, "Compare equal objects")
+			script compareEqual
 				assertEqual(2, 1 + 1)
+				assertEqual("ab", "a" & "b")
+				shouldEqual({} as text, "")
+				shouldEqual(compareEqual, compareEqual)
 			end script
 			
 		end script -- TCAssertEqual
+		
+		TestSet(TCAssertNotEqual, "assertNotEqual()")
+		script TCAssertNotEqual
+			
+			UnitTest(cmpDifferent, "Compare different objects.")
+			script cmpDifferent
+				script EmptyScript
+				end script
+				assertNotEqual(1, "a")
+				assertNotEqual(cmpDifferent, EmptyScript)
+				assertNotEqual(cmpDifferent, {})
+				shouldNotEqual({1}, {2})
+				shouldNotEqual(1 + 1, 3)
+			end script
+			
+		end script -- TCAssertNotEqual
 		
 	end script -- InnerTestSuite
 end script -- MiniTestSuite
