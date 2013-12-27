@@ -1064,6 +1064,7 @@ script MiniTest
 				and name does not start with "Test Loader"
 		end tell
 		repeat with aFile in testFiles
+			log "Loading " & aFile's name
 			if aFile's name ends with ".applescript" then
 				try
 					run script (aFile as alias)
