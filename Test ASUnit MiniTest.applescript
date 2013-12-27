@@ -98,4 +98,32 @@ script MiniTestSuite
 		end script -- TCAssertNotEqual
 		
 	end script -- InnerTestSuite
+	
+	TestSet(TRef, "assertReference().")
+	script TRef
+		
+		UnitTest(TRef1, "Test Finder reference.")
+		script TRef1
+			assertReference(path to me)
+			tell application "Finder" to set x to folder of file (path to me)
+			assertReference(x)
+		end script
+		
+		UnitTest(TRef2, "Test 'a reference to' operator.")
+		script TRef2
+			property x : 3
+			set y to a reference to x
+			assertReference(y)
+		end script
+		
+		UnitTest(TRef3, "Test assertNotReference().")
+		script TRef3
+			property x : 1
+			assertNotReference(x)
+			assertNotReference({})
+			set y to a reference to x
+			assertNotReference(contents of y)
+		end script
+	end script -- TRef
+	
 end script -- MiniTestSuite

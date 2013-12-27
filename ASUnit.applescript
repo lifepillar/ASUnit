@@ -377,6 +377,35 @@ on makeAssertions(theParent)
 			assertNotEqual(unexpected, value)
 		end shouldNotEqual
 		
+		(*! @abstract Tests whether a variable is a reference. *)
+		on assertReference(anObject)
+			try
+				anObject as reference -- Try to coerce to reference class
+			on error
+				fail("The given object is not a reference.")
+			end try
+		end assertReference
+		
+		(*! @abstract A synonym for <tt>assertReference()</tt>. *)
+		on shouldBeReference(anObject)
+			assertReference(anObject)
+		end shouldBeReference
+		
+		(*! @abstract Fails when a variable is a reference. *)
+		on assertNotReference(anObject)
+			try
+				anObject as reference -- Try to coerce to reference class
+			on error
+				return
+			end try
+			fail("The given object is a reference.")
+		end assertNotReference
+		
+		(*! @abstract A synonym for <tt>assertReference()</tt>. *)
+		on shouldNotBeReference(anObject)
+			assertNotReference(anObject)
+		end shouldNotBeReference
+		
 	end script
 end makeAssertions
 
