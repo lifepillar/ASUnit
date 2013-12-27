@@ -312,7 +312,7 @@ on makeAssertions(theParent)
 		end shouldntRaise
 		
 		(*!
-		 @abstract Succeeds when two given expressions have the same value.
+		 @abstract Succeeds when the two given expressions have the same value.
 		 @param expected <em>[anything]</em> The expected value.
 		 @param value <em>[anything]</em> Some other value.
 		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
