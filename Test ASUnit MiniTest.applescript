@@ -126,4 +126,36 @@ script MiniTestSuite
 		end script
 	end script -- TRef
 	
+	TestSet(TEx, "shouldRaise() and shouldntRaise()")
+	script TEx
+		
+		UnitTest(TEx1, "Catch more than one exception.")
+		script TEx1
+			script Raiser
+				error number 9876
+			end script
+			
+			shouldRaise({1, 2, 3, 1000, 9876, 10000}, Raiser, Â
+				"The script should have raised exception 9876.")
+			
+			shouldRaise({}, Raiser, Â
+				"The script should have raised exception 9876")
+			
+			shouldntRaise({1, 2, 3, 1000, 10000}, Raiser, Â
+				"The script has raised a forbidden exception.")
+			
+		end script
+		
+		UnitTest(TEx2, "Catch any exception.")
+		script TEx2
+			script Quiet
+				-- Needs not be empty, because AS 2.3 on OS X 10.9.1
+				-- gives a stack overflow when running an empty script.
+				set x to 1
+			end script
+			shouldntRaise({1, 2, 9876}, Quiet, "Should not have raised any exception.")
+			shouldntRaise({}, Quiet, "Should not have raised any exception.")
+		end script
+		
+	end script
 end script -- MiniTestSuite

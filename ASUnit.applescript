@@ -288,12 +288,22 @@ on makeAssertions(theParent)
 		 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised
 		 	by running <tt>aScript</tt>.
 		 @discussion Fails if an unexpected error was raised or no error was raised.
+		 @param expectedErrorNumber <em>[integer]</em> or <em>[list]</em>
+		 An exception number or a list of exception numbers. To make this assertion
+		 succeeds no matter what exception is raised, pass an empty list.
+		 @param aScript <em>[script]</em> A script.
+		 @param message <em>[text]</em> A message.
 		*)
 		on shouldRaise(expectedErrorNumber, aScript, message)
+			if expectedErrorNumber's class is integer then
+				set expectedErrorNumber to {expectedErrorNumber}
+			end if
 			try
 				run aScript
-			on error why number errorNumber
-				if errorNumber is not expectedErrorNumber then fail(message & ": " & why)
+			on error errMsg number errNum
+				if (length of expectedErrorNumber > 0) and (expectedErrorNumber does not contain errNum) then
+					fail(message & linefeed & errMsg & linefeed & "Exception raised: " & errNum)
+				end if
 				return
 			end try
 			fail(message)
@@ -302,12 +312,23 @@ on makeAssertions(theParent)
 		(*!
 		 @abstract Fails if <tt>expectedErrorNumber</tt> is raised
 		 	by running <tt>aScript</tt>.
+		 @discussion Fails if a certain error is raised.
+		 @param expectedErrorNumber <em>[integer]</em> or <em>[list]</em>
+		 An exception number or a list of exception numbers. To make this assertion
+		 succeeds only when no exception is raised, pass an empty list.
+		 @param aScript <em>[script]</em> A script.
+		 @param message <em>[text]</em> A message.
 		*)
 		on shouldntRaise(expectedErrorNumber, aScript, message)
+			if expectedErrorNumber's class is integer then
+				set expectedErrorNumber to {expectedErrorNumber}
+			end if
 			try
 				run aScript
-			on error why number errorNumber
-				if errorNumber is expectedErrorNumber then fail(message & ": " & why)
+			on error errMsg number errNum
+				if (the length of expectedErrorNumber = 0) or (expectedErrorNumber contains errNum) then
+					fail(message & linefeed & errMsg & linefeed & "Exception raised: " & errNum)
+				end if
 			end try
 		end shouldntRaise
 		
