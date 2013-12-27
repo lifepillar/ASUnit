@@ -409,22 +409,22 @@ script TestLogger
 	
 	(*! @abstract TODO *)
 	on printSuccess()
-		printColoredLine("ok", successColor)
+		printColoredString("ok" & linefeed, successColor)
 	end printSuccess
 	
 	(*! @abstract TODO *)
 	on printSkip()
-		printColoredLine("skip", successColor)
+		printColoredString("skip" & linefeed, successColor)
 	end printSkip
 	
 	(*! @abstract TODO *)
 	on printFail()
-		printColoredLine("FAIL", defectColor)
+		printColoredString("FAIL" & linefeed, defectColor)
 	end printFail
 	
 	(*! @abstract TODO *)
 	on printError()
-		printColoredLine("ERROR", defectColor)
+		printColoredString("ERROR" & linefeed, defectColor)
 	end printError
 	
 	(*! @abstract TODO *)
@@ -464,13 +464,9 @@ script TestLogger
 	on printResult()
 		printLine("")
 		if _TestResult's hasPassed() then
-			printColoredLine("OK", successColor)
-			printLine("")
-			printLine("")
+			printColoredLine("OK" & linefeed & linefeed, successColor)
 		else
-			printColoredLine("FAILED", defectColor)
-			printLine("")
-			printLine("")
+			printColoredLine("FAILED" & linefeed & linefeed, defectColor)
 		end if
 	end printResult
 	
@@ -488,7 +484,7 @@ script TestLogger
 	
 	(*! @abstract TODO *)
 	on printColoredLine(aString, aColor)
-		printColoredString(aString & return, aColor)
+		printColoredString(aString & linefeed, aColor)
 	end printColoredLine
 	
 	(*! @abstract TODO *)
@@ -538,6 +534,11 @@ script AppleScriptEditorLogger
 	end printColoredString
 	
 	(*! @abstract TODO *)
+	on printColoredLine(aString, aColor)
+		printColoredString("-- " & aString & linefeed, aColor)
+	end printColoredLine
+	
+	(*! @abstract TODO *)
 	on printTestCase(aTestCase)
 		printString("-- " & aTestCase's fullName() & " ... ")
 	end printTestCase
@@ -552,14 +553,16 @@ script ConsoleLogger
 	property _buffer : ""
 	
 	on printColoredString(aString, aColor)
-		set _buffer to _buffer & aString
+		if aString ends with linefeed then
+			if the length of aString > 1 then
+				set _buffer to _buffer & (text 1 thru -2 of aString)
+			end if
+			log _buffer
+			set _buffer to ""
+		else
+			set _buffer to _buffer & aString
+		end if
 	end printColoredString
-	
-	on printColoredLine(aString, aColor)
-		printColoredString(aString, aColor)
-		log _buffer
-		set _buffer to ""
-	end printColoredLine
 	
 end script -- ConsoleLogger		
 
