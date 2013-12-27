@@ -23,20 +23,20 @@ property ASUnit : me -- Needed to refer to top level entities from some tests
 property suite : makeTestSuite("ASUnit Tests")
 
 script |should and shouldnt|
-	property parent : registerFixture(me)
+	property parent : TestSet(me)
 	
 	script |should succeed with true|
-		property parent : registerTestCase(me)
+		property parent : UnitTest(me)
 		should(true, name)
 	end script
 	
 	script |shouldnt succeed with false|
-		property parent : registerTestCase(me)
+		property parent : UnitTest(me)
 		shouldnt(false, name)
 	end script
 	
 	script |should fail with false|
-		property parent : registerTestCase(me)
+		property parent : UnitTest(me)
 		
 		script |unregistered failure|
 			property parent : makeTestCase()
@@ -47,7 +47,7 @@ script |should and shouldnt|
 	end script
 	
 	script |shouldnt fail with true|
-		property parent : registerTestCase(me)
+		property parent : UnitTest(me)
 		
 		script |unregistered failure|
 			property parent : makeTestCase()

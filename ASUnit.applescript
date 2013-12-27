@@ -715,9 +715,14 @@ script ASUnit
 	
 	(*! @abstract Convenience handler for registering fixture inheriting from <tt>TestCase</tt>. *)
 	on registerFixture(aUserFixture)
-		return registerFixtureOfKind(aUserFixture, makeAssertions(TestCase))
+		TestSet(aUserFixture)
 	end registerFixture
 	
+	(*! @abstract A more user-friendly name for <tt>registerFixture()</tt>. *)
+	on TestSet(aUserFixture)
+		return registerFixtureOfKind(aUserFixture, makeAssertions(TestCase))
+	end TestSet
+
 	(*!
 	 @abstract Creates an unregistered <tt>TestCase</tt> inheriting from the current fixture.
 	 @discussion You can run the test case or add it manually to a suite.
@@ -732,10 +737,15 @@ script ASUnit
 	 @discussion This test will run automatically when you run the suite.
 	*)
 	on registerTestCase(aUserTestCase)
+		UnitTest(aUserTestCase)
+	end registerTestCase
+	
+	(*! @abstract A more user-friendly name for <tt>registerTestCase()</tt>. *)
+	on UnitTest(aUserTestCase)
 		set aSuite to aUserTestCase's parent's suite
 		if aSuite is not ASUnitSentinel then aSuite's add(aUserTestCase)
 		return makeTestCase()
-	end registerTestCase
+	end UnitTest
 	
 	(*!
 	 @abstract Creates a test suite.
@@ -856,7 +866,7 @@ end script -- ASUnit
 	*)
 script MiniTest
 	property version : TOP_LEVEL's version
-
+	
 	(*! @abstract TODO *)
 	on makeUnitTest(aScript, aDescription)
 		script UnitTest
