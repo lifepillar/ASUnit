@@ -464,9 +464,9 @@ script TestLogger
 	on printResult()
 		printLine("")
 		if _TestResult's hasPassed() then
-			printColoredLine("OK", successColor)
+			printColoredLine("OK" & return & return, successColor)
 		else
-			printColoredLine("FAILED", defectColor)
+			printColoredLine("FAILED" & return & return, defectColor)
 		end if
 	end printResult
 	
@@ -526,12 +526,17 @@ script AppleScriptEditorLogger
 	on printColoredString(aString, aColor)
 		tell textView
 			set selection to insertion point -1
-			set contents of selection to "-- " & aString
+			set contents of selection to aString
 			if aColor is not missing value then Â
 				set color of contents of selection to aColor
 			set selection to insertion point -1
 		end tell
 	end printColoredString
+	
+	(*! @abstract TODO *)
+	on printTestCase(aTestCase)
+		printString("-- " & aTestCase's fullName() & " ... ")
+	end printTestCase
 	
 end script -- AppleScriptEditorLogger		
 
