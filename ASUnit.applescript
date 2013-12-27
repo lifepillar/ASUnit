@@ -507,7 +507,6 @@ script AppleScriptEditorLogger
 		try -- to reuse an existing window
 			tell application "AppleScript Editor"
 				set textView to get document windowTitle
-				set textView's text to ""
 				set textView's window's index to 1 -- bring to front
 			end tell
 		on error -- create a new document
@@ -722,7 +721,7 @@ script ASUnit
 	on TestSet(aUserFixture)
 		return registerFixtureOfKind(aUserFixture, makeAssertions(TestCase))
 	end TestSet
-
+	
 	(*!
 	 @abstract Creates an unregistered <tt>TestCase</tt> inheriting from the current fixture.
 	 @discussion You can run the test case or add it manually to a suite.
