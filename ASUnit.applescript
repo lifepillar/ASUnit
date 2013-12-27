@@ -349,6 +349,34 @@ on makeAssertions(theParent)
 			assertEqual(expected, value)
 		end shouldEqual
 		
+		(*!
+		 @abstract Succeeds when the two given expressions are different.
+		 @param unexpected <em>[anything]</em> The unexpected value.
+		 @param value <em>[anything]</em> Some other value.
+		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+		*)
+		on assertNotEqual(unexpected, value)
+			local msg, unwanted, errMsg
+			if value's class is not equal to unexpected's class then return
+			-- else, the values are of the same type
+			considering case, diacriticals, hyphens, punctuation and white space
+				if value is equal to unexpected then
+					try -- to coerce the unexpected value to text (this may not succeed)
+						set unwanted to (unexpected as text)
+						set msg to "Expected a value different from " & unwanted
+					on error errMsg -- produce a more generic message
+						set msg to "The values are not different"
+					end try
+					fail(msg)
+				end if
+			end considering
+		end assertNotEqual
+		
+		(*! @abstract A synonym for <tt>assertNotEqual()</tt>. *)
+		on shouldNotEqual(unexpected, value)
+			assertNotEqual(unexpected, value)
+		end shouldNotEqual
+		
 	end script
 end makeAssertions
 
