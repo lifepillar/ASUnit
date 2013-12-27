@@ -323,7 +323,7 @@ on makeAssertions(theParent)
 				try -- to coerce classes to text (this may not succeed)
 					set wanted to (expected's class) as text
 					set got to (value's class) as text
-					set msg to "Expected class: " & wanted & return & Â
+					set msg to "Expected class: " & wanted & linefeed & Â
 						"Actual class: " & got
 				on error -- produce a more generic message
 					set msg to "The value does not belong to the expected class."
@@ -335,7 +335,7 @@ on makeAssertions(theParent)
 					try -- to coerce the values to text (this may not succeed)
 						set wanted to (expected as text)
 						set got to (value as text)
-						set msg to "Expected: " & wanted & return & "Actual: " & got
+						set msg to "Expected: " & wanted & linefeed & "Actual: " & got
 					on error errMsg -- produce a more generic message
 						set msg to "Got an unexpected value"
 					end try
