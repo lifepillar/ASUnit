@@ -574,6 +574,11 @@ script |concrete fixture|
 end script
 
 log "ASUnit v" & my parent's version
-set AppleScriptEditorLogger's successColor to {256 * 1, 256 * 102, 256 * 146} -- RGB(1,102,146)
+tell AppleScriptEditorLogger -- Customize colors
+	set its defaultColor to {256 * 30, 256 * 20, 256 * 10} -- RGB(30,20,10)
+	set its successColor to {256 * 1, 256 * 102, 256 * 146} -- RGB(1,102,146)
+	set its defectColor to {256 * 255, 256 * 108, 256 * 96} -- RGB(255,108,96)
+end tell
+
 set suite's loggers to {AppleScriptEditorLogger, ConsoleLogger}
 autorun(suite)
