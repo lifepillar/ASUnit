@@ -461,13 +461,13 @@ script TestLogger
 		printLine("")
 		printLine(title)
 		repeat with aResult in defects
-			printLine(separator)
-			printLine("test: " & aResult's test's fullName())
+			printColoredLine(separator, defectColor)
+			printColoredLine("test: " & aResult's test's fullName(), defectColor)
 			repeat with aLine in every paragraph of aResult's message
-				printLine("      " & aLine)
+				printColoredLine("      " & aLine, defectColor)
 			end repeat
 		end repeat
-		printLine(separator)
+		printColoredLine(separator, defectColor)
 	end printDefects
 	
 	(*! @abstract TODO *)
