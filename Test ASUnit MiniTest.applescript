@@ -149,9 +149,11 @@ script MiniTestSuite
 		UnitTest(TEx2, "Catch any exception.")
 		script TEx2
 			script Quiet
-				-- Needs not be empty, because AS 2.3 on OS X 10.9.1
-				-- gives a stack overflow when running an empty script.
-				set x to 1
+				-- Must not be empty, because it will inherit the run handler
+				-- which will cause a stack overflow
+				-- (see http://macscripter.net/viewtopic.php?pid=170090)
+				on run
+				end run
 			end script
 			shouldntRaise({1, 2, 9876}, Quiet, "Should not have raised any exception.")
 			shouldntRaise({}, Quiet, "Should not have raised any exception.")
