@@ -464,9 +464,13 @@ script TestLogger
 	on printResult()
 		printLine("")
 		if _TestResult's hasPassed() then
-			printColoredLine("OK" & return & return, successColor)
+			printColoredLine("OK", successColor)
+			printLine("")
+			printLine("")
 		else
-			printColoredLine("FAILED" & return & return, defectColor)
+			printColoredLine("FAILED", defectColor)
+			printLine("")
+			printLine("")
 		end if
 	end printResult
 	
