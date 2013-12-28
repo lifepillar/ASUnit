@@ -22,12 +22,6 @@ property parent : ASUnit of Â
 		& "Script Libraries:ASUnit.scpt"))
 property suite : makeTestSuite(suitename)
 
-try -- to load the script to be tested
-	set MyScript to load script file Â
-		((folder of file (path to me) of application "Finder" as text) & scriptName & ".scpt")
-on error errMsg
-	return errMsg
-end try
 set suite's loggers to {AppleScriptEditorLogger, ConsoleLogger}
 tell AppleScriptEditorLogger
 	set its defaultColor to {256 * 1, 256 * 102, 256 * 146}
@@ -40,6 +34,21 @@ autorun(suite)
 ---------------------------------------------------------------------------------------
 -- Tests
 ---------------------------------------------------------------------------------------
+
+-- Don't change this test case!
+-- We load the script in a test case, because this will work
+-- when all the tests in the current folder are run together (using loadTestsFromFolder()).
+script |Load script|
+	property parent : TestSet(me)
+	
+	script |Loading the script|
+		property parent : UnitTest(me)
+		set MyScript to load script file Â
+			((folder of file (path to TopLevel) of application "Finder" as text) & scriptName & ".scpt")
+		assert(MyScript's class = script, "The script was not loaded correctly.")
+	end script
+end script
+
 
 script |A test set|
 	property parent : TestSet(me)
