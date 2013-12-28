@@ -86,13 +86,20 @@ script api
 	sh("open " & docDir & "/ASUnit_applescript/index.html")
 end script
 
-script build
+script asunit
 	property parent : Task(me)
 	property description : "Build ASUnit."
-	osacompile({"ASUnit", "Test ASUnit", Â
+	osacompile("ASUnit")
+end script
+
+script build
+	property parent : Task(me)
+	property description : "Build all source AppleScript scripts."
+	run asunit
+	osacompile({Â
 		"examples/HexString", "examples/Test HexString", Â
-		"templates/Test Template", "templates/Test Loader", "templates/Runtime Loader", Â
-		"templates/MyScript"})
+		"templates/Test Template", "templates/Test Loader", Â
+		"templates/Runtime Loader", "templates/MyScript"})
 end script
 
 script clean
@@ -124,7 +131,7 @@ script dist
 	property dir : missing value
 	try
 		run clobber
-		run build
+		run asunit
 		run doc
 	on error errMsg number errNum
 		log errMsg
@@ -163,7 +170,7 @@ script install
 	property dir : POSIX path of Â
 		((path to library folder from user domain) as text) & "Script Libraries"
 	try
-		run script build
+		run asunit
 		mkdir(dir)
 		cp("ASUnit.scpt", dir)
 	on error errMsg
