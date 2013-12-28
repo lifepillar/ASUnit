@@ -18,7 +18,7 @@ end _setpath
 -- Required ASUnit header
 -- Load  ASUnit from current folder using text format during development
 property ASUnitPath : _setpath() & "ASUnit.applescript" -- set at compile time
-property parent : ASUnit of (run script file ASUnitPath)
+property parent : run script file ASUnitPath
 property ASUnit : me -- Needed to refer to top level entities from some tests
 property suite : makeTestSuite("ASUnit Tests")
 

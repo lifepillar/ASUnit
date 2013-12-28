@@ -17,9 +17,9 @@ global MyScript -- The variable holding the script to be tested
 ---------------------------------------------------------------------------------------
 
 property TopLevel : me
-property parent : ASUnit of Â
-	(load script file (((path to library folder from user domain) as text) Â
-		& "Script Libraries:ASUnit.scpt"))
+property parent : Â
+	load script file (((path to library folder from user domain) as text) Â
+		& "Script Libraries:ASUnit.scpt")
 property suite : makeTestSuite(suitename)
 
 set suite's loggers to {AppleScriptEditorLogger, ConsoleLogger}
@@ -38,13 +38,22 @@ autorun(suite)
 -- Don't change this test case!
 -- We load the script in a test case, because this will work
 -- when all the tests in the current folder are run together (using loadTestsFromFolder()).
+-- Besides, this will make sure that we are using the latest version of the script
+-- to be tested even if we do not recompile this script.
 script |Load script|
 	property parent : TestSet(me)
 	
 	script |Loading the script|
 		property parent : UnitTest(me)
-		set MyScript to load script file Â
-			((folder of file (path to TopLevel) of application "Finder" as text) & scriptName & ".scpt")
+		try
+			set MyScript to load script file Â
+				((folder of file (path to TopLevel) of application "Finder" as text) Â
+					& scriptName & ".scpt")
+		on error
+			set MyScript to run script file Â
+				((folder of file (path to TopLevel) of application "Finder" as text) Â
+					& scriptName & ".applescript")
+		end try
 		assert(MyScript's class = script, "The script was not loaded correctly.")
 	end script
 end script

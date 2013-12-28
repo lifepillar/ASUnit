@@ -14,8 +14,8 @@
 	All in all, loading scripts at compile time is more robust.	
 *)
 global ASUnit
-set ASUnit to ASUnit of (load script file Â
-	((folder of file (path to me) of application "Finder" as text) & "ASUnit.scpt"))
+set ASUnit to run script file Â
+	((folder of folder of file (path to me) of application "Finder" as text) & "ASUnit.applescript")
 run TestWrapper
 
 -- Tests start here

@@ -644,29 +644,31 @@ script ConsoleLogger
 	
 end script -- ConsoleLogger		
 
-(*! @abstract The ASUnit framework. *)
-script ASUnit
-	(*!
+
+-----------------------------------------------------------------
+-- The ASUnit framework.
+-----------------------------------------------------------------
+
+(*!
 	 @abstract <em>[script]</em> Saves the current fixture while compiling
 	 	test cases in a fixture.
 	*)
-	property _currentFixture : missing value
-	property version : TOP_LEVEL's version
-	
-	(*!
+property _currentFixture : missing value
+
+(*!
 	 @abstract Sentinel object used to mark missing values.
 	 @discussion This is used, in particular, to catch a missing suite property in a test script.
 	*)
-	script ASUnitSentinel
-	end script
-	
-	(*!
+script ASUnitSentinel
+end script
+
+(*!
 	 @abstract Used to automatically collect tests in a script file.
 	 @discussion If a test script defines its own suite property, this property will be shadowed.
 	*)
-	property suite : ASUnitSentinel
-	
-	(*!
+property suite : ASUnitSentinel
+
+(*!
 	 @abstract The base class for test components.
 	 @discussion Test suites are a composite of components.
 	 	The basic unit is a single <tt>TestCase</tt>, which may be tested as is.
@@ -675,93 +677,93 @@ script ASUnit
 		<tt>TestSuite</tt>s, which may contain other suites.
 		Testing a composite returns a <tt>TestResult</tt> object.
 	*)
-	script TestComponent
-		
-		(*!
+script TestComponent
+	
+	(*!
 		 @abstract Runs a test.
 		 @return <em>[script]</em> A <tt>TestResult</tt> object.
 		*)
-		on test()
-			set aTestResult to makeTestResult(name)
-			tell aTestResult
-				runTest(me)
-			end tell
-			return aTestResult
-		end test
-		
-		(*!
+	on test()
+		set aTestResult to makeTestResult(name)
+		tell aTestResult
+			runTest(me)
+		end tell
+		return aTestResult
+	end test
+	
+	(*!
 		 @abstract Tells whether this is a composite test.
 		 @discussion Allows transparent handling of components,
 		 	avoiding try... on error, e.g., if a's isComposite() then a's add(foo).
 		 @return <em>[boolean]</em> <tt>true</tt> if this a composite test;
 		 	returns <tt>false</tt> otherwise.
 		*)
-		on isComposite()
-			return false
-		end isComposite
-		
-		(*!
+	on isComposite()
+		return false
+	end isComposite
+	
+	(*!
 		 @abstract Implemented by sub classes.
 		 @param aVisitor <em>[script]</em> A visitor.
 		*)
-		on accept(aVisitor)
-			return
-		end accept
-		
-	end script -- TestComponent
+	on accept(aVisitor)
+		return
+	end accept
 	
-	(*!
+end script -- TestComponent
+
+(*!
 	 @abstract Models a certain configuration of the system being tested.
 	 @discussion TODO.
 	*)
-	script TestCase
-		property parent : TestComponent
-		
-		(*! @abstract TODO. *)
-		on accept(aVisitor)
-			tell aVisitor
-				visitTestCase(me)
-			end tell
-		end accept
-		
-		(*! @abstract May be implemented by a subclass. *)
-		on setUp()
-		end setUp
-		
-		(*! @abstract May be implemented by a subclass. *)
-		on tearDown()
-		end tearDown
-		
-		(*!
+script TestCase
+	property parent : TestComponent
+	
+	(*! @abstract TODO. *)
+	on accept(aVisitor)
+		tell aVisitor
+			visitTestCase(me)
+		end tell
+	end accept
+	
+	(*! @abstract May be implemented by a subclass. *)
+	on setUp()
+	end setUp
+	
+	(*! @abstract May be implemented by a subclass. *)
+	on tearDown()
+	end tearDown
+	
+	(*!
 		 @abstract Runs a test case.
 		 @discussion Ensures that <tt>tearDown()</tt> is executed,
 		 	even if an error was raised. Errors are passed to the caller.
 		 @return Nothing.
 		*)
-		on runCase()
-			try
-				setUp()
-				run
-				tearDown()
-			on error message number errorNumber
-				tearDown()
-				error message number errorNumber
-			end try
-		end runCase
-		
-		(*! @abstract Makes sure that the user test script has a <tt>run</tt> method. *)
-		on run
-			error "test script does not contain any test code"
-		end run
-		
-		(*! @abstract TODO. *)
-		on fullName()
-			return parent's name & " - " & name
-		end fullName
-		
-	end script -- TestCase
+	on runCase()
+		try
+			setUp()
+			run
+			tearDown()
+		on error message number errorNumber
+			tearDown()
+			error message number errorNumber
+		end try
+	end runCase
 	
-	(*!
+	(*! @abstract Makes sure that the user test script has a <tt>run</tt> method. *)
+	on run
+		error "test script does not contain any test code"
+	end run
+	
+	(*! @abstract TODO. *)
+	on fullName()
+		return parent's name & " - " & name
+	end fullName
+	
+end script -- TestCase
+
+(*!
 	 @abstract Creates an unregistered fixture inheriting from <tt>TestCase</tt>.
 	 @discussion
 	 	A user test case inherits from the user fixture, which inherit from <tt>TestCase</tt>.
@@ -788,55 +790,55 @@ script ASUnit
 		end
 		</pre>
 	*)
-	on makeFixture()
-		return makeAssertions(TestCase)
-	end makeFixture
-	
-	(*!
+on makeFixture()
+	return makeAssertions(TestCase)
+end makeFixture
+
+(*!
 	 @abstract Primitive registration handler.
 	 @discussion May be used to register a fixture inheriting
 	 	from a <tt>TestCase</tt> subclass.
 	*)
-	on registerFixtureOfKind(aUserFixture, aParent)
-		set _currentFixture to aUserFixture
-		return aParent
-	end registerFixtureOfKind
-	
-	(*! @abstract Convenience handler for registering fixture inheriting from <tt>TestCase</tt>. *)
-	on registerFixture(aUserFixture)
-		TestSet(aUserFixture)
-	end registerFixture
-	
-	(*! @abstract A more user-friendly name for <tt>registerFixture()</tt>. *)
-	on TestSet(aUserFixture)
-		return registerFixtureOfKind(aUserFixture, makeAssertions(TestCase))
-	end TestSet
-	
-	(*!
+on registerFixtureOfKind(aUserFixture, aParent)
+	set _currentFixture to aUserFixture
+	return aParent
+end registerFixtureOfKind
+
+(*! @abstract Convenience handler for registering fixture inheriting from <tt>TestCase</tt>. *)
+on registerFixture(aUserFixture)
+	TestSet(aUserFixture)
+end registerFixture
+
+(*! @abstract A more user-friendly name for <tt>registerFixture()</tt>. *)
+on TestSet(aUserFixture)
+	return registerFixtureOfKind(aUserFixture, makeAssertions(TestCase))
+end TestSet
+
+(*!
 	 @abstract Creates an unregistered <tt>TestCase</tt> inheriting from the current fixture.
 	 @discussion You can run the test case or add it manually to a suite.
 	 	This feature is essential for ASUnit own unit tests.
 	*)
-	on makeTestCase()
-		return _currentFixture
-	end makeTestCase
-	
-	(*!
+on makeTestCase()
+	return _currentFixture
+end makeTestCase
+
+(*!
 	 @abstract Creates a test case and registers it with the main script suite.
 	 @discussion This test will run automatically when you run the suite.
 	*)
-	on registerTestCase(aUserTestCase)
-		UnitTest(aUserTestCase)
-	end registerTestCase
-	
-	(*! @abstract A more user-friendly name for <tt>registerTestCase()</tt>. *)
-	on UnitTest(aUserTestCase)
-		set aSuite to aUserTestCase's parent's suite
-		if aSuite is not ASUnitSentinel then aSuite's add(aUserTestCase)
-		return makeTestCase()
-	end UnitTest
-	
-	(*!
+on registerTestCase(aUserTestCase)
+	UnitTest(aUserTestCase)
+end registerTestCase
+
+(*! @abstract A more user-friendly name for <tt>registerTestCase()</tt>. *)
+on UnitTest(aUserTestCase)
+	set aSuite to aUserTestCase's parent's suite
+	if aSuite is not ASUnitSentinel then aSuite's add(aUserTestCase)
+	return makeTestCase()
+end UnitTest
+
+(*!
 	 @abstract Creates a test suite.
 	 @discussion Each test script should define a <tt>suite</tt> property to support
 	 	automatic registration of test cases. If a suite is not defined, tests will have to be registered
@@ -844,250 +846,104 @@ script ASUnit
 		Each test script should define a <tt>suite</tt> property and initialize it with <tt>makeTestSuite()</tt>,
 		or with a <tt>TestSuite</tt> subclass.
 	*)
-	on makeTestSuite(aName)
+on makeTestSuite(aName)
+	
+	(*! @abstract A composite of test cases and test suites. *)
+	script TestSuite
 		
-		(*! @abstract A composite of test cases and test suites. *)
-		script TestSuite
-			
-			property parent : TestComponent
-			property name : aName
-			property tests : {}
-			property loggers : missing value
-			
-			(*! @abstract TODO. *)
-			on accept(aVisitor)
-				aVisitor's visitTestSuite(me)
-				repeat with aTest in tests
-					aTest's accept(aVisitor)
-				end repeat
-			end accept
-			
-			(*! @abstract TODO. *)
-			on isComposite()
-				return true
-			end isComposite
-			
-			(*!
+		property parent : TestComponent
+		property name : aName
+		property tests : {}
+		property loggers : missing value
+		
+		(*! @abstract TODO. *)
+		on accept(aVisitor)
+			aVisitor's visitTestSuite(me)
+			repeat with aTest in tests
+				aTest's accept(aVisitor)
+			end repeat
+		end accept
+		
+		(*! @abstract TODO. *)
+		on isComposite()
+			return true
+		end isComposite
+		
+		(*!
 			 @abstract Adds a test case or test suite to this suite.
 			 @param aTest <em>[script]</em> May be a <tt>TestCase</tt>
 			 	or another <tt>TestSuite</tt> containing other <tt>TestCase</tt>s
 				and <tt>TestSuite</tt>s.
 			*)
-			on add(aTest)
-				set end of tests to aTest
-			end add
-			
-		end script -- TestSuite
+		on add(aTest)
+			set end of tests to aTest
+		end add
 		
-		return TestSuite
-		
-	end makeTestSuite
+	end script -- TestSuite
 	
-	(*! @abstract Loads tests from files and folders, and returns a suite with all tests. *)
-	on makeTestLoader()
+	return TestSuite
+	
+end makeTestSuite
+
+(*! @abstract Loads tests from files and folders, and returns a suite with all tests. *)
+on makeTestLoader()
+	
+	script TestLoader
 		
-		script TestLoader
-			
-			-- only files that starts with prefix will be considered as tests
-			property prefix : "Test"
-			
-			(*!
+		-- only files that starts with prefix will be considered as tests
+		property prefix : "Test"
+		
+		(*!
 			 @abstract Returns a test suite containing all the suites
 			 	in the tests scripts in the specified folder.
 			*)
-			on loadTestsFromFolder(aFolder)
-				set suite to ASUnit's makeTestSuite("All Tests in " & (aFolder as text))
-				
-				tell application "Finder"
-					set testFiles to files of aFolder Â
-						where name starts with prefix and name ends with ".scpt"
-				end tell
-				repeat with aFile in testFiles
-					suite's add(loadTestsFromFile(aFile))
-				end repeat
-				
-				return suite
-			end loadTestsFromFolder
+		on loadTestsFromFolder(aFolder)
+			set suite to makeTestSuite("All Tests in " & (aFolder as text))
 			
-			(*!
+			tell application "Finder"
+				set testFiles to files of aFolder Â
+					where name starts with prefix and name ends with ".scpt"
+			end tell
+			repeat with aFile in testFiles
+				suite's add(loadTestsFromFile(aFile))
+			end repeat
+			
+			return suite
+		end loadTestsFromFolder
+		
+		(*!
 			 @abstract Returns a test suite from aFile or the default suite.
 			 @throws An error if a test file does not have a suite property.
 			*)
-			on loadTestsFromFile(aFile)
-				-- TODOs:
-				-- - Should check for comforming suite?
-				-- - How to load tests from text format (.applescript)?
-				set testScript to load script file (aFile as text)
-				try
-					set aSuite to testScript's suite
-					if testScript's suite is my ASUnitSentinel then MissingSuiteError(aFile)
-					return aSuite
-				on error number 10
-					MissingSuiteError(aFile)
-				end try
-				
-			end loadTestsFromFile
+		on loadTestsFromFile(aFile)
+			-- TODOs:
+			-- - Should check for comforming suite?
+			-- - How to load tests from text format (.applescript)?
+			set testScript to load script file (aFile as text)
+			try
+				set aSuite to testScript's suite
+				if testScript's suite is my ASUnitSentinel then MissingSuiteError(aFile)
+				return aSuite
+			on error number 10
+				MissingSuiteError(aFile)
+			end try
 			
-			(*! @abstract TODO *)
-			on MissingSuiteError(aFile)
-				error (aFile as text) & " does not have a suite property"
-			end MissingSuiteError
-			
-		end script -- TestLoader
+		end loadTestsFromFile
 		
-		return TestLoader
+		(*! @abstract TODO *)
+		on MissingSuiteError(aFile)
+			error (aFile as text) & " does not have a suite property"
+		end MissingSuiteError
 		
-	end makeTestLoader
+	end script -- TestLoader
 	
-end script -- ASUnit
+	return TestLoader
+	
+end makeTestLoader
 
-(*!
-	 @abstract A different way to run your tests.
-	 @discussion Differently from ÒstandardÓ ASUnit tests, MiniTest
-	 	allows you to write tests that are registered at runtime. This makes it easier
-		to load ASUnit and to run tests in different environments (e.g., AppleScript Editor,
-		osascript, etcÉ). Instead of using the Composite design pattern to build test cases
-		and test suites, MiniTest adopts a more ÒhackishÓ approach, better suited to the way
-		AppleScript works, in which the framework's script objects inherit from the user tests,
-		rather than vice versa. In other words, instead of writing a test that inherits from
-		the framework's <tt>TestCase</tt>, using MiniTest you write a test
-		and ÒinjectÓ it at runtime into a <tt>UnitTest</tt> script, which inherits from it.
-	*)
-script MiniTest
-	property version : TOP_LEVEL's version
-	
-	(*! @abstract TODO *)
-	on makeUnitTest(aScript, aDescription)
-		script UnitTest
-			property parent : aScript
-			property class : "UnitTest"
-			property name : aScript's name
-			property description : aDescription
-			
-			(*! @abstract TODO *)
-			on accept(aVisitor)
-				tell aVisitor to visitTestCase(me)
-			end accept
-			
-			(*! @abstract TODO *)
-			on runCase()
-				run
-			end runCase
-			
-			(*! @abstract TODO. *)
-			on fullName()
-				return my description
-			end fullName
-			
-		end script -- UnitTest
-		
-		return makeAssertions(UnitTest)
-		
-	end makeUnitTest
-	
-	(*! @abstract TODO *)
-	on makeTestSet(aScript, testSetDescription)
-		script TestSet
-			property parent : aScript
-			property class : "TestSet"
-			property name : aScript's name
-			property description : testSetDescription
-			property tests : {} -- private
-			
-			(*! @abstract TODO *)
-			on setUp()
-				try -- to invoke parent's setUp()
-					continue setUp()
-				on error errMsg number errNum
-					if errNum is not -1708 or Â
-						errMsg does not contain "CanÕt continue setUp" then
-						error errMsg number errNum
-					end if
-				end try
-			end setUp
-			
-			(*! @abstract TODO *)
-			on tearDown()
-				try -- to invoke parent's tearDown()
-					continue tearDown()
-				on error errMsg number errNum
-					if errNum is not -1708 or Â
-						errMsg does not contain "CanÕt continue tearDown" then
-						error errMsg number errNum
-					end if
-				end try
-			end tearDown
-			
-			(*! @abstract TODO *)
-			on accept(aVisitor)
-				aVisitor's visitTestSuite(me)
-				repeat with aTest in tests
-					try
-						setUp()
-						aTest's accept(aVisitor)
-						tearDown()
-					on error errMsg number errNum
-						tearDown()
-						error errMsg number errNum
-					end try
-				end repeat
-			end accept
-			
-			(*! @abstract TODO *)
-			on UnitTest(scriptName, aDescription)
-				set the end of tests to Â
-					MiniTest's makeUnitTest(scriptName, my description & " - " & aDescription)
-				return "UnitTest"
-			end UnitTest
-			
-			(*! @abstract TODO *)
-			on TestSet(scriptName, aDescription)
-				set the end of tests to MiniTest's makeTestSet(scriptName, aDescription)
-				return "TestSet"
-			end TestSet
-			
-		end script -- TestSet
-		
-		run TestSet -- Register the tests
-		return TestSet
-		
-	end makeTestSet
-	
-	(*! @abstract Runs all the test files in the specified folder. *)
-	on runTestsFromFolder(aFolder)
-		local prefix
-		set prefix to "Test"
-		tell application "Finder"
-			set testFiles to files of aFolder Â
-				where name starts with prefix Â
-				and (name ends with ".scpt" or name ends with ".applescript") Â
-				and name does not start with "Test Loader"
-		end tell
-		repeat with aFile in testFiles
-			log "Loading " & aFile's name
-			if aFile's name ends with ".applescript" then
-				try
-					run script (aFile as alias)
-				on error
-					log "Could not execute test script: " & aFile's name
-				end try
-			else
-				try
-					set miniTestScript to load script (aFile as alias)
-					run miniTestScript
-				on error
-					log "Could not load or execute test script: " & aFile's name
-				end try
-			end if
-		end repeat
-	end runTestsFromFolder
-	
-	(*! @abstract TODO *)
-	on autorun(aTestSet)
-		continue autorun(makeTestSet(aTestSet, aTestSet's name))
-	end autorun
-	
-end script -- ASMiniTest
+-----------------------------------------------------------------
+-- End of ASUnit framework
+-----------------------------------------------------------------
 
 (*! @abstract TODO *)
 on autorun(aTestSuite)

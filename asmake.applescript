@@ -2,7 +2,7 @@ property version : missing value
 property workDir : missing value
 property tasks : {}
 property docDir : "Documentation"
-property topLevel : me
+property TopLevel : me
 
 -- Registers a task.
 on Task(t)
@@ -89,7 +89,7 @@ end script
 script build
 	property parent : Task(me)
 	property description : "Build ASUnit."
-	osacompile({"ASUnit", "Test ASUnit", "Test ASUnit MiniTest"})
+	osacompile({"ASUnit", "Test ASUnit"})
 end script
 
 script clean
@@ -127,7 +127,7 @@ script dist
 		log errMsg
 		return errNum
 	end try
-	set dir to "ASUnit-" & topLevel's version
+	set dir to "ASUnit-" & TopLevel's version
 	mkdir(dir)
 	cp({"ASUnit.scpt", "COPYING", "OldManual.html", "README.html"}, dir)
 end script
@@ -179,7 +179,7 @@ script showVersion
 	property parent : Task(me)
 	property name : "version"
 	property description : "Print ASUnit's version and exit."
-	log "ASUnit" & space & topLevel's version
+	log "ASUnit" & space & TopLevel's version
 end script
 
 
