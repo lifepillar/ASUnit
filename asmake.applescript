@@ -95,7 +95,7 @@ end script
 script clean
 	property parent : Task(me)
 	property description : "Remove any temporary products."
-	rm({"*.scpt", "*.scptd"})
+	rm({"*.scpt", "*.scptd", "templates/*.scpt", "templates/*.scptd"})
 end script
 
 script clobber
