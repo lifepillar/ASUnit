@@ -161,6 +161,7 @@ script install
 		((path to library folder from user domain) as text) & "Script Libraries"
 	try
 		run script build
+		mkdir(dir)
 		cp("ASUnit.scpt", dir)
 	on error errMsg
 		log errMsg
