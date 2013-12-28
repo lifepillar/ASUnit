@@ -902,7 +902,9 @@ on makeTestLoader()
 			
 			tell application "Finder"
 				set testFiles to files of aFolder Â
-					where name starts with prefix and name ends with ".scpt"
+					where name starts with prefix and name ends with Â
+					".scpt" and name does not start with Â
+					"Test Loader" and name does not start with "TestLoader"
 			end tell
 			repeat with aFile in testFiles
 				suite's add(loadTestsFromFile(aFile))
