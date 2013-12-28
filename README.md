@@ -40,7 +40,8 @@ You may run the test script inside AppleScript Editor,
 or from the command-line using `osascript`.
 
 When you have several test files, you may run them all at once using
-a _test loader_. See `Test Loader.applescript` in the `templates` folder.
+a _test loader_ (there is no need to compile them in advance).
+See `Test Loader.applescript` in the `templates` folder.
 
 By default, if you run the tests in AppleScript Editor, the output is written
 to a new AppleScript Editor document, and if you run the tests in the Terminal,
