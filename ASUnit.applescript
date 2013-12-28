@@ -899,12 +899,13 @@ on makeTestLoader()
 			*)
 		on loadTestsFromFolder(aFolder)
 			set suite to makeTestSuite("All Tests in " & (aFolder as text))
+			compileSourceFiles(aFolder)
 			
 			tell application "Finder"
 				set testFiles to files of aFolder Â
 					where name starts with prefix and name ends with Â
 					".scpt" and name does not start with Â
-					"Test Loader" and name does not start with "TestLoader"
+					"Test Load" and name does not start with "TestLoad"
 			end tell
 			repeat with aFile in testFiles
 				suite's add(loadTestsFromFile(aFile))
@@ -912,6 +913,31 @@ on makeTestLoader()
 			
 			return suite
 		end loadTestsFromFolder
+		
+		(*!
+			 @abstract Compiles all the test scripts in the specified folder.
+		*)
+		on compileSourceFiles(aFolder)
+			tell application "Finder"
+				set testFiles to files of aFolder Â
+					where name starts with prefix and name ends with Â
+					".applescript" and name does not start with Â
+					"Test Load" and name does not start with "TestLoad"
+			end tell
+			repeat with aFile in testFiles
+				set outfile to (text 1 thru -(2 + (length of (aFile's name extension as text))) Â
+					of (aFile's name as text)) & ".scpt"
+				set cmd to "osacompile -d -o " & space & Â
+					quoted form of (POSIX path of (aFolder as alias) & outfile) & space & Â
+					quoted form of POSIX path of (aFile as alias)
+				try
+					do shell script cmd
+				on error errMsg
+					log "Skipping " & aFile & space & "(Could not compile)"
+					log errMsg
+				end try
+			end repeat
+		end compileSourceFiles
 		
 		(*!
 			 @abstract Returns a test suite from aFile or the default suite.
