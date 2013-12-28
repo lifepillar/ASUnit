@@ -3,9 +3,9 @@
 	@abstract
 		A template for unit testing.
 	@discussion
-		Copy this template in the folder containing <tt>MyScript.scpt</tt> (the script to be tested) and customize it as follows:
+		Copy this template in the folder containing the script to be tested and customize it as follows:
 	
-		1) Provide a description for this test suite and the name of the script.
+		1) Provide a description for this test suite and the name of the script to be tested.
 		2) Write tests :)
 
 	@charset macintosh
@@ -29,7 +29,6 @@ tell AppleScriptEditorLogger
 	set its defectColor to {256 * 137, 256 * 89, 256 * 168}
 end tell
 autorun(suite)
-
 
 ---------------------------------------------------------------------------------------
 -- Tests
