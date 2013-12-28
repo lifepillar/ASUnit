@@ -89,13 +89,16 @@ end script
 script build
 	property parent : Task(me)
 	property description : "Build ASUnit."
-	osacompile({"ASUnit", "Test ASUnit"})
+	osacompile({"ASUnit", "Test ASUnit", Â
+		"examples/HexString", "examples/Test HexString", Â
+		"templates/Test Template", "templates/Test Loader", "templates/Runtime Loader", Â
+		"templates/MyScript"})
 end script
 
 script clean
 	property parent : Task(me)
 	property description : "Remove any temporary products."
-	rm({"*.scpt", "*.scptd", "templates/*.scpt", "templates/*.scptd"})
+	rm({"*.scpt", "*.scptd", "templates/*.scpt*", "examples/*.scpt*"})
 end script
 
 script clobber
