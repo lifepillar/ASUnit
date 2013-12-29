@@ -407,7 +407,6 @@ on makeAssertions(theParent)
 			if eps < 0.0 then fail("The relative error cannot be negative")
 			local min
 			local n
-			local err
 			set n to e1 - e2
 			if n < 0.0 then set n to -n
 			if e1 < 0.0 then set e1 to -e1
@@ -417,8 +416,8 @@ on makeAssertions(theParent)
 			else
 				set min to e2
 			end if
-			set err to min * eps
-			if n > err then fail("The relative error is " & (n as text) & " > " & (err as text))
+			if n > min * eps then Â
+				fail("The relative error is " & ((n / min) as text) & " > " & (eps as text))
 		end assertEqualRelError
 		
 		(*! @abstract Tests whether a variable is a reference. *)
