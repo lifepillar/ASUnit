@@ -3,7 +3,9 @@
 - - -
 **As of version 0.5, this document is partially obsolete.**
 **Please refer to the README.**
+**The original version of this document is available [here].**
 
+[here]: http://nirs.freeshell.org/asunit/ "here"
 - - -
 
 ASUnit is testing framework for AppleScript, influenced by SUnit, [ASTest][ASTest]
@@ -18,12 +20,6 @@ Features:
 * Automatic and manual test case registration.
 * Runs in *AppleScript Editor*, displays results in a new document.
 * Aggregates multiple test scripts.
-
-Download: [current version][current] | [source][source] | [all versions][all versions]
-
-[current]: http://nirs.freeshell.org/asunit/versions/ASUnit-0.4.zip "current version"
-[source]: http://nirs.freeshell.org/asunit/versions/ASUnit-0.4.src.tgz "source tarball"
-[all versions]: http://nirs.freeshell.org/asunit/versions/ "all versions"
 
 This text is mostly a shameless copy of Kent Beck's [SmallTalk testing framework][SmallTalk], modified for ASUnit.
 
