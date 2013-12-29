@@ -9,33 +9,26 @@
 
 	@discussion
 		This is an ASUnit implementation of the tests from the MacTech article mentioned above (benchmarks excluded). All the tests have been designed by the author's article Ryan Wilcox: I have just copied them into an ASUnit test set, with minor modifications.
-		
-		This script can be run as it is in OS X 10.9 or later. On previous systems, change
-		
-			use AppleScript
-			property parent : script "ASUnit"
-			
-		to
-
-			property parent : Â
-				load script file (((path to library folder from user domain) as text) Â
-					& "Script Libraries:ASUnit.scpt")
 
 	@charset macintosh
 *)
 ---------------------------------------------------------------------------------------
 property suitename : "AppleScript's Variable Types and You"
 ---------------------------------------------------------------------------------------
-
+property parent : Â
+	load script file (((path to library folder from user domain) as text) Â
+		& "Script Libraries:ASUnit.scpt")
+(* For OS X 10.9 or later you may use the following instead:
 use AppleScript
 property parent : script "ASUnit"
+*)
 property TopLevel : me
 property suite : makeTestSuite(suitename)
 
 set suite's loggers to {AppleScriptEditorLogger, ConsoleLogger}
 autorun(suite)
 
-script Test
+script test
 	property parent : TestSet(me)
 	
 	script xAnYScalars
@@ -181,7 +174,7 @@ script Test
 		assertEqual({123, 124, 124, 124, 124}, myList)
 	end script
 	
-	script changeListItemListAndList
+	script |changeListItemListAndList (will fail)|
 		property parent : UnitTest(me)
 		set myList to {}
 		set myItem to {1}
@@ -540,7 +533,7 @@ script Test
 			set the contents of y to false -- AS runtime error
 		end script
 		-- AS Editor and osascript raise different exceptions!
-		shouldRaise({-1700,-10006}, RefError, Â
+		shouldRaise({-1700, -10006}, RefError, Â
 			"Should have raised: Can't make 'x' into type reference or Can't set x to false.")
 	end script
 	
