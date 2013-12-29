@@ -341,11 +341,9 @@ on makeAssertions(theParent)
 		on assertEqual(expected, value)
 			local msg, got, wanted, errMsg
 			if value's class is not expected's class then
-				try -- to coerce classes to text (this may not succeed)
-					set wanted to (expected's class) as text
-					set got to (value's class) as text
-					set msg to "Expected class: " & wanted & linefeed & Â
-						"Actual class: " & got
+				try -- to pretty print the classes
+					set msg to "Expected class: " & pp(expected's class) & linefeed & Â
+						"  Actual class: " & pp(value's class)
 				on error -- produce a more generic message
 					set msg to "The value does not belong to the expected class."
 				end try
@@ -353,11 +351,9 @@ on makeAssertions(theParent)
 			end if
 			considering case, diacriticals, hyphens, punctuation and white space
 				if (value is not expected) then
-					try -- to coerce the values to text (this may not succeed)
-						set wanted to (expected as text)
-						set got to (value as text)
-						set msg to "Expected: " & wanted & linefeed & "Actual: " & got
-					on error errMsg -- produce a more generic message
+					try -- to pretty print the values
+						set msg to "Expected: " & pp(expected) & linefeed & "  Actual: " & pp(value)
+					on error -- produce a more generic message
 						set msg to "Got an unexpected value"
 					end try
 					fail(msg)
@@ -382,10 +378,9 @@ on makeAssertions(theParent)
 			-- else, the values are of the same type
 			considering case, diacriticals, hyphens, punctuation and white space
 				if value is equal to unexpected then
-					try -- to coerce the unexpected value to text (this may not succeed)
-						set unwanted to (unexpected as text)
-						set msg to "Expected a value different from " & unwanted
-					on error errMsg -- produce a more generic message
+					try -- to pretty print the values
+						set msg to "Expected a value different from " & pp(unexpected)
+					on error -- produce a more generic message
 						set msg to "The values are not different"
 					end try
 					fail(msg)
@@ -429,7 +424,7 @@ on makeAssertions(theParent)
 		
 		(*! @abstract Returns a textual representation of an object. *)
 		on pp(anObject)
-			if class of anObject is list then
+			if class of anObject is in {list, RGB color} then
 				local s, n
 				set n to (anObject's length) - 1
 				set s to "{"
@@ -441,18 +436,69 @@ on makeAssertions(theParent)
 				return "Çrecord " & pp(anObject as list) & "È"
 			else if class of anObject is script then
 				return "Çscript " & anObject's name & "È"
-			else if class of anObject is application then
+			else if class of anObject is in {application, null} then
 				return "Çapplication " & anObject's name & "È"
 			else
 				set res to anObject as text
 				if class of anObject is in {alias, boolean, class, constant, Â
-					date, file, integer, number, POSIX file, Â
-					real, reference, RGB color, text} then
+					date, file, integer, POSIX file, real, text} then
 					return res
 				else if class of anObject is centimeters then
-					return (anObject as text) & " centimeters"
+					return res & " centimeters"
 				else if class of anObject is feet then
-					return (anObject as text) & " feet"
+					return res & " feet"
+				else if class of anObject is inches then
+					return res & " inches"
+				else if class of anObject is kilometers then
+					return res & " kilometers"
+				else if class of anObject is meters then
+					return res & " meters"
+				else if class of anObject is miles then
+					return res & " miles"
+				else if class of anObject is yards then
+					return res & " yards"
+				else if class of anObject is square feet then
+					return res & " square feet"
+				else if class of anObject is square kilometers then
+					return res & " square kilometers"
+				else if class of anObject is square meters then
+					return res & " square meters"
+				else if class of anObject is square miles then
+					return res & " square miles"
+				else if class of anObject is square yards then
+					return res & " square yards"
+				else if class of anObject is cubic centimeters then
+					return res & " cubic centimeters"
+				else if class of anObject is cubic feet then
+					return res & " cubic feet"
+				else if class of anObject is cubic inches then
+					return res & " cubic inches"
+				else if class of anObject is cubic meters then
+					return res & " cubic meters"
+				else if class of anObject is cubic yards then
+					return res & " cubic yards"
+				else if class of anObject is gallons then
+					return res & " gallons"
+				else if class of anObject is liters then
+					return res & " liters"
+				else if class of anObject is quarts then
+					return res & " quarts"
+				else if class of anObject is grams then
+					return res & " grams"
+				else if class of anObject is kilograms then
+					return res & " kilograms"
+				else if class of anObject is ounces then
+					return res & " ounces"
+				else if class of anObject is pounds then
+					return res & " pounds"
+				else if class of anObject is degrees Celsius then
+					return res & " degrees Celsius"
+				else if class of anObject is degrees Fahrenheit then
+					return res & " degrees Fahrenheit"
+				else if class of anObject is degrees Kelvin then
+					return res & " degrees Kelvin"
+				else
+					return res
 				end if
 			end if
 		end pp
