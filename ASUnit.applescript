@@ -420,6 +420,19 @@ on makeAssertions(theParent)
 				fail("The relative error is " & ((n / min) as text) & " > " & (eps as text))
 		end assertEqualRelError
 		
+		(*! @abstract Tests whether the given expression belongs to the given class. *)
+		on assertInstanceOf(klass, expr)
+			if class of expr is not klass then
+				try -- to pretty print the classes
+					set msg to "Expected class: " & pp(klass) & linefeed & Â
+						"  Actual class: " & pp(class of expr)
+				on error
+					set msg to ""
+				end try
+				fail(msg)
+			end if
+		end assertKindOf
+		
 		(*! @abstract Tests whether a variable is a reference. *)
 		on assertReference(anObject)
 			try

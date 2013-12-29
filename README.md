@@ -103,10 +103,11 @@ you may use a number of assertion handlers:
 - `shouldntRaise(num, aScript, msg)`: fails if `aScript` raises exception `num` when run.
 - `assertEqual(exp, value)` or `shouldEqual(exp, value)`: succeeds when `exp` = `value`.
 - `assertNotEqual(exp, value)` or `shouldNotEqual(exp, value)`: succeeds when `exp` ≠ `value`.
-- `assertEqualAbsError(e1, e2, delta)`: Succeeds when `|e1-e2| <= delta`.
-- `assertEqualRelError(e1, e2, eps)`: Fails if `e1` and `e2` have a relative error greater than `eps`.
+- `assertEqualAbsError(e1, e2, delta)`: succeeds when `|e1-e2| <= delta`.
+- `assertEqualRelError(e1, e2, eps)`: fails if `e1` and `e2` have a relative error greater than `eps`.
 - `assertReference(x)` or `shouldBeReference(x)`: succeeds when `x` is a reference.
 - `assertNotReference(x)` or `shouldNotBeReference(x)`: fails when `x` is a reference.
+- `assertInstanceOf(aClass, expr)`: succeeds when the class of `expr` is equal to `aClass`.
 
 Most of the assertions take as an argument a textual message,
 which is printed when the assertion fails.
