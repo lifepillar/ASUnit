@@ -395,11 +395,31 @@ on makeAssertions(theParent)
 		
 		(*! @abstract Fails unless <tt>e1</tt> and <tt>e2</tt> are within <tt>delta</tt> from each other. *)
 		on assertEqualAbsError(e1, e2, delta)
+			if delta < 0.0 then fail("The absolute error cannot be negative")
 			local n
 			set n to e1 - e2
 			if n < 0.0 then set n to -n
 			if n > delta then fail("The arguments differ by " & (n as text) & " > " & (delta as text))
-		end assertEqualWithAccuracy
+		end assertEqualAbsError
+		
+		(*! @abstract Fails unless <tt>e1</tt> and <tt>e2</tt> have a relative error less than <tt>eps</tt>. *)
+		on assertEqualRelError(e1, e2, eps)
+			if eps < 0.0 then fail("The relative error cannot be negative")
+			local min
+			local n
+			local err
+			set n to e1 - e2
+			if n < 0.0 then set n to -n
+			if e1 < 0.0 then set e1 to -e1
+			if e2 < 0.0 then set e2 to -e2
+			if e1 < e2 then
+				set min to e1
+			else
+				set min to e2
+			end if
+			set err to min * eps
+			if n > err then fail("The relative error is " & (n as text) & " > " & (err as text))
+		end assertEqualRelError
 		
 		(*! @abstract Tests whether a variable is a reference. *)
 		on assertReference(anObject)
