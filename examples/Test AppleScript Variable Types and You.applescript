@@ -537,9 +537,11 @@ script Test
 		script RefError
 			set x to true
 			set y to a reference to x
-			set the contents of y to false -- AS runtime error: "can't make 'x' into type reference (-1700)
+			set the contents of y to false -- AS runtime error
 		end script
-		shouldRaise(-1700, RefError, "Should have raised: can't make 'x' into type reference.")
+		-- AS Editor and osascript raise different exceptions!
+		shouldRaise({-1700,-10006}, RefError, Â
+			"Should have raised: Can't make 'x' into type reference or Can't set x to false.")
 	end script
 	
 end script -- Test Set
