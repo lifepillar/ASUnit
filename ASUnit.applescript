@@ -427,6 +427,13 @@ on makeAssertions(theParent)
 			assertNotReference(anObject)
 		end shouldNotBeReference
 		
+		(*! @abstract Returns a textual representation of an object. *)
+		on pp(anObject)
+			if class of anObject is script then
+				"Çscript " & anObject's name & "È"
+			end if
+		end pp
+		
 	end script
 end makeAssertions
 

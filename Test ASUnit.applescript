@@ -573,6 +573,100 @@ script |concrete fixture|
 	
 end script
 
+script |pretty print|
+	property parent : TestSet(me)
+	
+	script |pp alias|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp application|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp boolean|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp class|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp constant|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp date|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp file|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp integer|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp list|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp number|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp POSIX file|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp real|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp record|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp reference|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp RGB color|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp script|
+		property parent : UnitTest(me)
+		assertEqual("«script pp script»", pp(me))
+	end script
+	
+	script |pp text|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+	
+	script |pp unit types|
+		property parent : UnitTest(me)
+		skip("Unimplemented")
+	end script
+end script
+
 log "ASUnit v" & my parent's version
 tell AppleScriptEditorLogger -- Customize colors
 	set its defaultColor to {256 * 30, 256 * 20, 256 * 10} -- RGB(30,20,10)
