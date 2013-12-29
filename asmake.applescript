@@ -182,7 +182,6 @@ script test
 	property parent : Task(me)
 	property description : "Run tests."
 	run script "Test ASUnit.applescript"
-	run script "Test ASUnit MiniTest.applescript"
 end script
 
 script showVersion
