@@ -53,7 +53,9 @@ destination). Currently, ASUnit defines two loggers:
 `AppleScriptEditorLogger` and `ConsoleLogger`. Defining custom loggers
 should be fairly easy: you simply need to define a script that inherits
 from `TestLogger` and override the `print…()` handlers to generate the output
-you want.
+you want. A more advanced alternative consists in subclassing _Visitor_: see
+the section _Creating new operations on a test suite_ in `OldManual.md`
+for an example.
 
 
 ### Writing the tests

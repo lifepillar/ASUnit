@@ -8,10 +8,9 @@
 [here]: http://nirs.freeshell.org/asunit/ "here"
 - - -
 
-ASUnit is testing framework for AppleScript, influenced by SUnit, [ASTest][ASTest]
+ASUnit is testing framework for AppleScript, influenced by SUnit, ASTest
 and Python [unittest][unittest] module.
 
-[ASTest]: http://applemods.sourceforge.net/mods/Development/ASTest.php "ASTest"
 [unittest]: http://docs.python.org/lib/module-unittest.html "unittest"
 
 Features:
