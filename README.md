@@ -3,7 +3,8 @@
 [ASUnit](http://nirs.freeshell.org/asunit/) is a unit testing framework for
 AppleScript originally written by Nir Soffer.
 For a detailed description of the architecture of the original ASUnit framework,
-read the file `OldManual.md`.
+read the file `OldManual.md`. Some advanced features of ASUnit (e.g., custom
+TestCases and Visitors) are still described only in that document.
 
 To build and install ASUnit:
 
@@ -41,7 +42,7 @@ or from the command-line using `osascript`.
 
 When you have several test files, you may run them all at once using
 a _test loader_ (there is no need to compile them in advance).
-See `Test Loader.applescript` in the `templates` folder.
+See `Test Loader.applescript` in the `examples` folder.
 
 By default, if you run the tests in AppleScript Editor, the output is written
 to a new AppleScript Editor document, and if you run the tests in the Terminal,
@@ -51,7 +52,8 @@ must be a list of _loggers_ (you may send the output to more than one
 destination). Currently, ASUnit defines two loggers:
 `AppleScriptEditorLogger` and `ConsoleLogger`. Defining custom loggers
 should be fairly easy: you simply need to define a script that inherits
-from `TestLogger` and override some handlers.
+from `TestLogger` and override the `print…()` handlers to generate the output
+you want.
 
 
 ### Writing the tests
@@ -97,8 +99,8 @@ you may use a number of assertion handlers:
 - `fail(msg)`: make the test unconditionally fail.
 - `ok(expr)`: succeeds when the boolean `expr` evaluates to true.
 - `notOk(expr)`: succeeds when `expr` evaluates to false.
-- `assert(expr, msg)` or `should(expr, msg)`: succeeds when `expr` is true.
-- `refute(expr, msg)` or `shouldnt(expr, msg)`: succeeds when `expr` is false.
+- `assert(expr, msg)` or `should(expr, msg)`: succeeds when `expr` is true; prints `msg` otherwise.
+- `refute(expr, msg)` or `shouldnt(expr, msg)`: succeeds when `expr` is false; prints `msg` otherwise.
 - `shouldRaise(num, aScript, msg)`: fails unless `aScript` raises exception `num` when run.
 - `shouldntRaise(num, aScript, msg)`: fails if `aScript` raises exception `num` when run.
 - `assertEqual(exp, value)` or `shouldEqual(exp, value)`: succeeds when `exp` = `value`.
@@ -109,7 +111,7 @@ you may use a number of assertion handlers:
 - `assertNotReference(x)` or `shouldNotBeReference(x)`: fails when `x` is a reference.
 - `assertInstanceOf(aClass, expr)`: succeeds when the class of `expr` is equal to `aClass`.
 
-Most of the assertions take as an argument a textual message,
+Some of the assertions take as an argument a textual message,
 which is printed when the assertion fails.
 
 Related unit tests can be grouped together into a script that must
