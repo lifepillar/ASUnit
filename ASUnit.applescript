@@ -4,12 +4,12 @@
  @abstract License: GNU GPL, see COPYING for details.
  @author Nir Soffer, Lifepillar
  @copyright 2013 Lifepillar, 2006 Nir Soffer
- @version 1.1.0
+ @version 1.1.1
  @charset macintosh
 *)
 
 (*! @abstract <em>[text]</em> ASUnit's version. *)
-property version : "1.1.0"
+property version : "1.1.1"
 (*! @abstract Error number signalling a failed test. *)
 property TEST_FAILED : 1000
 (*! @abstract Error number signalling a skipped test. *)
