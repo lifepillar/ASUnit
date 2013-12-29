@@ -103,6 +103,7 @@ you may use a number of assertion handlers:
 - `shouldntRaise(num, aScript, msg)`: fails if `aScript` raises exception `num` when run.
 - `assertEqual(exp, value)` or `shouldEqual(exp, value)`: succeeds when `exp` = `value`.
 - `assertNotEqual(exp, value)` or `shouldNotEqual(exp, value)`: succeeds when `exp` ≠ `value`.
+- `assertEqualWithAccuracy(e1, e2, delta)`: Succeeds when `|e1-e2| <= delta`.
 - `assertReference(x)` or `shouldBeReference(x)`: succeeds when `x` is a reference.
 - `assertNotReference(x)` or `shouldNotBeReference(x)`: fails when `x` is a reference.
 

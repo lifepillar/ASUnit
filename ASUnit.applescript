@@ -393,6 +393,14 @@ on makeAssertions(theParent)
 			assertNotEqual(unexpected, value)
 		end shouldNotEqual
 		
+		(*! @abstract Fails unless <tt>e1</tt> and <tt>e2</tt> are within <tt>delta</tt> from each other. *)
+		on assertEqualWithAccuracy(e1, e2, delta)
+			local n
+			set n to e1 - e2
+			if n < 0.0 then set n to -n
+			if n > delta then fail("The arguments differ by " & (n as text) & " > " & (delta as text))
+		end assertEqualWithAccuracy
+		
 		(*! @abstract Tests whether a variable is a reference. *)
 		on assertReference(anObject)
 			try
