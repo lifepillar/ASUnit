@@ -394,7 +394,7 @@ on makeAssertions(theParent)
 		end shouldNotEqual
 		
 		(*! @abstract Fails unless <tt>e1</tt> and <tt>e2</tt> are within <tt>delta</tt> from each other. *)
-		on assertEqualWithAccuracy(e1, e2, delta)
+		on assertEqualAbsError(e1, e2, delta)
 			local n
 			set n to e1 - e2
 			if n < 0.0 then set n to -n
