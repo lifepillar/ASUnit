@@ -429,8 +429,31 @@ on makeAssertions(theParent)
 		
 		(*! @abstract Returns a textual representation of an object. *)
 		on pp(anObject)
-			if class of anObject is script then
-				"Çscript " & anObject's name & "È"
+			if class of anObject is list then
+				local s, n
+				set n to (anObject's length) - 1
+				set s to "{"
+				repeat with i from 1 to n
+					set s to s & pp(item i of anObject) & "," & space
+				end repeat
+				return s & pp(item (n + 1) of anObject) & "}"
+			else if class of anObject is record then
+				return "Çrecord " & pp(anObject as list) & "È"
+			else if class of anObject is script then
+				return "Çscript " & anObject's name & "È"
+			else if class of anObject is application then
+				return "Çapplication " & anObject's name & "È"
+			else
+				set res to anObject as text
+				if class of anObject is in {alias, boolean, class, constant, Â
+					date, file, integer, number, POSIX file, Â
+					real, reference, RGB color, text} then
+					return res
+				else if class of anObject is centimeters then
+					return (anObject as text) & " centimeters"
+				else if class of anObject is feet then
+					return (anObject as text) & " feet"
+				end if
 			end if
 		end pp
 		
