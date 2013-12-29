@@ -427,11 +427,24 @@ on makeAssertions(theParent)
 					set msg to "Expected class: " & pp(klass) & linefeed & Â
 						"  Actual class: " & pp(class of expr)
 				on error
-					set msg to ""
+					set msg to "Expected the argument to have the specified class."
 				end try
 				fail(msg)
 			end if
 		end assertInstanceOf
+		
+		
+		(*! @abstract Succeeds when the given expression is not of the given class. *)
+		on refuteInstanceOf(klass, expr)
+			if class of expr is klass then
+				try -- to pretty print the class
+					set msg to "Expected class different from " & pp(klass)
+				on error
+					set msg to "Expected the argument to have a different class."
+				end try
+				fail(msg)
+			end if
+		end refuteInstanceOf
 		
 		(*! @abstract Tests whether a variable is a reference. *)
 		on assertReference(anObject)
