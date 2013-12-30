@@ -139,7 +139,7 @@ script dist
 	end try
 	set dir to "ASUnit-" & TopLevel's version
 	mkdir(dir)
-	cp({"ASUnit.scpt", "COPYING", "OldManual.html", "README.html"}, dir)
+	cp({"ASUnit.scpt", "COPYING", "OldManual.html", "README.html", "examples", "templates"}, dir)
 end script
 
 script gzip
