@@ -3,7 +3,7 @@
 	@abstract
 		Template test loader.
 	@discussion
-		Loads all the compiled test scripts in the current folder.
+		Runs all the test scripts in the current folder.
 	@charset macintosh
 *)
 property parent : Â
