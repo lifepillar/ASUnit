@@ -389,6 +389,11 @@ on makeAssertions(theParent)
 		end assertNotEqual
 		
 		(*! @abstract A synonym for <tt>assertNotEqual()</tt>. *)
+		on refuteEqual(unexpected, value)
+			assertNotEqual(unexpected, value)
+		end refuteEqual
+		
+		(*! @abstract A synonym for <tt>assertNotEqual()</tt>. *)
 		on shouldNotEqual(unexpected, value)
 			assertNotEqual(unexpected, value)
 		end shouldNotEqual
