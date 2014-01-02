@@ -459,24 +459,21 @@ on makeAssertions(theParent)
 				until it finds <tt>obj</tt>, reaches the end of the inheritance
 				chain, or detects a cycle in the inheritance chain.
 		*)
-		on assertInheritsFrom(obj, descendantObj, msg)
+		on assertInheritsFrom(ancestor, descendant, msg)
 			local currObj, inheritanceChain
-			set currObj to descendantObj
-			set inheritanceChain to {} -- To detect cycles
+			set currObj to descendant
+			set inheritanceChain to {}
 			repeat
-				set the end of inheritanceChain to currObj
+				set the end of the inheritanceChain to currObj
 				try
 					set currObj to currObj's parent
-					if currObj is equal to obj or currObj is in inheritanceChain then exit repeat
+					if currObj is equal to ancestor then return
+					if currObj is in inheritanceChain then error number -1728 -- cycle
 				on error errMsg number errNum
-					if errNum is -1728 then -- Can't get parent (end of inheritance chain)
-						exit repeat
-					else -- we should never get here
-						error "Unexpected error: " & errMsg number errNum
-					end if
+					if errNum is -1728 then fail(msg) -- Can't get parent (end of inheritance chain)
+					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			if currObj is not equal to obj then fail(msg)
 		end assertInheritsFrom
 		
 		(*!
@@ -494,11 +491,8 @@ on makeAssertions(theParent)
 					if currObj is equal to obj then exit repeat
 					if currObj is in inheritanceChain then return -- cycle
 				on error errMsg number errNum
-					if errNum is -1728 then -- Can't get parent (end of inheritance chain)
-						return
-					else -- we should never get here
-						error "Unexpected error: " & errMsg number errNum
-					end if
+					if errNum is -1728 then return -- Can't get parent (end of inheritance chain)
+					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
 			fail(msg)
