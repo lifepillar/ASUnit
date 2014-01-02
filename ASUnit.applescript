@@ -451,6 +451,59 @@ on makeAssertions(theParent)
 			end if
 		end refuteInstanceOf
 		
+		(*!
+			@abstract
+				Tests whether an object inherits from another object.
+			@discussion
+				This test walks up the inheritance chain of <tt>descendantObject</tt>
+				until it finds <tt>obj</tt>, reaches the end of the inheritance
+				chain, or detects a cycle in the inheritance chain.
+		*)
+		on assertInheritsFrom(obj, descendantObj, msg)
+			local currObj, inheritanceChain
+			set currObj to descendantObj
+			set inheritanceChain to {} -- To detect cycles
+			repeat
+				set the end of inheritanceChain to currObj
+				try
+					set currObj to currObj's parent
+					if currObj is equal to obj or currObj is in inheritanceChain then exit repeat
+				on error errMsg number errNum
+					if errNum is -1728 then -- Can't get parent (end of inheritance chain)
+						exit repeat
+					else -- we should never get here
+						error "Unexpected error: " & errMsg number errNum
+					end if
+				end try
+			end repeat
+			if currObj is not equal to obj then fail(msg)
+		end assertInheritsFrom
+		
+		(*!
+			@abstract Succeeds when <tt>anotherObj</tt> does not inherit
+			(directly on indirectly) from <tt>obj</tt>.
+		*)
+		on refuteInheritsFrom(obj, anotherObj, msg)
+			local currObj, inheritanceChain
+			set currObj to anotherObj
+			set inheritanceChain to {} -- To detect cycles
+			repeat
+				set the end of inheritanceChain to currObj
+				try
+					set currObj to currObj's parent
+					if currObj is equal to obj then exit repeat
+					if currObj is in inheritanceChain then return -- cycle
+				on error errMsg number errNum
+					if errNum is -1728 then -- Can't get parent (end of inheritance chain)
+						return
+					else -- we should never get here
+						error "Unexpected error: " & errMsg number errNum
+					end if
+				end try
+			end repeat
+			fail(msg)
+		end refuteInheritsFrom
+		
 		(*! @abstract Tests whether a variable is a reference. *)
 		on assertReference(anObject)
 			try
