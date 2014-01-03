@@ -214,7 +214,7 @@ end makeTestResult
 	 @return A script inheriting from the given script and implementing assertions.
 	*)
 on makeAssertions(theParent)
-	script
+	script TestAssertions
 		property parent : theParent
 		
 		on test_failed_error_number()
