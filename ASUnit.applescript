@@ -223,6 +223,21 @@ on makeAssertions(theParent)
 			return TEST_SKIPPED
 		end test_skipped_error_number
 		
+		(*! @abstract Helper handler that returns a textual representation of an inheritance chain. *)
+		on formatInheritanceChain(chain)
+			local n
+			set n to the length of the chain
+			if n = 0 then return "(The inheritance chain is empty)"
+			if n > 0 then
+				local s
+				set s to "Inheritance chain: " & pp(item 1 of chain)
+				repeat with i from 2 to n
+					set s to s & linefeed & "                   -> " & pp(item i of chain)
+				end repeat
+				return s
+			end if
+		end formatInheritanceChain
+		
 		(*!
 		 @abstract Raises a TEST_SKIPPED error.
 		 @param why <em>[text]</em> A message.
@@ -464,7 +479,8 @@ on makeAssertions(theParent)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(pp(expr) & space & "is not a kind of" & space & pp(klass) & ".")
+			fail(pp(expr) & space & "is not a kind of" & space & pp(klass) & "." & linefeed & Â
+				formatInheritanceChain(inheritanceChain))
 		end assertKindOf
 		
 		on refuteKindOf(klass, expr)
@@ -477,9 +493,9 @@ on makeAssertions(theParent)
 				on error
 					return
 				end try
+				set the end of the inheritanceChain to curr
 				if k is klass then exit repeat
 				if klass is number and k is in {integer, real} then exit repeat
-				set the end of the inheritanceChain to curr
 				try
 					set curr to curr's parent
 					if curr is in inheritanceChain then return -- cycle
@@ -488,7 +504,8 @@ on makeAssertions(theParent)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(pp(expr) & space & "is a kind of" & space & pp(klass) & ".")
+			fail(pp(expr) & space & "is a kind of" & space & pp(klass) & "." & linefeed & Â
+				formatInheritanceChain(inheritanceChain))
 		end refuteKindOf
 		
 		(*!
@@ -508,13 +525,17 @@ on makeAssertions(theParent)
 				try
 					set currObj to currObj's parent
 					if currObj is equal to ancestor then return
-					if currObj is in inheritanceChain then exit repeat -- cycle
+					if currObj is in inheritanceChain then -- cycle
+						set the end of inheritanceChain to currObj
+						exit repeat
+					end if
 				on error errMsg number errNum
 					if errNum is -1728 then exit repeat -- Can't get parent (end of inheritance chain)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(pp(descendant) & space & "does not inherit from" & space & pp(ancestor) & ".")
+			fail(pp(descendant) & space & "does not inherit from" & space & pp(ancestor) & "." & linefeed & Â
+				formatInheritanceChain(inheritanceChain))
 		end assertInheritsFrom
 		
 		(*!
@@ -529,14 +550,18 @@ on makeAssertions(theParent)
 				set the end of inheritanceChain to currObj
 				try
 					set currObj to currObj's parent
-					if currObj is equal to obj then exit repeat
+					if currObj is equal to obj then
+						set the end of inheritanceChain to currObj
+						exit repeat
+					end if
 					if currObj is in inheritanceChain then return -- cycle
 				on error errMsg number errNum
 					if errNum is -1728 then return -- Can't get parent (end of inheritance chain)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(pp(anotherObj) & space & "inherits from" & space & pp(obj) & ".")
+			fail(pp(anotherObj) & space & "inherits from" & space & pp(obj) & "." & linefeed & Â
+				formatInheritanceChain(inheritanceChain))
 		end refuteInheritsFrom
 		
 		(*! @abstract Tests whether a variable is a reference. *)
