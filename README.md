@@ -129,7 +129,7 @@ Consider the following two scripts:
 		end script
 
 		script B
-			property parent : Father
+			property parent : A
 			property class : "Child"
 		end script
 
