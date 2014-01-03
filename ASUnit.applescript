@@ -246,7 +246,7 @@ on makeAssertions(theParent)
 		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
 		*)
 		on ok(expr)
-			if not expr then fail("The given expression did not evaluate to true")
+			if not expr then fail("The given expression did not evaluate to true.")
 		end ok
 		
 		(*!
@@ -254,7 +254,7 @@ on makeAssertions(theParent)
 		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
 		*)
 		on notOk(expr)
-			if expr then fail("The given expression did not evaluate to false")
+			if expr then fail("The given expression did not evaluate to false.")
 		end notOk
 		
 		(*!
@@ -343,23 +343,9 @@ on makeAssertions(theParent)
 		*)
 		on assertEqual(expected, value)
 			local msg, got, wanted, errMsg
-			if value's class is not expected's class then
-				try -- to pretty print the classes
-					set msg to "Expected class: " & pp(expected's class) & linefeed & Â
-						"  Actual class: " & pp(value's class)
-				on error -- produce a more generic message
-					set msg to "The value does not belong to the expected class."
-				end try
-				fail(msg)
-			end if
 			considering case, diacriticals, hyphens, punctuation and white space
 				if (value is not expected) then
-					try -- to pretty print the values
-						set msg to "Expected: " & pp(expected) & linefeed & "  Actual: " & pp(value)
-					on error -- produce a more generic message
-						set msg to "Got an unexpected value"
-					end try
-					fail(msg)
+					fail("Expected: " & pp(expected) & linefeed & "  Actual: " & pp(value))
 				end if
 			end considering
 		end assertEqual
@@ -377,16 +363,9 @@ on makeAssertions(theParent)
 		*)
 		on assertNotEqual(unexpected, value)
 			local msg, unwanted, errMsg
-			if value's class is not equal to unexpected's class then return
-			-- else, the values are of the same type
 			considering case, diacriticals, hyphens, punctuation and white space
 				if value is equal to unexpected then
-					try -- to pretty print the values
-						set msg to "Expected a value different from " & pp(unexpected)
-					on error -- produce a more generic message
-						set msg to "The values are not different"
-					end try
-					fail(msg)
+					fail("Expected a value different from " & pp(unexpected) & ".")
 				end if
 			end considering
 		end assertNotEqual
@@ -403,7 +382,7 @@ on makeAssertions(theParent)
 		
 		(*! @abstract Fails unless <tt>e1</tt> and <tt>e2</tt> are within <tt>delta</tt> from each other. *)
 		on assertEqualAbsError(e1, e2, delta)
-			if delta < 0.0 then fail("The absolute error cannot be negative")
+			if delta < 0.0 then fail("The absolute error cannot be negative.")
 			local n
 			set n to e1 - e2
 			if n < 0.0 then set n to -n
@@ -412,7 +391,7 @@ on makeAssertions(theParent)
 		
 		(*! @abstract Fails unless <tt>e1</tt> and <tt>e2</tt> have a relative error less than <tt>eps</tt>. *)
 		on assertEqualRelError(e1, e2, eps)
-			if eps < 0.0 then fail("The relative error cannot be negative")
+			if eps < 0.0 then fail("The relative error cannot be negative.")
 			local min
 			local n
 			set n to e1 - e2
@@ -434,16 +413,11 @@ on makeAssertions(theParent)
 			try
 				set k to class of expr
 			on error
-				fail("Can't get class of expression.")
+				fail("Can't get class of" & space & pp(expr) & ".")
 			end try
 			if k is not klass then
-				try -- to pretty print the classes
-					set msg to "Expected class: " & pp(klass) & linefeed & Â
-						"  Actual class: " & pp(k)
-				on error
-					set msg to "Expected the argument to have the specified class."
-				end try
-				fail(msg)
+				fail("Expected class: " & pp(klass) & linefeed & Â
+					"  Actual class: " & pp(k))
 			end if
 		end assertInstanceOf
 		
@@ -456,14 +430,8 @@ on makeAssertions(theParent)
 			on error
 				return
 			end try
-			if k is klass then
-				try -- to pretty print the class
-					set msg to "Expected class to be different from " & pp(klass) & "."
-				on error
-					set msg to "Expected the argument to belong to a different class."
-				end try
-				fail(msg)
-			end if
+			if k is klass then Â
+				fail("Expected class of " & pp(expr) & linefeed & "to be different from " & pp(klass) & ".")
 		end refuteInstanceOf
 		
 		(*!
@@ -475,7 +443,7 @@ on makeAssertions(theParent)
 				to <tt>assertInstanceOf()</tt>. The main difference is that it can be
 				used to test whether an expression is a number, no matter if integer or real.
 		*)
-		on assertKindOf(klass, expr, msg)
+		on assertKindOf(klass, expr)
 			local curr, k, inheritanceChain
 			set curr to expr
 			set inheritanceChain to {}
@@ -496,11 +464,31 @@ on makeAssertions(theParent)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(msg)
+			fail(pp(expr) & space & "is not a kind of" & space & pp(klass) & ".")
 		end assertKindOf
 		
-		on refuteKindOf(klass, expr, msg)
-			failIf(assertKindOf, {klass, expr, ""}, msg)
+		on refuteKindOf(klass, expr)
+			local curr, k, inheritanceChain
+			set curr to expr
+			set inheritanceChain to {}
+			repeat
+				try
+					set k to class of curr
+				on error
+					return
+				end try
+				if k is klass then exit repeat
+				if klass is number and k is in {integer, real} then exit repeat
+				set the end of the inheritanceChain to curr
+				try
+					set curr to curr's parent
+					if curr is in inheritanceChain then return -- cycle
+				on error errMsg number errNum
+					if errNum is -1728 then return -- Can't get parent (end of inheritance chain)
+					error "Unexpected error: " & errMsg number errNum
+				end try
+			end repeat
+			fail(pp(expr) & space & "is a kind of" & space & pp(klass) & ".")
 		end refuteKindOf
 		
 		(*!
@@ -511,7 +499,7 @@ on makeAssertions(theParent)
 				until it finds <tt>obj</tt>, reaches the end of the inheritance
 				chain, or detects a cycle in the inheritance chain.
 		*)
-		on assertInheritsFrom(ancestor, descendant, msg)
+		on assertInheritsFrom(ancestor, descendant)
 			local currObj, inheritanceChain
 			set currObj to descendant
 			set inheritanceChain to {}
@@ -520,19 +508,20 @@ on makeAssertions(theParent)
 				try
 					set currObj to currObj's parent
 					if currObj is equal to ancestor then return
-					if currObj is in inheritanceChain then error number -1728 -- cycle
+					if currObj is in inheritanceChain then exit repeat -- cycle
 				on error errMsg number errNum
-					if errNum is -1728 then fail(msg) -- Can't get parent (end of inheritance chain)
+					if errNum is -1728 then exit repeat -- Can't get parent (end of inheritance chain)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
+			fail(pp(descendant) & space & "does not inherit from" & space & pp(ancestor) & ".")
 		end assertInheritsFrom
 		
 		(*!
 			@abstract Succeeds when <tt>anotherObj</tt> does not inherit
 			(directly on indirectly) from <tt>obj</tt>.
 		*)
-		on refuteInheritsFrom(obj, anotherObj, msg)
+		on refuteInheritsFrom(obj, anotherObj)
 			local currObj, inheritanceChain
 			set currObj to anotherObj
 			set inheritanceChain to {} -- To detect cycles
@@ -547,7 +536,7 @@ on makeAssertions(theParent)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(msg)
+			fail(pp(anotherObj) & space & "inherits from" & space & pp(obj) & ".")
 		end refuteInheritsFrom
 		
 		(*! @abstract Tests whether a variable is a reference. *)
@@ -555,7 +544,7 @@ on makeAssertions(theParent)
 			try
 				anObject as reference -- Try to coerce to reference class
 			on error
-				fail("The given object is not a reference.")
+				fail(pp(anObject) & space & "is not a reference.")
 			end try
 		end assertReference
 		
@@ -571,7 +560,7 @@ on makeAssertions(theParent)
 			on error
 				return
 			end try
-			fail("The given object is a reference.")
+			fail("Got a reference to " & pp(anObject) & ".")
 		end assertNotReference
 		
 		(*! @abstract A synonym for <tt>assertReference()</tt>. *)
@@ -605,6 +594,8 @@ on makeAssertions(theParent)
 					AssertionFunctor's call(item 1 of args, item 2 of args)
 				else if n = 3 then
 					AssertionFunctor's call(item 1 of args, item 2 of args, item 3 of args)
+				else
+					error "Wrong number of arguments to assertion handler" number -1721
 				end if
 				error number TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED
 			on error errMsg number errNum
@@ -617,78 +608,127 @@ on makeAssertions(theParent)
 		
 		(*! @abstract Returns a textual representation of an object. *)
 		on pp(anObject)
-			if class of anObject is in {list, RGB color} then
+			local res, klass
+			try
+				set klass to class of anObject
+			on error -- can't get class
+				try
+					set res to "Ç" & anObject's name & "È"
+					return res
+				end try
+				try
+					set res to "Ç" & anObject's id & "'È"
+					return res
+				end try
+				try
+					set res to "Ç" & anObject's description & "È"
+					return res
+				end try
+				try
+					set res to anObject as text
+					return res
+				on error -- Give up
+					return "ÇobjectÈ"
+				end try
+			end try
+			
+			if klass is in {list, RGB color} then
 				local s, n
-				set n to (anObject's length) - 1
+				set n to anObject's length
+				if n = 0 then return "{}"
 				set s to "{"
-				repeat with i from 1 to n
+				repeat with i from 1 to n - 1
 					set s to s & pp(item i of anObject) & "," & space
 				end repeat
-				return s & pp(item (n + 1) of anObject) & "}"
-			else if class of anObject is record then
+				return s & pp(item n of anObject) & "}"
+			else if klass is record then
 				return "Çrecord " & pp(anObject as list) & "È"
-			else if class of anObject is script then
-				return "Çscript " & anObject's name & "È"
-			else if class of anObject is in {application, null} then
-				return "Çapplication " & anObject's name & "È"
+			else if klass is script then
+				if anObject is AppleScript then return "AppleScript"
+				try
+					set res to space & anObject's name
+				on error
+					try
+						set res to space & anObject's id
+					on error
+						set res to ""
+					end try
+				end try
+				return "Çscript" & res & "È"
+			else if klass is in {application, null} then
+				try
+					set res to space & anObject's name
+				on error
+					set res to ""
+				end try
+				return "Çapplication" & res & "È"
 			else
-				set res to anObject as text
-				if class of anObject is in {alias, boolean, class, constant, Â
+				try
+					set res to anObject as text
+				on error
+					try
+						set klass to klass as text
+						return "Çobject of class" & space & klass & "È"
+					on error
+						return "ÇobjectÈ"
+					end try
+				end try
+				if klass is in {alias, boolean, class, constant, Â
 					date, file, integer, POSIX file, real, text} then
 					return res
-				else if class of anObject is centimeters then
+				else if klass is centimeters then
 					return res & " centimeters"
-				else if class of anObject is feet then
+				else if klass is feet then
 					return res & " feet"
-				else if class of anObject is inches then
+				else if klass is inches then
 					return res & " inches"
-				else if class of anObject is kilometers then
+				else if klass is kilometers then
 					return res & " kilometers"
-				else if class of anObject is meters then
+				else if klass is meters then
 					return res & " meters"
-				else if class of anObject is miles then
+				else if klass is miles then
 					return res & " miles"
-				else if class of anObject is yards then
+				else if klass is yards then
 					return res & " yards"
-				else if class of anObject is square feet then
+				else if klass is square feet then
 					return res & " square feet"
-				else if class of anObject is square kilometers then
+				else if klass is square kilometers then
 					return res & " square kilometers"
-				else if class of anObject is square meters then
+				else if klass is square meters then
 					return res & " square meters"
-				else if class of anObject is square miles then
+				else if klass is square miles then
 					return res & " square miles"
-				else if class of anObject is square yards then
+				else if klass is square yards then
 					return res & " square yards"
-				else if class of anObject is cubic centimeters then
+				else if klass is cubic centimeters then
 					return res & " cubic centimeters"
-				else if class of anObject is cubic feet then
+				else if klass is cubic feet then
 					return res & " cubic feet"
-				else if class of anObject is cubic inches then
+				else if klass is cubic inches then
 					return res & " cubic inches"
-				else if class of anObject is cubic meters then
+				else if klass is cubic meters then
 					return res & " cubic meters"
-				else if class of anObject is cubic yards then
+				else if klass is cubic yards then
 					return res & " cubic yards"
-				else if class of anObject is gallons then
+				else if klass is gallons then
 					return res & " gallons"
-				else if class of anObject is liters then
+				else if klass is liters then
 					return res & " liters"
-				else if class of anObject is quarts then
+				else if klass is quarts then
 					return res & " quarts"
-				else if class of anObject is grams then
+				else if klass is grams then
 					return res & " grams"
-				else if class of anObject is kilograms then
+				else if klass is kilograms then
 					return res & " kilograms"
-				else if class of anObject is ounces then
+				else if klass is ounces then
 					return res & " ounces"
-				else if class of anObject is pounds then
+				else if klass is pounds then
 					return res & " pounds"
-				else if class of anObject is degrees Celsius then
+				else if klass is degrees Celsius then
 					return res & " degrees Celsius"
-				else if class of anObject is degrees Fahrenheit then
+				else if klass is degrees Fahrenheit then
 					return res & " degrees Fahrenheit"
-				else if class of anObject is degrees Kelvin then
+				else if klass is degrees Kelvin then
 					return res & " degrees Kelvin"
 				else
 					return res
