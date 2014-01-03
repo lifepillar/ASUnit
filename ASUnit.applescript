@@ -8,6 +8,8 @@
  @charset macintosh
 *)
 
+(*! @abstract <em>[text]</em> ASUnit's name. *)
+property name : "ASUnit"
 (*! @abstract <em>[text]</em> ASUnit's version. *)
 property version : "1.1.1"
 (*! @abstract <em>[text]</em> ASUnit's id. *)
@@ -1016,13 +1018,18 @@ property suite : ASUnitSentinel
 		Testing a composite returns a <tt>TestResult</tt> object.
 	*)
 script TestComponent
+	-- The parent property must be set to something different from the top-level script.
+	-- Without explicitly setting its parent, TestComponent
+	-- would inherit the top-level name property and would pass it to all its descendant scripts,
+	-- which would not be able to get their own name any longer (see TestCase's fullName()).
+	property parent : AppleScript
 	
 	(*!
 		 @abstract Runs a test.
 		 @return <em>[script]</em> A <tt>TestResult</tt> object.
 		*)
 	on test()
-		set aTestResult to makeTestResult(name)
+		set aTestResult to TOP_LEVEL's makeTestResult(name)
 		tell aTestResult
 			runTest(me)
 		end tell
