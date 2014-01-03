@@ -1022,6 +1022,9 @@ script TestComponent
 	-- Without explicitly setting its parent, TestComponent
 	-- would inherit the top-level name property and would pass it to all its descendant scripts,
 	-- which would not be able to get their own name any longer (see TestCase's fullName()).
+	-- AppleScript is the correct object to inherit from: it makes all global constants
+	-- available in tests. The AppleScript object has a name property, but fortunately
+	-- it is not inherited (as well as its version property).
 	property parent : AppleScript
 	
 	(*!
