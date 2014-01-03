@@ -3,7 +3,7 @@
  	An AppleScript testing framework.
  @abstract License: GNU GPL, see COPYING for details.
  @author Nir Soffer, Lifepillar
- @copyright 2013√ê2014 Lifepillar, 2006 Nir Soffer
+ @copyright 2013–2014 Lifepillar, 2006 Nir Soffer
  @version 1.1.1
  @charset macintosh
 *)
@@ -430,10 +430,16 @@ on makeAssertions(theParent)
 		
 		(*! @abstract Tests whether the given expression belongs to the given class. *)
 		on assertInstanceOf(klass, expr)
-			if class of expr is not klass then
+			local k
+			try
+				set k to class of expr
+			on error
+				fail("Can't get class of expression.")
+			end try
+			if k is not klass then
 				try -- to pretty print the classes
 					set msg to "Expected class: " & pp(klass) & linefeed & ¬
-						"  Actual class: " & pp(class of expr)
+						"  Actual class: " & pp(k)
 				on error
 					set msg to "Expected the argument to have the specified class."
 				end try
@@ -444,11 +450,17 @@ on makeAssertions(theParent)
 		
 		(*! @abstract Succeeds when the given expression is not of the given class. *)
 		on refuteInstanceOf(klass, expr)
-			if class of expr is klass then
+			local k
+			try
+				set k to class of expr
+			on error
+				return
+			end try
+			if k is klass then
 				try -- to pretty print the class
-					set msg to "Expected class different from " & pp(klass)
+					set msg to "Expected class to be different from " & pp(klass) & "."
 				on error
-					set msg to "Expected the argument to have a different class."
+					set msg to "Expected the argument to belong to a different class."
 				end try
 				fail(msg)
 			end if
@@ -572,8 +584,8 @@ on makeAssertions(theParent)
 				Fails when the given assertion succeeds.
 			@discussion
 				This is mostly a convenience for testing ASUnit itself,
-				since for every positive assertion (assert√â, should√â),
-				ASUnit already defines a corresponding negative assertion (refute√â, shouldnt√â).
+				since for every positive assertion (assert…, should…),
+				ASUnit already defines a corresponding negative assertion (refute…, shouldnt…).
 			@param assertion <em>[handler]</em> An assertion handler.
 			@param args <em>[list]</em> A list of arguments to be passed to the handler.
 				The length of the list must match the number of arguments of the assertion.
