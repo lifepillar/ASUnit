@@ -456,6 +456,43 @@ on makeAssertions(theParent)
 		
 		(*!
 			@abstract
+				Tests whether the given object or any of its ancestors belongs to the given class.
+			@discussion
+				This is mainly useful for user-defined scripts and user-defined
+				inheritance hierarchies. For built-in types, it is nearly equivalent
+				to <tt>assertInstanceOf()</tt>. The main difference is that it can be
+				used to test whether an expression is a number, no matter if integer or real.
+		*)
+		on assertKindOf(klass, expr, msg)
+			local curr, k, inheritanceChain
+			set curr to expr
+			set inheritanceChain to {}
+			repeat
+				try
+					set k to class of curr
+				on error
+					exit repeat
+				end try
+				if k is klass then return
+				if klass is number and k is in {integer, real} then return
+				set the end of the inheritanceChain to curr
+				try
+					set curr to curr's parent
+					if curr is in inheritanceChain then exit repeat -- cycle
+				on error errMsg number errNum
+					if errNum is -1728 then exit repeat -- Can't get parent (end of inheritance chain)
+					error "Unexpected error: " & errMsg number errNum
+				end try
+			end repeat
+			fail(msg)
+		end assertKindOf
+		
+		on refuteKindOf(klass, expr, msg)
+			failIf(assertKindOf, {klass, expr, ""}, msg)
+		end refuteKindOf
+		
+		(*!
+			@abstract
 				Tests whether an object inherits from another object.
 			@discussion
 				This test walks up the inheritance chain of <tt>descendantObject</tt>
