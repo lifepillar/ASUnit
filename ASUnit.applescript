@@ -744,9 +744,9 @@ script TestLogger
 	property parent : Observer
 	property _TestResult : missing value
 	property separator : "----------------------------------------------------------------------"
-	property successColor : {256 * 113, 256 * 140, 256 * 0} -- RGB (113,140,0)
-	property defectColor : {256 * 200, 256 * 40, 256 * 41} -- RGB (200,40,41)
-	property defaultColor : {256 * 77, 256 * 77, 256 * 76} -- RGB (77,77,76)
+	property successColor : {256 * 129, 256 * 167, 256 * 147} -- RGB (129,167,147)
+	property defectColor : {256 * 215, 256 * 67, 256 * 34} -- RGB (215,67,34)
+	property defaultColor : {256 * 12, 256 * 56, 256 * 67} -- RGB (12,56,67)
 	
 	(*! @abstract TODO *)
 	on setNotifier(aTestResult)
