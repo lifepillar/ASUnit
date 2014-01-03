@@ -97,28 +97,53 @@ The general structure of a test script is as follows:
 Each unit test is a script that inherits from `UnitTest(me)`. Inside such scripts,
 you may use a number of assertion handlers:
 
-- `skip(msg)`: use this to skip a given test.
-- `fail(msg)`: make the test unconditionally fail.
-- `ok(expr)`: succeeds when the boolean `expr` evaluates to true.
-- `notOk(expr)`: succeeds when `expr` evaluates to false.
-- `assert(expr, msg)` or `should(expr, msg)`: succeeds when `expr` is true; prints `msg` otherwise.
-- `refute(expr, msg)` or `shouldnt(expr, msg)`: succeeds when `expr` is false; prints `msg` otherwise.
-- `shouldRaise(num, aScript, msg)`: fails unless `aScript` raises exception `num` when run.
-- `shouldntRaise(num, aScript, msg)`: fails if `aScript` raises exception `num` when run.
-- `assertEqual(exp, value)` or `shouldEqual(exp, value)`: succeeds when `exp` = `value`.
-- `assertNotEqual(exp, value)` or `shouldNotEqual(exp, value)`: succeeds when `exp` ≠ `value`.
-- `assertEqualAbsError(e1, e2, delta)`: succeeds when `|e1-e2| <= delta`.
-- `assertEqualRelError(e1, e2, eps)`: fails if `e1` and `e2` have a relative error greater than `eps`.
-- `assertReference(x)` or `shouldBeReference(x)`: succeeds when `x` is a reference.
-- `assertNotReference(x)` or `shouldNotBeReference(x)`: fails when `x` is a reference.
-- `assertInstanceOf(aClass, expr)`: succeeds when the class of `expr` is equal to `aClass`.
-- `refuteInstanceOf(aClass, expr)`: fails when the class of `expr` is equal to `aClass`.
-- `assertInheritsFrom(obja, objb)`: succeeds when `objb` (directly or indirectly) inherits from `obja`.
-- `refuteInheritsFrom(obja, objb)`: succeeds if `objb` does not inherit from `obja`.
-- `failIf(assertion, args, msg)`: succeeds when the given assertion fails.
+- `skip(msg)`: skips the current test.
+- `fail(msg)`: makes the test unconditionally fail.
+- `failIf(assertion, args, msg)`: succeeds iff the given assertion fails.
+- `ok(expr)`: succeeds iff the boolean `expr` evaluates to true.
+- `notOk(expr)`: succeeds iff `expr` evaluates to false.
+- `assert(expr, msg)` or `should(expr, msg)`: succeeds iff `expr` is true.
+- `refute(expr, msg)` or `shouldnt(expr, msg)`: succeeds iff `expr` is false.
+- `shouldRaise(num, aScript, msg)`: succeeds iff `aScript` raises exception `num` when run.
+- `shouldntRaise(num, aScript, msg)`: succeeds iff `aScript` does not raise exception `num` when run.
+- `assertEqual(exp, value)` or `shouldEqual(exp, value)`: succeeds iff `exp` = `value`.
+- `assertNotEqual(exp, value)` or `shouldNotEqual(exp, value)`: succeeds iff `exp` ≠ `value`.
+- `assertEqualAbsError(e1, e2, delta)`: succeeds iff `|e1-e2| <= delta`.
+- `assertEqualRelError(e1, e2, eps)`: succeeds iff `e1` and `e2` have a relative error no greater than `eps`.
+- `assertReference(x)` or `shouldBeReference(x)`: succeeds iff `x` is a reference.
+- `assertNotReference(x)` or `shouldNotBeReference(x)`: succeeds iff `x` is not a reference.
+- `assertInstanceOf(aClass, expr)`: succeeds iff the class of `expr` is equal to `aClass`.
+- `refuteInstanceOf(aClass, expr)`: succeeds iff the class of `expr` is not `aClass`.
+- `assertKindOf(aClass, expr, msg)`: succeeds iff `expr` or any of its ancestors belongs to `aClass`.
+- `refuteKindOf(aClass, expr, msg)`: succeeds iff neither `expr` nor any of its ancestors belong to `aClass`.
+- `assertInheritsFrom(obja, objb, msg)`: succeeds iff `objb` (directly or indirectly) inherits from `obja`.
+- `refuteInheritsFrom(obja, objb, msg)`: succeeds iff `objb` does not inherit from `obja`.
 
-Some of the assertions take as an argument a textual message,
+Some of the assertions take as an argument a textual message (`msg` parameter),
 which is printed when the assertion fails.
+
+A clarification is in order for the last three types of assertions.
+Consider the following two scripts:
+
+		script Father
+			property class : "Father"
+		end script
+
+		script Child
+			property parent : Father
+			property class : "Child"
+		end script
+
+Then, these assertions must succeed:
+
+		assertInstanceOf("Child", Child)
+		assertInstanceOf("Father", Father)
+		refuteInstanceOf("Father", Child)
+		assertKindOf("Father", Child, "")
+		refuteInstanceOf(script, Child)
+		assertKindOf(script, Child, "")
+		assertInheritsFrom(Father, Child, "")
+		refuteInheritsFrom(Child, Father, "")
 
 Related unit tests can be grouped together into a script that must
 inherit from `TestSet(me)`. One advantage of grouping
