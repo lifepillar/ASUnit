@@ -161,5 +161,5 @@ names, as it was done in the example above.
 
 GNU GPL, see COPYING for details.
 
-Copyright © 2013 Lifepillar, 2006 Nir Soffer
+Copyright © 2013–2014 Lifepillar, 2006 Nir Soffer
 
