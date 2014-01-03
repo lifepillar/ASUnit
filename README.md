@@ -99,7 +99,6 @@ you may use a number of assertion handlers:
 
 - `skip(msg)`: skips the current test.
 - `fail(msg)`: makes the test unconditionally fail.
-- `failIf(assertion, args, msg)`: succeeds iff the given assertion fails.
 - `ok(expr)`: succeeds iff the boolean `expr` evaluates to true.
 - `notOk(expr)`: succeeds iff `expr` evaluates to false.
 - `assert(expr, msg)` or `should(expr, msg)`: succeeds iff `expr` is true.
@@ -114,10 +113,10 @@ you may use a number of assertion handlers:
 - `assertNotReference(x)` or `shouldNotBeReference(x)`: succeeds iff `x` is not a reference.
 - `assertInstanceOf(aClass, expr)`: succeeds iff the class of `expr` is equal to `aClass`.
 - `refuteInstanceOf(aClass, expr)`: succeeds iff the class of `expr` is not `aClass`.
-- `assertKindOf(aClass, expr, msg)`: succeeds iff `expr` or any of its ancestors belongs to `aClass`.
-- `refuteKindOf(aClass, expr, msg)`: succeeds iff neither `expr` nor any of its ancestors belong to `aClass`.
-- `assertInheritsFrom(obja, objb, msg)`: succeeds iff `objb` (directly or indirectly) inherits from `obja`.
-- `refuteInheritsFrom(obja, objb, msg)`: succeeds iff `objb` does not inherit from `obja`.
+- `assertKindOf(aClass, expr)`: succeeds iff `expr` or any of its ancestors belongs to `aClass`.
+- `refuteKindOf(aClass, expr)`: succeeds iff neither `expr` nor any of its ancestors belong to `aClass`.
+- `assertInheritsFrom(a, b)`: succeeds iff `b` (directly or indirectly) inherits from `a`.
+- `refuteInheritsFrom(a, b)`: succeeds iff `b` does not inherit from `a`.
 
 Some of the assertions take as an argument a textual message (`msg` parameter),
 which is printed when the assertion fails.
@@ -125,25 +124,25 @@ which is printed when the assertion fails.
 A clarification is in order for the last three types of assertions.
 Consider the following two scripts:
 
-		script Father
+		script A
 			property class : "Father"
 		end script
 
-		script Child
+		script B
 			property parent : Father
 			property class : "Child"
 		end script
 
 Then, these assertions must succeed:
 
-		assertInstanceOf("Child", Child)
-		assertInstanceOf("Father", Father)
-		refuteInstanceOf("Father", Child)
-		assertKindOf("Father", Child, "")
-		refuteInstanceOf(script, Child)
-		assertKindOf(script, Child, "")
-		assertInheritsFrom(Father, Child, "")
-		refuteInheritsFrom(Child, Father, "")
+		assertInstanceOf("Father", A)
+		assertInstanceOf("Child", B)
+		refuteInstanceOf("Father", B)
+		assertKindOf("Father", B)
+		refuteInstanceOf(script, A)
+		assertKindOf(script, A)
+		assertInheritsFrom(A, B)
+		refuteInheritsFrom(B, A)
 
 Related unit tests can be grouped together into a script that must
 inherit from `TestSet(me)`. One advantage of grouping
