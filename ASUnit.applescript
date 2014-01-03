@@ -3,7 +3,7 @@
  	An AppleScript testing framework.
  @abstract License: GNU GPL, see COPYING for details.
  @author Nir Soffer, Lifepillar
- @copyright 2013 Lifepillar, 2006 Nir Soffer
+ @copyright 2013Ð2014 Lifepillar, 2006 Nir Soffer
  @version 1.1.1
  @charset macintosh
 *)
