@@ -466,6 +466,7 @@ on makeAssertions(theParent)
 				try
 					set k to class of curr
 				on error
+					set the end of inheritanceChain to curr
 					exit repeat
 				end try
 				if k is klass then return
@@ -473,7 +474,10 @@ on makeAssertions(theParent)
 				set the end of the inheritanceChain to curr
 				try
 					set curr to curr's parent
-					if curr is in inheritanceChain then exit repeat -- cycle
+					if curr is in inheritanceChain then -- cycle
+						set the end of inheritanceChain to curr
+						exit repeat
+					end if
 				on error errMsg number errNum
 					if errNum is -1728 then exit repeat -- Can't get parent (end of inheritance chain)
 					error "Unexpected error: " & errMsg number errNum
