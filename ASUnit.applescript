@@ -14,6 +14,7 @@ property version : "1.1.1"
 property TEST_FAILED : 1000
 (*! @abstract Error number signalling a skipped test. *)
 property TEST_SKIPPED : 1001
+property TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED : 1002
 property TOP_LEVEL : me
 
 (*!
