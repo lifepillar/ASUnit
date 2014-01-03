@@ -10,6 +10,8 @@
 
 (*! @abstract <em>[text]</em> ASUnit's version. *)
 property version : "1.1.1"
+(*! @abstract <em>[text]</em> ASUnit's id. *)
+property id : "com.lifepillar.ASUnit"
 (*! @abstract Error number signalling a failed test. *)
 property TEST_FAILED : 1000
 (*! @abstract Error number signalling a skipped test. *)
