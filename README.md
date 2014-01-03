@@ -108,7 +108,7 @@ you may use a number of assertion handlers:
 - `assertEqual(exp, value)` or `shouldEqual(exp, value)`: succeeds iff `exp` = `value`.
 - `assertNotEqual(exp, value)` or `shouldNotEqual(exp, value)`: succeeds iff `exp` ≠ `value`.
 - `assertEqualAbsError(e1, e2, delta)`: succeeds iff `|e1-e2| <= delta`.
-- `assertEqualRelError(e1, e2, eps)`: succeeds iff `e1` and `e2` have a relative error no greater than `eps`.
+- `assertEqualRelError(e1, e2, eps)`: succeeds iff `|e1-e2| <= min(|e1|,|e2|) * eps`.
 - `assertReference(x)` or `shouldBeReference(x)`: succeeds iff `x` is a reference.
 - `assertNotReference(x)` or `shouldNotBeReference(x)`: succeeds iff `x` is not a reference.
 - `assertInstanceOf(aClass, expr)`: succeeds iff the class of `expr` is equal to `aClass`.
