@@ -527,6 +527,42 @@ on makeAssertions(theParent)
 			assertNotReference(anObject)
 		end shouldNotBeReference
 		
+		(*!
+			@abstract
+				Fails when the given assertion succeeds.
+			@discussion
+				This is mostly a convenience for testing ASUnit itself,
+				since for every positive assertion (assertÉ, shouldÉ),
+				ASUnit already defines a corresponding negative assertion (refuteÉ, shouldntÉ).
+			@param assertion <em>[handler]</em> An assertion handler.
+			@param args <em>[list]</em> A list of arguments to be passed to the handler.
+				The length of the list must match the number of arguments of the assertion.
+			@param msg <em>[text]</em> A message to print when this test fails.
+		*)
+		on failIf(assertion, args, msg)
+			local n
+			script AssertionFunctor
+				property call : assertion
+			end script
+			if args's class is not list then set args to {args}
+			set n to length of args
+			try
+				if n = 1 then
+					AssertionFunctor's call(item 1 of args)
+				else if n = 2 then
+					AssertionFunctor's call(item 1 of args, item 2 of args)
+				else if n = 3 then
+					AssertionFunctor's call(item 1 of args, item 2 of args, item 3 of args)
+				end if
+				error number TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED
+			on error errMsg number errNum
+				if errNum is TEST_FAILED then return
+				if errNum is TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED then fail(msg)
+				if errNum is TEST_SKIPPED then skip(msg)
+				error errMsg number errNum
+			end try
+		end failIf
+		
 		(*! @abstract Returns a textual representation of an object. *)
 		on pp(anObject)
 			if class of anObject is in {list, RGB color} then
