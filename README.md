@@ -113,6 +113,9 @@ you may use a number of assertion handlers:
 - `assertNotReference(x)` or `shouldNotBeReference(x)`: fails when `x` is a reference.
 - `assertInstanceOf(aClass, expr)`: succeeds when the class of `expr` is equal to `aClass`.
 - `refuteInstanceOf(aClass, expr)`: fails when the class of `expr` is equal to `aClass`.
+- `assertInheritsFrom(obja, objb)`: succeeds when `objb` (directly or indirectly) inherits from `obja`.
+- `refuteInheritsFrom(obja, objb)`: succeeds if `objb` does not inherit from `obja`.
+- `failIf(assertion, args, msg)`: succeeds when the given assertion fails.
 
 Some of the assertions take as an argument a textual message,
 which is printed when the assertion fails.
