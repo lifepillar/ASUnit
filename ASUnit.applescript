@@ -1251,7 +1251,7 @@ on makeTestLoader()
 			 	in the tests scripts in the specified folder.
 			*)
 		on loadTestsFromFolder(aFolder)
-			set suite to makeTestSuite("All Tests in " & (aFolder as text))
+			set suite to TOP_LEVEL's makeTestSuite("All Tests in " & (aFolder as text))
 			compileSourceFiles(aFolder)
 			
 			tell application "Finder"
