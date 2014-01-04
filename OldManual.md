@@ -333,7 +333,7 @@ the suite:
 
     script HTMLFormatter
         property parent : Visitor
-        peoperty html : missing value
+        property html : missing value
         
         on format(aTest)
             set html to {}
