@@ -18,6 +18,7 @@ property id : "com.lifepillar.ASUnit"
 property TEST_FAILED : 1000
 (*! @abstract Error number signalling a skipped test. *)
 property TEST_SKIPPED : 1001
+(*! @abstract Error number used inside @link failIf @/link. *)
 property TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED : 1002
 property TOP_LEVEL : me
 
