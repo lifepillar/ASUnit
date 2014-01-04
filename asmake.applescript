@@ -97,8 +97,8 @@ script build
 	property description : "Build all source AppleScript scripts."
 	run asunit
 	osacompile({Â
-		"examples/HexString", "examples/Test HexString", Â
-		"templates/Test Template", "templates/Test Loader", Â
+		"examples/HexString", "examples/Test HexString", "examples/Test Loader", Â
+		"templates/Test Template", Â
 		"templates/Runtime Loader", "templates/MyScript"})
 end script
 
