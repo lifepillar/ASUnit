@@ -6,9 +6,8 @@
 		Runs all the test scripts in the current folder.
 	@charset macintosh
 *)
-property parent : Â
-	load script file (((path to library folder from user domain) as text) Â
-		& "Script Libraries:ASUnit.scpt")
+property parent : load script (((path to library folder from user domain) as text) Â
+	& "Script Libraries:ASUnit.scpt") as alias
 
 set pwd to (the folder of file (path to me) of application "Finder")
 set suite to makeTestLoader()'s loadTestsFromFolder(pwd)

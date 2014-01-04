@@ -13,9 +13,8 @@ script |Load script|
 	
 	script |Loading the script|
 		property parent : UnitTest(me)
-		set HexString to run script file Â
-			((folder of file (path to me) of application "Finder" as text) Â
-				& "HexString.applescript")
+		set HexString to run script ((folder of file (path to me) of application "Finder" as text) Â
+			& "HexString.applescript") as alias
 		assert(HexString's class = script, "The script was not loaded correctly.")
 	end script
 end script

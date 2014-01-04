@@ -15,9 +15,8 @@
 ---------------------------------------------------------------------------------------
 property suitename : "AppleScript's Variable Types and You"
 ---------------------------------------------------------------------------------------
-property parent : Â
-	load script file (((path to library folder from user domain) as text) Â
-		& "Script Libraries:ASUnit.scpt")
+property parent : load script (((path to library folder from user domain) as text) Â
+	& "Script Libraries:ASUnit.scpt") as alias
 (* For OS X 10.9 or later you may use the following instead:
 use AppleScript
 property parent : script "ASUnit"

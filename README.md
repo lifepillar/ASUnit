@@ -25,8 +25,8 @@ To use ASUnit with AppleScript 2.3 or later (OS X 10.9 or later), add
 at the top of your test script. For previous systems, use:
 
     property parent : ¬
-      load script file (((path to library folder from user domain) as text) ¬
-        & "Script Libraries:ASUnit.scpt")
+      load script (((path to library folder from user domain) as text) ¬
+        & "Script Libraries:ASUnit.scpt") as alias
 
 
 ### Running the tests

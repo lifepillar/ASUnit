@@ -17,9 +17,8 @@ global MyScript -- The variable holding the script to be tested
 ---------------------------------------------------------------------------------------
 
 property TopLevel : me
-property parent : Â
-	load script file (((path to library folder from user domain) as text) Â
-		& "Script Libraries:ASUnit.scpt")
+property parent : load script (((path to library folder from user domain) as text) Â
+	& "Script Libraries:ASUnit.scpt") as alias
 property suite : makeTestSuite(suitename)
 
 set suite's loggers to {AppleScriptEditorLogger, ConsoleLogger}
