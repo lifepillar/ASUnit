@@ -1241,7 +1241,7 @@ end makeTestSuite
 on makeTestLoader()
 	
 	script TestLoader
-		property parent : AppleScript
+		property name : "TestLoader"
 		
 		-- only files that starts with prefix will be considered as tests
 		property prefix : "Test"
@@ -1251,7 +1251,7 @@ on makeTestLoader()
 			 	in the tests scripts in the specified folder.
 			*)
 		on loadTestsFromFolder(aFolder)
-			set suite to TOP_LEVEL's makeTestSuite("All Tests in " & (aFolder as text))
+			set suite to makeTestSuite("All Tests in " & (aFolder as text))
 			compileSourceFiles(aFolder)
 			
 			tell application "Finder"
