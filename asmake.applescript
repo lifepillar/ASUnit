@@ -31,7 +31,7 @@ on Task(t)
 				set src to {src}
 			end if
 			repeat with s in src
-				sh("osacompile -d -x -o" & space & Â
+				sh("osacompile -x -o" & space & Â
 					quoted form of (s & ".scpt") & space & Â
 					quoted form of (s & ".applescript"))
 			end repeat
