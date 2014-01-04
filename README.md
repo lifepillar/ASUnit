@@ -1,4 +1,4 @@
-## ASUnit, an AppleScript unit testing framework
+## ASUnit, the AppleScript unit testing framework
 
 [ASUnit](http://nirs.freeshell.org/asunit/) is a unit testing framework for
 AppleScript originally written by Nir Soffer.
