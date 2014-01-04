@@ -166,9 +166,9 @@ end script
 
 script install
 	property parent : Task(me)
-	property description : "Install ASUnit in ~/Library/Script Libraries."
 	property dir : POSIX path of Â
 		((path to library folder from user domain) as text) & "Script Libraries"
+	property description : "Install ASUnit in" & space & dir & "."
 	try
 		run asunit
 		mkdir(dir)
