@@ -27,6 +27,7 @@ property TOP_LEVEL : me
  	Concrete observers are supposed to inherit from this script.
 *)
 script Observer
+	property parent : AppleScript
 	
 	(*! @abstract TODO *)
 	on setNotifier(aNotifier)
@@ -44,6 +45,7 @@ end script -- Observer
 		Your custom visitor should inherit from one of the framework visitors or from <tt>Visitor</tt>.
 	*)
 script Visitor
+	property parent : AppleScript
 	
 	(*! @abstract TODO *)
 	on visitTestSuite(aTestSuite)
@@ -1000,6 +1002,7 @@ property _currentFixture : missing value
 	 @discussion This is used, in particular, to catch a missing suite property in a test script.
 	*)
 script ASUnitSentinel
+	property parent : AppleScript
 end script
 
 (*!
@@ -1237,6 +1240,7 @@ end makeTestSuite
 on makeTestLoader()
 	
 	script TestLoader
+		property parent : AppleScript
 		
 		-- only files that starts with prefix will be considered as tests
 		property prefix : "Test"
