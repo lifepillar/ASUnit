@@ -1,13 +1,58 @@
+property name : missing value
 property version : missing value
+property fullname : missing value
 property workDir : missing value
 property tasks : {}
 property docDir : "Documentation"
 property TopLevel : me
 
+
+script Stdout
+	property parent : AppleScript
+	property esc : "\\033["
+	property boldBlue : esc & "1;34m"
+	property boldGreen : esc & "1;92m"
+	property boldPurple : esc & "1;35m"
+	property boldRed : esc & "1;31m"
+	property boldYellow : esc & "1;33m"
+	property boldWhite : esc & "1;39m"
+	property blue : esc & "0;34m"
+	property green : esc & "0;92m"
+	property purple : esc & "0;35m"
+	property red : esc & "0;31m"
+	property yellow : esc & "0;33m"
+	property white : esc & "0;39m"
+	property reset : esc & "0m"
+	
+	on col(msg, kolor)
+		set msg to kolor & msg & reset
+	end col
+	
+	on echo(msg)
+		set msg to do shell script "echo " & quoted form of msg without altering line endings
+		log text 1 thru -2 of msg -- Remove last linefeed
+	end echo
+	
+	on ohai(msg)
+		echo(green & "==>" & space & boldWhite & msg & reset)
+	end ohai
+	
+	on ofail(msg, info)
+		echo(red & "Fail: " & boldWhite & msg & reset & linefeed & info)
+	end ofail
+	
+	on owarn(msg)
+		echo(red & "Warn: " & boldWhite & msg & reset)
+	end owarn
+	
+end script
+
+
 -- Registers a task.
 on Task(t)
 	set the end of tasks to t
 	script BaseTask
+		property parent : Stdout
 		property class : "Task"
 		
 		on cp(src, dst) -- src can be a list of POSIX paths
@@ -49,12 +94,12 @@ on Task(t)
 		end rm
 		
 		on sh(command)
-			log command
+			Stdout's echo(command)
 			-- Execute command in working directory
 			set command to Â
 				"cd" & space & quoted form of POSIX path of workDir & ";" & space & command
 			set output to (do shell script command & space & "2>&1")
-			if output is not equal to "" then log output
+			if output is not equal to "" then echo(output)
 		end sh
 		
 		on which(command)
@@ -62,7 +107,7 @@ on Task(t)
 				do shell script "which" & space & command
 				true
 			on error
-				log command & space & "not found in" & space & (do shell script "echo $PATH")
+				ofail(command & space & "not found in" & space & (do shell script "echo $PATH"), "")
 				false
 			end try
 		end which
@@ -79,7 +124,7 @@ script api
 	property parent : Task(me)
 	property description : "Build the API documentation."
 	
-	log "Warning: HeaderDoc's support for AppleScript is definitely broken as of v8.9 (Xcode 5.0)"
+	owarn("HeaderDoc's support for AppleScript is definitely broken as of v8.9 (Xcode 5.0)")
 	--Set LANG to get rid of warnings about missing default encoding
 	sh("env LANG=en_US.UTF-8 headerdoc2html -q -o" & space & docDir & space & "ASUnit.applescript")
 	sh("env LANG=en_US.UTF-8 gatherheaderdoc" & space & docDir)
@@ -119,7 +164,7 @@ script doc
 	property parent : Task(me)
 	property description : "Build an HTML version of the old manual and the README."
 	
-	if which("markdown") then
+	if which("markdow") then
 		sh("markdown OldManual.md >OldManual.html")
 		sh("markdown README.md >README.html")
 	end if
@@ -160,7 +205,7 @@ script showHelp
 	property description : "Show this help and exit."
 	
 	repeat with t in tasks
-		log (t's name) & tab & tab & (t's description)
+		echo(my boldWhite & t's name & my reset & tab & tab & t's description)
 	end repeat
 end script
 
@@ -173,8 +218,9 @@ script install
 		run asunit
 		mkdir(dir)
 		cp("ASUnit.scpt", dir)
+		ohai(TopLevel's fullname & space & "installed in" & space & (dir as text))
 	on error errMsg
-		log errMsg
+		ofail("Could not install ASUnit", errMsg)
 	end try
 end script
 
@@ -188,7 +234,7 @@ script showVersion
 	property parent : Task(me)
 	property name : "version"
 	property description : "Print ASUnit's version and exit."
-	log "ASUnit" & space & TopLevel's version
+	ohai(TopLevel's fullname)
 end script
 
 
@@ -198,18 +244,19 @@ end script
 
 on run {action}
 	set workDir to (folder of file (path to me) of application "Finder") as text
-	set version to version of (run script (workDir & "ASUnit.applescript") as alias)
+	set {name, version} to {name, version} of (run script (workDir & "ASUnit.applescript") as alias)
+	set fullname to name & space & "v" & version
+	
 	try
 		set t to getTask(action)
 	on error errMsg
-		log "Unknown task: " & action
-		log errMsg
+		Stdout's ofail("Unknown task: " & action, errMsg)
 		return
 	end try
 	try
 		run t
 	on error errMsg
-		log "Task failed:" & space & errMsg
+		Stdout's ofail("Task failed", errMsg)
 	end try
 end run
 
