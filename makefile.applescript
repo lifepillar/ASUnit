@@ -13,16 +13,9 @@ end _setpath
 property parent : run script (_setpath() & "ASMake.applescript") as alias
 --
 
-property name : missing value
-property version : missing value
-property fullName : missing value
 property TopLevel : me
 
 on run {action}
-	set workDir to (folder of file (path to me) of application "Finder") as text
-	set {name, version} to {name, version} of Â
-		(run script (workDir & "ASUnit.applescript") as alias)
-	set fullName to name & space & "v" & version
 	runTask(action)
 end run
 
@@ -124,7 +117,7 @@ script install
 	run asunit
 	mkdir(dir)
 	cp("ASUnit.scpt", dir)
-	ohai(TopLevel's fullName & space & "installed in" & space & (dir as text))
+	ohai("ASUnit installed in" & space & (dir as text))
 end script
 
 script test
@@ -137,5 +130,8 @@ script versionTask
 	property parent : Task(me)
 	property name : "version"
 	property description : "Print ASUnit's version and exit."
-	ohai(TopLevel's fullName)
+	set workDir to (folder of file (path to me) of application "Finder") as text
+	set {n, v} to {name, version} of Â
+		(run script (workDir & "ASUnit.applescript") as alias)
+	ohai(n & space & "v" & v)
 end script
