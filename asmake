@@ -1,2 +1,2 @@
 #!/bin/bash
-osascript asmake.applescript "$@"
+osascript makefile.applescript "$@"
