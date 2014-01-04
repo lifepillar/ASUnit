@@ -1,32 +1,27 @@
-property name : missing value
-property version : missing value
-property fullname : missing value
-property workDir : missing value
-property tasks : {}
-property docDir : "Documentation"
-property TopLevel : me
-
+-- Start ASMake library
 
 script Stdout
 	property parent : AppleScript
 	property esc : "\\033["
-	property boldBlue : esc & "1;34m"
-	property boldGreen : esc & "1;92m"
-	property boldPurple : esc & "1;35m"
-	property boldRed : esc & "1;31m"
-	property boldYellow : esc & "1;33m"
-	property boldWhite : esc & "1;39m"
+	property black : esc & "0;30m"
 	property blue : esc & "0;34m"
-	property green : esc & "0;92m"
+	property cyan : esc & "0;36m"
+	property green : esc & "0;32m"
+	property magenta : esc & "0;35m"
 	property purple : esc & "0;35m"
 	property red : esc & "0;31m"
 	property yellow : esc & "0;33m"
-	property white : esc & "0;39m"
+	property white : esc & "0;37m"
 	property reset : esc & "0m"
 	
-	on col(msg, kolor)
-		set msg to kolor & msg & reset
+	on col(s, kolor)
+		set s to kolor & s & reset
 	end col
+	
+	-- Make color bold
+	on bb(kolor)
+		esc & "1;" & text -3 thru -1 of kolor
+	end bb
 	
 	on echo(msg)
 		set msg to do shell script "echo " & quoted form of msg without altering line endings
@@ -34,87 +29,132 @@ script Stdout
 	end echo
 	
 	on ohai(msg)
-		echo(green & "==>" & space & boldWhite & msg & reset)
+		echo(green & "==>" & space & bb(white) & msg & reset)
 	end ohai
 	
 	on ofail(msg, info)
-		echo(red & "Fail: " & boldWhite & msg & reset & linefeed & info)
+		echo(red & "Fail:" & space & bb(white) & msg & reset & linefeed & info)
 	end ofail
 	
 	on owarn(msg)
-		echo(red & "Warn: " & boldWhite & msg & reset)
+		echo(red & "Warn:" & space & bb(white) & msg & reset)
 	end owarn
 	
-end script
+end script -- Stdout
 
-
--- Registers a task.
-on Task(t)
-	set the end of tasks to t
-	script BaseTask
-		property parent : Stdout
-		property class : "Task"
-		
-		on cp(src, dst) -- src can be a list of POSIX paths
-			local cmd
-			if src's class is text then
-				set src to {src}
-			end if
-			set cmd to "cp -r"
-			repeat with s in src
-				set cmd to cmd & space & quoted form of s & space
-			end repeat
-			sh(cmd & space & quoted form of dst)
-		end cp
-		
-		on mkdir(dirname)
-			sh("mkdir -p" & space & quoted form of dirname)
-		end mkdir
-		
-		on osacompile(src)
-			if src's class is text then
-				set src to {src}
-			end if
-			repeat with s in src
-				sh("osacompile -x -o" & space & Â
-					quoted form of (s & ".scpt") & space & Â
-					quoted form of (s & ".applescript"))
-			end repeat
-		end osacompile
-		
-		on rm(patterns)
-			if patterns's class is text then
-				set patterns to {patterns}
-			end if
-			set cmd to ""
-			repeat with p in patterns
-				set cmd to cmd & "rm -fr" & space & p & ";" & space
-			end repeat
-			sh(cmd)
-		end rm
-		
-		on sh(command)
-			Stdout's echo(command)
-			-- Execute command in working directory
-			set command to Â
-				"cd" & space & quoted form of POSIX path of workDir & ";" & space & command
-			set output to (do shell script command & space & "2>&1")
-			if output is not equal to "" then echo(output)
-		end sh
-		
-		on which(command)
-			try
-				do shell script "which" & space & command
-				true
-			on error
-				ofail(command & space & "not found in" & space & (do shell script "echo $PATH"), "")
-				false
-			end try
-		end which
-	end script
+script ASMake
+	property parent : Stdout
+	property tasks : {}
+	property pwd : missing value
 	
-	return BaseTask
-end Task
+	on parseTask(action)
+		repeat with t in (a reference to tasks)
+			if t's name = action then return t
+		end repeat
+		error
+	end parseTask
+	
+	on runTask(action)
+		set pwd to do shell script "pwd"
+		try
+			set t to parseTask(action)
+		on error errMsg
+			ofail("Unknown task: " & action, errMsg)
+			return
+		end try
+		try
+			run t
+		on error errMsg
+			ofail("Task failed", errMsg)
+		end try
+	end runTask
+	
+	-- Registers a task.
+	on Task(t)
+		set the end of my tasks to t
+		
+		script BaseTask
+			property parent : ASMake
+			property class : "Task"
+			
+			on cp(src, dst) -- src can be a list of POSIX paths
+				local cmd
+				if src's class is text then
+					set src to {src}
+				end if
+				set cmd to "cp -r"
+				repeat with s in src
+					set cmd to cmd & space & quoted form of s & space
+				end repeat
+				sh(cmd & space & quoted form of dst)
+			end cp
+			
+			on mkdir(dirname)
+				sh("mkdir -p" & space & quoted form of dirname)
+			end mkdir
+			
+			on osacompile(src)
+				if src's class is text then
+					set src to {src}
+				end if
+				repeat with s in src
+					sh("osacompile -x -o" & space & Â
+						quoted form of (s & ".scpt") & space & Â
+						quoted form of (s & ".applescript"))
+				end repeat
+			end osacompile
+			
+			on rm(patterns)
+				if patterns's class is text then
+					set patterns to {patterns}
+				end if
+				set cmd to ""
+				repeat with p in patterns
+					set cmd to cmd & "rm -fr" & space & p & ";" & space
+				end repeat
+				sh(cmd)
+			end rm
+			
+			on sh(command)
+				local output
+				echo(command)
+				-- Execute command in working directory
+				set command to Â
+					"cd" & space & quoted form of pwd & ";" & space & command
+				set output to (do shell script command & space & "2>&1")
+				if output is not equal to "" then echo(output)
+			end sh
+			
+			on which(command)
+				try
+					do shell script "which" & space & command
+					true
+				on error
+					false
+				end try
+			end which
+		end script
+		
+		return BaseTask
+	end Task
+	
+end script -- ASMake
+
+-- End ASMake library
+
+-- Main
+property parent : ASMake
+property name : missing value
+property version : missing value
+property fullName : missing value
+property TopLevel : me
+
+on run {action}
+	set workDir to (folder of file (path to me) of application "Finder") as text
+	set {name, version} to {name, version} of (run script (workDir & "ASUnit.applescript") as alias)
+	set fullName to name & space & "v" & version
+	runTask(action)
+end run
 
 ------------------------------------------------------------------
 -- Tasks
@@ -123,6 +163,7 @@ end Task
 script api
 	property parent : Task(me)
 	property description : "Build the API documentation."
+	property docDir : "Documentation"
 	
 	owarn("HeaderDoc's support for AppleScript is definitely broken as of v8.9 (Xcode 5.0)")
 	--Set LANG to get rid of warnings about missing default encoding
@@ -131,20 +172,22 @@ script api
 	sh("open " & docDir & "/ASUnit_applescript/index.html")
 end script
 
-script asunit
+script ASUnit
 	property parent : Task(me)
 	property description : "Build ASUnit."
 	osacompile("ASUnit")
+	ohai("Success!")
 end script
 
 script build
 	property parent : Task(me)
 	property description : "Build all source AppleScript scripts."
-	run asunit
+	run ASUnit
 	osacompile({Â
 		"examples/HexString", "examples/Test HexString", "examples/Test Loader", Â
 		"templates/Test Template", Â
 		"templates/Runtime Loader", "templates/MyScript"})
+	ohai("Success!")
 end script
 
 script clean
@@ -163,10 +206,13 @@ end script
 script doc
 	property parent : Task(me)
 	property description : "Build an HTML version of the old manual and the README."
+	property markdown : "markdow"
 	
-	if which("markdow") then
+	if which(markdown) then
 		sh("markdown OldManual.md >OldManual.html")
 		sh("markdown README.md >README.html")
+	else
+		ofail(markdown & space & "not found.", "PATH: " & (do shell script "echo $PATH"))
 	end if
 end script
 
@@ -176,7 +222,7 @@ script dist
 	property dir : missing value
 	try
 		run clobber
-		run asunit
+		run ASUnit
 		run doc
 	on error errMsg number errNum
 		log errMsg
@@ -204,8 +250,8 @@ script showHelp
 	property name : "help"
 	property description : "Show this help and exit."
 	
-	repeat with t in tasks
-		echo(my boldWhite & t's name & my reset & tab & tab & t's description)
+	repeat with t in my tasks
+		echo(bb(my white) & t's name & my reset & tab & tab & t's description)
 	end repeat
 end script
 
@@ -215,10 +261,10 @@ script install
 		((path to library folder from user domain) as text) & "Script Libraries"
 	property description : "Install ASUnit in" & space & dir & "."
 	try
-		run asunit
+		run ASUnit
 		mkdir(dir)
 		cp("ASUnit.scpt", dir)
-		ohai(TopLevel's fullname & space & "installed in" & space & (dir as text))
+		ohai(TopLevel's fullName & space & "installed in" & space & (dir as text))
 	on error errMsg
 		ofail("Could not install ASUnit", errMsg)
 	end try
@@ -234,35 +280,5 @@ script showVersion
 	property parent : Task(me)
 	property name : "version"
 	property description : "Print ASUnit's version and exit."
-	ohai(TopLevel's fullname)
+	ohai(TopLevel's fullName)
 end script
-
-
-------------------------------------------------------------------
--- End of tasks
-------------------------------------------------------------------
-
-on run {action}
-	set workDir to (folder of file (path to me) of application "Finder") as text
-	set {name, version} to {name, version} of (run script (workDir & "ASUnit.applescript") as alias)
-	set fullname to name & space & "v" & version
-	
-	try
-		set t to getTask(action)
-	on error errMsg
-		Stdout's ofail("Unknown task: " & action, errMsg)
-		return
-	end try
-	try
-		run t
-	on error errMsg
-		Stdout's ofail("Task failed", errMsg)
-	end try
-end run
-
-on getTask(action)
-	repeat with t in (a reference to tasks)
-		if t's name = action then return t
-	end repeat
-	error
-end getTask
