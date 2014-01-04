@@ -20,25 +20,30 @@ property TEST_FAILED : 1000
 property TEST_SKIPPED : 1001
 (*! @abstract Error number used inside @link failIf @/link. *)
 property TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED : 1002
+(*! @abstract A property that refers to the top-level script. *)
 property TOP_LEVEL : me
 
 (*!
- @abstract Base class for observers.
- @discussion Observers are objects that may get notified by visitors.
+ @abstract
+ 	Base class for observers.
+ @discussion
+ 	Observers are objects that may get notified by visitors.
  	Concrete observers are supposed to inherit from this script.
 *)
 script Observer
 	property parent : AppleScript
 	
-	(*! @abstract TODO *)
+	(*! @abstract Sets the object observed by this  observer. *)
 	on setNotifier(aNotifier)
 	end setNotifier
 	
 end script -- Observer
 
 (*!
-	 @abstract Base class for visitors.
-	 @discussion This script defines the interface for a Visitor object.
+	 @abstract
+	 	Base class for visitors.
+	 @discussion
+	 	This script defines the interface for a Visitor object.
 	 	Subclasses are supposed to override some handlers.
 	 	To operate on a suite, you call the suite <tt>accept()</tt> with a visitor.
 		ASUnit defines only one visitor, <tt>TestResult</tt>, which runs all the tests in a suite.
@@ -48,17 +53,17 @@ end script -- Observer
 script Visitor
 	property parent : AppleScript
 	
-	(*! @abstract TODO *)
+	(*! @abstract See <tt>visitTestSuite</tt> in @link TestResult @/link. *)
 	on visitTestSuite(aTestSuite)
 	end visitTestSuite
 	
-	(*! @abstract TODO *)
+	(*! @abstract See <tt>visitTestCase</tt> in @link TestResult @/link. *)
 	on visitTestCase(TestCase)
 	end visitTestCase
 	
 end script -- Visitor
 
-(*! @abstract TODO *)
+(*! @abstract Builds and returns a TestResult object. *)
 on makeTestResult(aName)
 	
 	(*! @abstract Runs test cases and collects the results. *)
@@ -77,16 +82,28 @@ on makeTestResult(aName)
 		property failures : {}
 		property errors : {}
 		
-		(*! @abstract TODO *)
+		(*!
+			@abstract
+				Makes the given object an observer of TestResult.
+			@discussion
+				Observers of TestResult are sent notifications whenever
+				certain events occur, like starting a test, completing a test, etc…
+				An observer should be an object that inherits from @link Observer @/link,
+				or at least conforms to its interface.
+			@param
+				anObject <em>[script]</em> The observer.
+		*)
 		on addObserver(anObject)
 			anObject's setNotifier(me)
 			set the end of observers to anObject
 		end addObserver
 		
 		(*!
-			 @abstract TODO.
-			 @param aTest <em>[script]</em> May be a test case or a test suite.
-			*)
+			 @abstract
+			 	Runs the given test case or test suite.
+			 @param
+			 	aTest <em>[script]</em> May be a test case or a test suite.
+		*)
 		on runTest(aTest)
 			try
 				startTest()
@@ -98,27 +115,34 @@ on makeTestResult(aName)
 			end try
 		end runTest
 		
-		(*! @abstract TODO *)
+		(*! @abstract Sets the start time of the test and notifies the observers. *)
 		on startTest()
 			set startDate to current date
 			notify({name:"start"})
 		end startTest
 		
-		(*! @abstract TODO *)
+		(*! @abstract Sets the end time of the test and notifies the observers. *)
 		on stopTest()
 			set stopDate to current date
 			notify({name:"stop"})
 		end stopTest
 		
-		(*! @abstract TODO *)
+		(*!
+			@abstract
+				Notifies the observers that the given test has started.
+			@param
+			 	aTestCase <em>[script]</em> A test case.
+		*)
 		on startTestCase(aTestCase)
 			notify({name:"start test case", test:aTestCase})
 		end startTestCase
 		
 		(*!
-			 @abstract Runs a test case and collects results.
-			 @param aTestCase <em>[script]</em> A test case.
-			*)
+			 @abstract
+			 	Runs a test case and collects results.
+			 @param
+			 	aTestCase <em>[script]</em> A test case.
+		*)
 		on visitTestCase(aTestCase)
 			startTestCase(aTestCase)
 			try
@@ -135,68 +159,105 @@ on makeTestResult(aName)
 			end try
 		end visitTestCase
 		
-		(*! @abstract TODO *)
+		(*!
+			@abstract
+				Registers the fact that the given test has succeeded and notifies the observers.
+			@param
+			 	aTestCase <em>[script]</em> A test case.
+		*)
 		on addSuccess(aTestCase)
 			set end of passed to aTestCase
 			notify({name:"success", test:aTestCase})
 		end addSuccess
 		
-		(*! @abstract TODO *)
+		(*!
+			@abstract
+				Registers the fact that the given test was skipped and notifies the observers.
+			@param
+			 	aTestCase <em>[script]</em> A test case.
+			@param
+				message <em>[text]</em> The message to be shown to the user.
+	*)
 		on addSkip(aTestCase, message)
 			set end of skips to {test:aTestCase, message:message}
 			notify({name:"skip", test:aTestCase})
 		end addSkip
 		
-		(*! @abstract TODO *)
+		(*!
+			@abstract
+				Registers the fact that the given test has failed and notifies the observers.
+			@param
+			 	aTestCase <em>[script]</em> A test case.
+			@param
+				message <em>[text]</em> The message to be shown to the user.
+		*)
 		on addFailure(aTestCase, message)
 			set end of failures to {test:aTestCase, message:message}
 			notify({name:"fail", test:aTestCase})
 		end addFailure
 		
-		(*! @abstract TODO *)
+		(*!
+			@abstract
+				Registers the fact that the given test raised an error and notifies the observers.
+			@param
+			 	aTestCase <em>[script]</em> A test case.
+			@param
+				message <em>[text]</em> The message to be shown to the user.
+		*)
 		on addError(aTestCase, message)
 			set end of errors to {test:aTestCase, message:message}
 			notify({name:"error", test:aTestCase})
 		end addError
 		
-		(*! @abstract TODO *)
+		(*!
+			@abstract
+				Sends the given event to all the observers.
+			@param
+				anEvent <em>[record]</em> the event that must be sent to the observers.
+				An event contains two fields: the <tt>name</tt> of the event
+				and the <tt>test</tt> object.
+		*)
 		on notify(anEvent)
 			repeat with obs in (a reference to observers)
 				obs's update(anEvent)
 			end repeat
 		end notify
 		
-		(*! @abstract TODO *)
+		(*!
+			@abstract
+				Returns true if and only if the test suite completes successfully, that is,
+				without errors or failures.
+		*)
 		on hasPassed()
 			return (failures's length) + (errors's length) = 0
 		end hasPassed
 		
-		(*! @abstract TODO *)
+		(*! @abstract Returns the number of tests run. *)
 		on runCount()
 			return (passed's length) + (skips's length) + (failures's length) + (errors's length)
 		end runCount
 		
-		(*! @abstract TODO *)
+		(*! @abstract Returns the number of successful tests. *)
 		on passCount()
 			return count of passed
 		end passCount
 		
-		(*! @abstract TODO *)
+		(*! @abstract Returns the number of skipped test. *)
 		on skipCount()
 			return count of skips
 		end skipCount
 		
-		(*! @abstract TODO *)
+		(*! @abstract Returns the number of tests that generated an error. *)
 		on errorCount()
 			return count of errors
 		end errorCount
 		
-		(*! @abstract TODO *)
+		(*! @abstract Returns the number of failed tests. *)
 		on failureCount()
 			return count of failures
 		end failureCount
 		
-		(*! @abstract TODO *)
+		(*! @abstract Returns the time spent to run the test suite, in seconds. *)
 		on runSeconds()
 			return stopDate - startDate
 		end runSeconds
@@ -208,13 +269,15 @@ on makeTestResult(aName)
 end makeTestResult
 
 (*!
-	 @abstract Factory handler to generate a test script.
-	 @discussion This handler is used to create a script inheriting
+	 @abstract
+	 	Factory handler to generate a test script.
+	 @discussion
+	 	This handler is used to create a script inheriting
 	 	from the given script, which implements testing assertions.
-		This handler is used with both ASUnit's <tt>TestCase</tt>s
-		and MiniTest's <tt>UnitTest</tt>s.
-	 @param theParent <em>[script]</em> The script to inherit from.
-	 @return A script inheriting from the given script and implementing assertions.
+	 @param
+	 	theParent <em>[script]</em> The script to inherit from.
+	 @return
+	 	A script inheriting from the given script and implementing assertions.
 	*)
 on makeAssertions(theParent)
 	script TestAssertions
@@ -228,7 +291,10 @@ on makeAssertions(theParent)
 			return TEST_SKIPPED
 		end test_skipped_error_number
 		
-		(*! @abstract Helper handler that returns a textual representation of an inheritance chain. *)
+		(*!
+			@abstract
+				Helper handler that returns a textual representation of an inheritance chain.
+		*)
 		on formatInheritanceChain(chain)
 			local n
 			set n to the length of the chain
@@ -244,78 +310,106 @@ on makeAssertions(theParent)
 		end formatInheritanceChain
 		
 		(*!
-		 @abstract Raises a TEST_SKIPPED error.
-		 @param why <em>[text]</em> A message.
-		 @throws A TEST_SKIPPED error.
+			@abstract
+				Raises a TEST_SKIPPED error.
+			@param
+				why <em>[text]</em> A message.
+			@throws
+				A @link TEST_SKIPPED @/link error.
 		*)
 		on skip(why)
 			error why number TEST_SKIPPED
 		end skip
 		
 		(*!
-		 @abstract Raises a TEST_FAILED error.
-		 @param why <em>[text]</em> A message.
-		 @throws A TEST_FAILED error.
+			@abstract
+				Raises a TEST_FAILED error.
+			@param
+				why <em>[text]</em> A message.
+			@throws
+				A @link TEST_FAILED @/link error.
 		*)
 		on fail(why)
 			error why number TEST_FAILED
 		end fail
 		
 		(*!
-		 @abstract Succeeds when its argument is true.
-		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+			@abstract
+				Succeeds when its argument is true.
+			@param
+				expr <em>[boolean]</em> An expression that evaluates to true or false.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on ok(expr)
 			if not expr then fail("The given expression did not evaluate to true.")
 		end ok
 		
 		(*!
-		 @abstract Succeeds when its argument is false.
-		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
+			@abstract
+				Succeeds when its argument is false.
+			@param
+				expr <em>[boolean]</em> An expression that evaluates to true or false.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on notOk(expr)
 			if expr then fail("The given expression did not evaluate to false.")
 		end notOk
 		
 		(*!
-		 @abstract Succeeds when the given expression is true.
-		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
-		 @param message <em>[text][</em> A message.
-		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+			@abstract
+				Succeeds when the given expression is true.
+			@param
+				expr <em>[boolean]</em> An expression that evaluates to true or false.
+			@param
+				message <em>[text][</em> A message that is printed when the test fails.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on assert(expr, message)
 			if not expr then fail(message)
 		end assert
 		
-		(*! @abstract A synonym for <tt>assert()</tt>. *)
+		(*! @abstract A synonym for @link assert @/link. *)
 		on should(expr, message)
 			assert(expr, message)
 		end should
 		
 		(*!
-		 @abstract Succeeds when the given expression is false.
-		 @param expr <em>[boolean]</em> An expression that evaluates to true or false.
-		 @param message <em>[text][</em> A message.
-		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+			@abstract
+				Succeeds when the given expression is false.
+			@param
+				expr <em>[boolean]</em> An expression that evaluates to true or false.
+			@param
+				message <em>[text][</em> A message that is printed when the test fails.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on refute(expr, message)
 			if expr then fail(message)
 		end refute
 		
-		(*! @abstract A synonym for <tt>refute()</tt>. *)
+		(*! @abstract A synonym for @link refute @/link. *)
 		on shouldnt(expr, message)
 			refute(expr, message)
 		end shouldnt
 		
 		(*!
-		 @abstract Fails unless <tt>expectedErrorNumber</tt> is raised
-		 	by running <tt>aScript</tt>.
-		 @discussion Fails if an unexpected error was raised or no error was raised.
-		 @param expectedErrorNumber <em>[integer]</em> or <em>[list]</em>
-		 An exception number or a list of exception numbers. To make this assertion
-		 succeeds no matter what exception is raised, pass an empty list.
-		 @param aScript <em>[script]</em> A script.
-		 @param message <em>[text]</em> A message.
+			@abstract
+				Fails unless <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>.
+			@discussion
+				Fails if an unexpected error was raised or no error was raised.
+			@param
+				expectedErrorNumber <em>[integer]</em> or <em>[list]</em>
+				An exception number or a list of exception numbers. To make this assertion
+				succeed no matter what exception is raised, pass an empty list.
+			@param
+				aScript <em>[script]</em> The script to be run.
+			@param
+				message <em>[text]</em> A message that is printed when the assertion fails.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on shouldRaise(expectedErrorNumber, aScript, message)
 			if expectedErrorNumber's class is integer then
@@ -333,14 +427,20 @@ on makeAssertions(theParent)
 		end shouldRaise
 		
 		(*!
-		 @abstract Fails if <tt>expectedErrorNumber</tt> is raised
-		 	by running <tt>aScript</tt>.
-		 @discussion Fails if a certain error is raised.
-		 @param expectedErrorNumber <em>[integer]</em> or <em>[list]</em>
-		 An exception number or a list of exception numbers. To make this assertion
-		 succeeds only when no exception is raised, pass an empty list.
-		 @param aScript <em>[script]</em> A script.
-		 @param message <em>[text]</em> A message.
+			@abstract
+				Fails if <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>.
+			@discussion
+				Fails if a certain error is raised.
+			@param
+				expectedErrorNumber <em>[integer]</em> or <em>[list]</em>
+				An exception number or a list of exception numbers. To make this assertion
+				succeed only when no exception is raised, pass an empty list.
+			@param
+				aScript <em>[script]</em> The script to be run.
+			@param
+				message <em>[text]</em> A message that is printed when this assertion fails.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on shouldntRaise(expectedErrorNumber, aScript, message)
 			if expectedErrorNumber's class is integer then
@@ -356,10 +456,14 @@ on makeAssertions(theParent)
 		end shouldntRaise
 		
 		(*!
-		 @abstract Succeeds when the two given expressions have the same value.
-		 @param expected <em>[anything]</em> The expected value.
-		 @param value <em>[anything]</em> Some other value.
-		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+			@abstract
+				Succeeds when the two given expressions have the same value.
+			@param
+				expected <em>[anything]</em> The expected value.
+			@param
+				value <em>[anything]</em> Some other value.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on assertEqual(expected, value)
 			local msg, got, wanted, errMsg
@@ -370,16 +474,20 @@ on makeAssertions(theParent)
 			end considering
 		end assertEqual
 		
-		(*! @abstract A synonym for <tt>assertEqual()</tt>. *)
+		(*! @abstract A synonym for @link assertEqual @/link. *)
 		on shouldEqual(expected, value)
 			assertEqual(expected, value)
 		end shouldEqual
 		
 		(*!
-		 @abstract Succeeds when the two given expressions are different.
-		 @param unexpected <em>[anything]</em> The unexpected value.
-		 @param value <em>[anything]</em> Some other value.
-		 @throws A <tt>TEST_FAILED</tt> error if the assertion fails.
+			@abstract
+				Succeeds when the two given expressions are not equal.
+			@param
+				unexpected <em>[anything]</em> The unexpected value.
+			@param
+				value <em>[anything]</em> Some other value.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on assertNotEqual(unexpected, value)
 			local msg, unwanted, errMsg
@@ -390,17 +498,30 @@ on makeAssertions(theParent)
 			end considering
 		end assertNotEqual
 		
-		(*! @abstract A synonym for <tt>assertNotEqual()</tt>. *)
+		(*! @abstract A synonym for @link assertNotEqual @/link. *)
 		on refuteEqual(unexpected, value)
 			assertNotEqual(unexpected, value)
 		end refuteEqual
 		
-		(*! @abstract A synonym for <tt>assertNotEqual()</tt>. *)
+		(*! @abstract A synonym for @link assertNotEqual @/link. *)
 		on shouldNotEqual(unexpected, value)
 			assertNotEqual(unexpected, value)
 		end shouldNotEqual
 		
-		(*! @abstract Fails unless <tt>e1</tt> and <tt>e2</tt> are within <tt>delta</tt> from each other. *)
+		(*!
+			@abstract
+				Fails unless <tt>e1</tt> and <tt>e2</tt> are within <tt>delta</tt> from each other.
+			@discussion
+				This assertion succeeds if and only if |e1-e2| ≤ delta.
+			@param
+				e1 <em>[number]</em> A number.
+			@param
+				e2 <em>[number]</em> A number.
+			@param
+				delta <em>[number]</em> The absolute error.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+		*)
 		on assertEqualAbsError(e1, e2, delta)
 			if delta < 0.0 then fail("The absolute error cannot be negative.")
 			local n
@@ -409,7 +530,20 @@ on makeAssertions(theParent)
 			if n > delta then fail("The arguments differ by " & (n as text) & " > " & (delta as text))
 		end assertEqualAbsError
 		
-		(*! @abstract Fails unless <tt>e1</tt> and <tt>e2</tt> have a relative error less than <tt>eps</tt>. *)
+		(*!
+			@abstract
+				Fails unless <tt>e1</tt> and <tt>e2</tt> have a relative error less than <tt>eps</tt>.
+			@discussion
+				This assertion succeeds if and only if |e1-e2| ≤ min(|e1|,|e2|) * eps.
+			@param
+				e1 <em>[number]</em> A number.
+			@param
+				e2 <em>[number]</em> A number.
+			@param
+				eps <em>[number]</em> The relative error.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+		*)
 		on assertEqualRelError(e1, e2, eps)
 			if eps < 0.0 then fail("The relative error cannot be negative.")
 			local min
@@ -427,7 +561,16 @@ on makeAssertions(theParent)
 				fail("The relative error is " & ((n / min) as text) & " > " & (eps as text))
 		end assertEqualRelError
 		
-		(*! @abstract Tests whether the given expression belongs to the given class. *)
+		(*!
+			@abstract
+				Tests whether the given expression belongs to the given class.
+			@param
+				klass <em>[class]</em> A class name.
+			@param
+				expr <em>[anything]</em> A value.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+		*)
 		on assertInstanceOf(klass, expr)
 			local k
 			try
@@ -441,8 +584,16 @@ on makeAssertions(theParent)
 			end if
 		end assertInstanceOf
 		
-		
-		(*! @abstract Succeeds when the given expression is not of the given class. *)
+		(*!
+			@abstract
+				Succeeds when the given expression is not of the given class.
+			@param
+				klass <em>[class]</em> A class name.
+			@param
+				expr <em>[anything]</em> A value.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+		*)
 		on refuteInstanceOf(klass, expr)
 			local k
 			try
@@ -459,9 +610,17 @@ on makeAssertions(theParent)
 				Tests whether the given object or any of its ancestors belongs to the given class.
 			@discussion
 				This is mainly useful for user-defined scripts and user-defined
-				inheritance hierarchies. For built-in types, it is nearly equivalent
-				to <tt>assertInstanceOf()</tt>. The main difference is that it can be
-				used to test whether an expression is a number, no matter if integer or real.
+				inheritance hierarchies. For built-in types, it is almost equivalent
+				to @link assertInstanceOf @/link. The main difference is that it can be
+				used to test whether an expression is a <tt>number</tt>,
+				but it does not matter if it is an <tt>integer</tt> or <tt>real</tt>
+				(you cannot do that with @link assertInstanceOf @/link).
+			@param
+				klass <em>[class]</em> A class name.
+			@param
+				expr <em>[anything]</em> A value.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on assertKindOf(klass, expr)
 			local curr, k, inheritanceChain
@@ -492,6 +651,18 @@ on makeAssertions(theParent)
 				formatInheritanceChain(inheritanceChain))
 		end assertKindOf
 		
+		(*!
+			@abstract
+				Verifies that neither the given object nor any of its ancestors belong to the given class.
+			@discussion
+				See @link assertKindOf @/link.
+			@param
+				klass <em>[class]</em> A class name.
+			@param
+				expr <em>[anything]</em> A value.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+		*)
 		on refuteKindOf(klass, expr)
 			local curr, k, inheritanceChain
 			set curr to expr
@@ -524,6 +695,12 @@ on makeAssertions(theParent)
 				This test walks up the inheritance chain of <tt>descendantObject</tt>
 				until it finds <tt>obj</tt>, reaches the end of the inheritance
 				chain, or detects a cycle in the inheritance chain.
+			@param
+				ancestor <em>[anything]</em> A value.
+			@param
+				descendant <em>[anything]</em> A value.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on assertInheritsFrom(ancestor, descendant)
 			local currObj, inheritanceChain
@@ -548,8 +725,15 @@ on makeAssertions(theParent)
 		end assertInheritsFrom
 		
 		(*!
-			@abstract Succeeds when <tt>anotherObj</tt> does not inherit
-			(directly on indirectly) from <tt>obj</tt>.
+			@abstract
+				Succeeds when <tt>anotherObj</tt> does not inherit
+				(directly on indirectly) from <tt>obj</tt>.
+			@param
+				obj <em>[anything]</em> A value.
+			@param
+				anotherObj <em>[anything]</em> A value.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
 		on refuteInheritsFrom(obj, anotherObj)
 			local currObj, inheritanceChain
@@ -573,7 +757,14 @@ on makeAssertions(theParent)
 				formatInheritanceChain(inheritanceChain))
 		end refuteInheritsFrom
 		
-		(*! @abstract Tests whether a variable is a reference. *)
+		(*!
+			@abstract
+				Tests whether a variable is a reference.
+			@param
+				anObject <em>[anything]</em> An expression.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+		*)
 		on assertReference(anObject)
 			try
 				anObject as reference -- Try to coerce to reference class
@@ -582,12 +773,19 @@ on makeAssertions(theParent)
 			end try
 		end assertReference
 		
-		(*! @abstract A synonym for <tt>assertReference()</tt>. *)
+		(*! @abstract A synonym for @link assertReference @/link. *)
 		on shouldBeReference(anObject)
 			assertReference(anObject)
 		end shouldBeReference
 		
-		(*! @abstract Fails when a variable is a reference. *)
+		(*!
+			@abstract
+				Fails when a variable is a reference.
+			@param
+				anObject <em>[anything]</em> An expression.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+		*)
 		on assertNotReference(anObject)
 			try
 				anObject as reference -- Try to coerce to reference class
@@ -597,7 +795,7 @@ on makeAssertions(theParent)
 			fail("Got a reference to " & pp(anObject) & ".")
 		end assertNotReference
 		
-		(*! @abstract A synonym for <tt>assertReference()</tt>. *)
+		(*! @abstract A synonym for @link assertNotReference() @/link. *)
 		on shouldNotBeReference(anObject)
 			assertNotReference(anObject)
 		end shouldNotBeReference
@@ -606,13 +804,18 @@ on makeAssertions(theParent)
 			@abstract
 				Fails when the given assertion succeeds.
 			@discussion
-				This is mostly a convenience for testing ASUnit itself,
-				since for every positive assertion (assert…, should…),
-				ASUnit already defines a corresponding negative assertion (refute…, shouldnt…).
-			@param assertion <em>[handler]</em> An assertion handler.
-			@param args <em>[list]</em> A list of arguments to be passed to the handler.
+				This is mostly a convenience for testing ASUnit itself, since for every
+				positive assertion (<tt>assert…</tt>, <tt>should…</tt>), ASUnit already
+				defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>).
+			@param
+				assertion <em>[handler]</em> An assertion handler.
+			@param
+				args <em>[list]</em> A list of arguments to be passed to the handler.
 				The length of the list must match the number of arguments of the assertion.
-			@param msg <em>[text]</em> A message to print when this test fails.
+			@param
+				msg <em>[text]</em> A message to print when this test fails.
+			@throws
+				A @link TEST_FAILED @/link error when <tt>assertion(args)</tt> succeeds.
 		*)
 		on failIf(assertion, args, msg)
 			local n
@@ -640,7 +843,12 @@ on makeAssertions(theParent)
 			end try
 		end failIf
 		
-		(*! @abstract Returns a textual representation of an object. *)
+		(*!
+			@abstract
+				Returns a textual representation of an object.
+			@param
+				anObject <em>[anything]</em> An expression.
+		*)
 		on pp(anObject)
 			local res, klass
 			try
@@ -782,12 +990,18 @@ script TestLogger
 	property defectColor : {256 * 215, 256 * 67, 256 * 34} -- RGB (215,67,34)
 	property defaultColor : {256 * 12, 256 * 56, 256 * 67} -- RGB (12,56,67)
 	
-	(*! @abstract TODO *)
+	(*! @abstract Overrides @link Observer @/link's <tt>setNotifier()</tt>. *)
 	on setNotifier(aTestResult)
 		set my _TestResult to aTestResult
 	end setNotifier
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Logs the given event.
+		@param
+			anEvent <em>[record]</em> An event. For the structure of an event,
+			see <tt>notify()</tt> in @link TestResult @/link.
+	*)
 	on update(anEvent)
 		set eventName to anEvent's name
 		if eventName is "start" then
@@ -807,7 +1021,7 @@ script TestLogger
 		end if
 	end update
 	
-	(*! @abstract TODO *)
+	(*! @abstract Prints the title of the test results. *)
 	on printTitle()
 		printLine(((_TestResult's startDate) as text))
 		printLine("")
@@ -815,7 +1029,7 @@ script TestLogger
 		printLine("")
 	end printTitle
 	
-	(*! @abstract TODO *)
+	(*! @abstract Prints a summary of the test results. *)
 	on printSummary()
 		printDefects("ERRORS", _TestResult's errors)
 		printDefects("FAILURES", _TestResult's failures)
@@ -823,32 +1037,43 @@ script TestLogger
 		printResult()
 	end printSummary
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Prints the name of the current test.
+		@param
+			aTestCase <em>[script]</em> A test case.
+	*)
 	on printTestCase(aTestCase)
 		printString(aTestCase's fullName() & " ... ")
 	end printTestCase
 	
-	(*! @abstract TODO *)
+	(*! @abstract Prints the success string for the current test. *)
 	on printSuccess()
 		printColoredString("ok" & linefeed, successColor)
 	end printSuccess
 	
-	(*! @abstract TODO *)
+	(*! @abstract Prints the skip string for the current test. *)
 	on printSkip()
 		printColoredString("skip" & linefeed, successColor)
 	end printSkip
 	
-	(*! @abstract TODO *)
+	(*! @abstract Prints the failure string for the current test. *)
 	on printFail()
 		printColoredString("FAIL" & linefeed, defectColor)
 	end printFail
 	
-	(*! @abstract TODO *)
+	(*! @abstract Prints the error string for the current test. *)
 	on printError()
 		printColoredString("ERROR" & linefeed, defectColor)
 	end printError
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Prints detailed information about failures and errors.
+		@param
+			title <em>[text]</em> The type of defect (failures, errors).
+			defects <em>[list]</em> The list of failures and errors.
+	*)
 	on printDefects(title, defects)
 		if (count of defects) is 0 then return
 		printLine("")
@@ -863,7 +1088,7 @@ script TestLogger
 		printColoredLine(separator, defectColor)
 	end printDefects
 	
-	(*! @abstract TODO *)
+	(*! @abstract Prints the counts of passed and skipped tests, failures, and errors. *)
 	on printCounts()
 		printLine("")
 		tell _TestResult
@@ -881,7 +1106,7 @@ script TestLogger
 		printLine(counts as text)
 	end printCounts
 	
-	(*! @abstract TODO *)
+	(*! @abstract Prints "OK" or "FAILED" at the end of the test results.  *)
 	on printResult()
 		printLine("")
 		if _TestResult's hasPassed() then
@@ -892,38 +1117,60 @@ script TestLogger
 	end printResult
 	
 	(*!
-	 @abstract Prints the given text with the given style.
-	 @discussion This handler must be implemented by subclasses.
+		@abstract
+			Prints the given text with the given style.
+		@discussion
+			This handler must be implemented by subclasses.
+		@param
+			aString <em>[text]</em> The text to be printed.
+		@param
+			aColor <em>[RGB color]</em> The text color.
 	*)
 	on printColoredString(aString, aColor)
 	end printColoredString
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Prints a string using the default color.
+		@param
+			aString <em>[text]</em> The text to be printed.
+	*)
 	on printString(aString)
 		printColoredString(aString, defaultColor)
 	end printString
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Prints a string with the given color and starts a new line.
+		@param
+			aString <em>[text]</em> The text to be printed.
+		@param
+			aColor <em>[RGB color]</em> The text color.
+	*)
 	on printColoredLine(aString, aColor)
 		printColoredString(aString & linefeed, aColor)
 	end printColoredLine
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Prints a string using the default color and starts a new line.
+		@param
+			aString <em>[text]</em> The text to be printed.
+	*)
 	on printLine(aString)
 		printColoredLine(aString, defaultColor)
 	end printLine
 	
 end script -- TestLogger		
 
-(*!
- @abstract Displays test results in a new AppleScript Editor document.
-*)
+(*! @abstract Displays test results in a new AppleScript Editor document. *)
 script AppleScriptEditorLogger
 	property parent : TestLogger
 	property textView : missing value
 	property windowTitle : "Test Results"
 	property loggerPath : ((path to temporary items from user domain) as text) & windowTitle
 	
+	(*! @abstract Creates a “Test Results” document if one does not already exist. *)
 	on printTitle()
 		try -- to reuse an existing window
 			tell application "AppleScript Editor"
@@ -943,7 +1190,14 @@ script AppleScriptEditorLogger
 		continue printTitle()
 	end printTitle
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Prints the given string to the “Test Results” document.
+		@param
+			aString <em>[text]</em> The text to be printed.
+		@param
+			aColor <em>[RGB color]</em> The text color.
+	*)
 	on printColoredString(aString, aColor)
 		tell textView
 			set selection to insertion point -1
@@ -954,25 +1208,49 @@ script AppleScriptEditorLogger
 		end tell
 	end printColoredString
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Prints the given string to the “Test Results” document and starts a new line.
+		@discussion
+			The string is automatically prefixed by <tt>--</tt>,
+			so that it is treated as a comment by AppleScript Editor.
+		@param
+			aString <em>[text]</em> The text to be printed.
+		@param
+			aColor <em>[RGB color]</em> The text color.
+	*)
 	on printColoredLine(aString, aColor)
 		printColoredString("-- " & aString & linefeed, aColor)
 	end printColoredLine
 	
-	(*! @abstract TODO *)
+	(*!
+		@abstract
+			Prints the name of the current test.
+		@discussion
+			The string is automatically prefixed by <tt>--</tt>,
+			so that it is treated as a comment by AppleScript Editor.
+		@param
+			aTestCase <em>[script]</em> A test case.
+	*)
 	on printTestCase(aTestCase)
 		printString("-- " & aTestCase's fullName() & " ... ")
 	end printTestCase
 	
 end script -- AppleScriptEditorLogger		
 
-(*!
- @abstract Displays test results in the console.
-*)
+(*! @abstract Displays test results in the console. *)
 script ConsoleLogger
 	property parent : TestLogger
 	property _buffer : ""
 	
+	(*!
+		@abstract
+			Logs the given string.
+		@param
+			aString <em>[text]</em> The text to be printed.
+		@param
+			aColor <em>[RGB color]</em> The text color. Ignored.
+	*)
 	on printColoredString(aString, aColor)
 		if aString ends with linefeed then
 			if the length of aString > 1 then
@@ -993,34 +1271,40 @@ end script -- ConsoleLogger
 -----------------------------------------------------------------
 
 (*!
-	 @abstract <em>[script]</em> Saves the current fixture while compiling
+	@abstract
+		<em>[script]</em> Saves the current fixture while compiling
 	 	test cases in a fixture.
-	*)
+*)
 property _currentFixture : missing value
 
 (*!
-	 @abstract Sentinel object used to mark missing values.
-	 @discussion This is used, in particular, to catch a missing suite property in a test script.
-	*)
+	@abstract
+		Sentinel object used to mark missing values.
+	@discussion
+		This is used, in particular, to catch a missing suite property in a test script.
+*)
 script ASUnitSentinel
 	property parent : AppleScript
 end script
 
 (*!
-	 @abstract Used to automatically collect tests in a script file.
-	 @discussion If a test script defines its own suite property, this property will be shadowed.
-	*)
+	@abstract
+		Used to automatically collect tests in a script file.
+	@discussion
+		If a test script defines its own suite property, this property will be shadowed.
+*)
 property suite : ASUnitSentinel
 
 (*!
-	 @abstract The base class for test components.
-	 @discussion Test suites are a composite of components.
-	 	The basic unit is a single <tt>TestCase</tt>, which may be tested as is.
-		Several <tt>TestCase</tt>s are grouped in a <tt>TestSuite</tt>,
+	@abstract
+		The base class for test components.
+	@discussion Test suites are a composite of components.
+	 	The basic unit is a single @link TestCase @/link, which may be tested as is.
+		Several <tt>TestCase</tt>s are grouped in a @link TestSuite @/link,
 		which can test all its tests. A <tt>TestSuite</tt> may contain other
 		<tt>TestSuite</tt>s, which may contain other suites.
-		Testing a composite returns a <tt>TestResult</tt> object.
-	*)
+		Testing a composite returns a @link TestResult @/link object.
+*)
 script TestComponent
 	-- The parent property must be set to something different from the top-level script.
 	-- Without explicitly setting its parent, TestComponent
@@ -1032,9 +1316,11 @@ script TestComponent
 	property parent : AppleScript
 	
 	(*!
-		 @abstract Runs a test.
-		 @return <em>[script]</em> A <tt>TestResult</tt> object.
-		*)
+		@abstract
+			Runs a test.
+		@return
+			<em>[script]</em> A @link TestResult @/link object.
+	*)
 	on test()
 		set aTestResult to TOP_LEVEL's makeTestResult(name)
 		tell aTestResult
@@ -1044,20 +1330,24 @@ script TestComponent
 	end test
 	
 	(*!
-		 @abstract Tells whether this is a composite test.
-		 @discussion Allows transparent handling of components,
-		 	avoiding try... on error, e.g., if a's isComposite() then a's add(foo).
-		 @return <em>[boolean]</em> <tt>true</tt> if this a composite test;
-		 	returns <tt>false</tt> otherwise.
+		@abstract
+			Tells whether this is a composite test.
+		@discussion
+			Allows transparent handling of components, avoiding <tt>try... on error</tt>,
+			e.g., if <tt>a's isComposite()</tt> then <tt>a's add(foo)</tt>.
+		@return
+			<em>[boolean]</em> <tt>true</tt> if this a composite test; <tt>false</tt> otherwise.
 		*)
 	on isComposite()
 		return false
 	end isComposite
 	
 	(*!
-		 @abstract Implemented by sub classes.
-		 @param aVisitor <em>[script]</em> A visitor.
-		*)
+		@abstract
+			Implemented by sub classes.
+		@param
+			aVisitor <em>[script]</em> A visitor.
+	*)
 	on accept(aVisitor)
 		return
 	end accept
@@ -1065,9 +1355,9 @@ script TestComponent
 end script -- TestComponent
 
 (*!
-	 @abstract Models a certain configuration of the system being tested.
-	 @discussion TODO.
-	*)
+	@abstract
+		Models a certain configuration of the system being tested.
+*)
 script TestCase
 	property parent : TestComponent
 	
@@ -1087,11 +1377,13 @@ script TestCase
 	end tearDown
 	
 	(*!
-		 @abstract Runs a test case.
-		 @discussion Ensures that <tt>tearDown()</tt> is executed,
-		 	even if an error was raised. Errors are passed to the caller.
-		 @return Nothing.
-		*)
+		@abstract
+			Runs a test case.
+		@discussion
+			Ensures that <tt>tearDown()</tt> is executed,
+			even if an error was raised. Errors are passed to the caller.
+		@return Nothing.
+	*)
 	on runCase()
 		try
 			setUp()
@@ -1108,7 +1400,7 @@ script TestCase
 		error "test script does not contain any test code"
 	end run
 	
-	(*! @abstract TODO. *)
+	(*! @abstract Returns the full name of this test. *)
 	on fullName()
 		return parent's name & " - " & name
 	end fullName
@@ -1116,9 +1408,10 @@ script TestCase
 end script -- TestCase
 
 (*!
-	 @abstract Creates an unregistered fixture inheriting from <tt>TestCase</tt>.
-	 @discussion
-	 	A user test case inherits from the user fixture, which inherit from <tt>TestCase</tt>.
+	@abstract
+		Creates an unregistered fixture inheriting from @link TestCase @/link.
+	@discussion
+		A user test case inherits from the user fixture, which inherit from <tt>TestCase</tt>.
 		Test cases are automatically registered while compiling a script, using two simple rules:
 		
 			1. Each fixture should call <tt>registerFixture()</tt> to register the fixture
@@ -1141,49 +1434,54 @@ end script -- TestCase
 			-- define your test cases here
 		end
 		</pre>
-	*)
+*)
 on makeFixture()
 	return makeAssertions(TestCase)
 end makeFixture
 
 (*!
-	 @abstract Primitive registration handler.
-	 @discussion May be used to register a fixture inheriting
-	 	from a <tt>TestCase</tt> subclass.
-	*)
+	@abstract
+		Primitive registration handler.
+	@discussion
+		May be used to register a fixture inheriting from a <tt>TestCase</tt> subclass.
+*)
 on registerFixtureOfKind(aUserFixture, aParent)
 	set _currentFixture to aUserFixture
 	return aParent
 end registerFixtureOfKind
 
-(*! @abstract Convenience handler for registering fixture inheriting from <tt>TestCase</tt>. *)
+(*! @abstract Convenience handler for registering fixture inheriting from @link TestCase @/link. *)
 on registerFixture(aUserFixture)
 	TestSet(aUserFixture)
 end registerFixture
 
-(*! @abstract A more user-friendly name for <tt>registerFixture()</tt>. *)
+(*! @abstract A more user-friendly name for @link registerFixture @/link. *)
 on TestSet(aUserFixture)
 	return registerFixtureOfKind(aUserFixture, makeAssertions(TestCase))
 end TestSet
 
 (*!
-	 @abstract Creates an unregistered <tt>TestCase</tt> inheriting from the current fixture.
-	 @discussion You can run the test case or add it manually to a suite.
+	@abstract
+		Creates an unregistered @link TestCase @/link inheriting from the current fixture.
+	@discussion
+		You can run the test case or add it manually to a suite.
 	 	This feature is essential for ASUnit own unit tests.
-	*)
+*)
 on makeTestCase()
 	return _currentFixture
 end makeTestCase
 
 (*!
-	 @abstract Creates a test case and registers it with the main script suite.
-	 @discussion This test will run automatically when you run the suite.
-	*)
+	@abstract
+		Creates a test case and registers it with the main script suite.
+	@discussion
+		This test will run automatically when you run the suite.
+*)
 on registerTestCase(aUserTestCase)
 	UnitTest(aUserTestCase)
 end registerTestCase
 
-(*! @abstract A more user-friendly name for <tt>registerTestCase()</tt>. *)
+(*! @abstract A more user-friendly name for @link registerTestCase @/link. *)
 on UnitTest(aUserTestCase)
 	set aSuite to aUserTestCase's parent's suite
 	if aSuite is not ASUnitSentinel then aSuite's add(aUserTestCase)
@@ -1191,12 +1489,15 @@ on UnitTest(aUserTestCase)
 end UnitTest
 
 (*!
-	 @abstract Creates a test suite.
-	 @discussion Each test script should define a <tt>suite</tt> property to support
-	 	automatic registration of test cases. If a suite is not defined, tests will have to be registered
-		with a suite manually. You may define your own suite class, inheriting from <tt>TestSuite</tt>.
-		Each test script should define a <tt>suite</tt> property and initialize it with <tt>makeTestSuite()</tt>,
-		or with a <tt>TestSuite</tt> subclass.
+	@abstract
+		Creates a test suite.
+	@discussion
+		Each test script should define a <tt>suite</tt> property to support
+	 	automatic registration of test cases. If a suite is not defined,
+		tests will have to be registered with a suite manually. You may define
+		your own suite class, inheriting from @link TestSuite @/link.
+		Each test script should define a <tt>suite</tt> property and initialize it
+		with @link makeTestSuite @/link, or with a @link TestSuite @/link subclass.
 	*)
 on makeTestSuite(aName)
 	
@@ -1222,11 +1523,13 @@ on makeTestSuite(aName)
 		end isComposite
 		
 		(*!
-			 @abstract Adds a test case or test suite to this suite.
-			 @param aTest <em>[script]</em> May be a <tt>TestCase</tt>
-			 	or another <tt>TestSuite</tt> containing other <tt>TestCase</tt>s
+			@abstract
+				Adds a test case or test suite to this suite.
+			@param
+				aTest <em>[script]</em> May be a @link TestCase @/link
+			 	or another @link TestSuite @/link containing other <tt>TestCase</tt>s
 				and <tt>TestSuite</tt>s.
-			*)
+		*)
 		on add(aTest)
 			set end of tests to aTest
 		end add
@@ -1243,13 +1546,14 @@ on makeTestLoader()
 	script TestLoader
 		property name : "TestLoader"
 		
-		-- only files that starts with prefix will be considered as tests
+		(*! @abstract Only files that starts with prefix will be considered as tests. *)
 		property prefix : "Test"
 		
 		(*!
-			 @abstract Returns a test suite containing all the suites
-			 	in the tests scripts in the specified folder.
-			*)
+			@abstract
+				Returns a test suite containing all the suites
+				in the tests scripts in the specified folder.
+		*)
 		on loadTestsFromFolder(aFolder)
 			set suite to makeTestSuite("All Tests in " & (aFolder as text))
 			compileSourceFiles(aFolder)
@@ -1267,9 +1571,7 @@ on makeTestLoader()
 			return suite
 		end loadTestsFromFolder
 		
-		(*!
-			 @abstract Compiles all the test scripts in the specified folder.
-		*)
+		(*! @abstract Compiles all the test scripts in the specified folder. *)
 		on compileSourceFiles(aFolder)
 			tell application "Finder"
 				set testFiles to files of aFolder ¬
@@ -1293,9 +1595,11 @@ on makeTestLoader()
 		end compileSourceFiles
 		
 		(*!
-			 @abstract Returns a test suite from aFile or the default suite.
-			 @throws An error if a test file does not have a suite property.
-			*)
+			@abstract
+				Returns a test suite from aFile or the default suite.
+			@throws
+				An error if a test file does not have a <tt>suite</tt> property.
+		*)
 		on loadTestsFromFile(aFile)
 			-- TODOs:
 			-- - Should check for comforming suite?
@@ -1311,7 +1615,7 @@ on makeTestLoader()
 			
 		end loadTestsFromFile
 		
-		(*! @abstract TODO *)
+		(*! @abstract Raises a missing suite error. *)
 		on MissingSuiteError(aFile)
 			error (aFile as text) & " does not have a suite property"
 		end MissingSuiteError
@@ -1326,7 +1630,7 @@ end makeTestLoader
 -- End of ASUnit framework
 -----------------------------------------------------------------
 
-(*! @abstract TODO *)
+(*! @abstract Automatically runs all the registered tests. *)
 on autorun(aTestSuite)
 	local loggers
 	set theTestRunner to makeTestResult(aTestSuite's name)
