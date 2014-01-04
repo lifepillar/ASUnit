@@ -33,7 +33,9 @@ script Stdout
 	end ohai
 	
 	on ofail(msg, info)
-		echo(red & "Fail:" & space & bb(white) & msg & reset & linefeed & info)
+		set msg to red & "Fail:" & space & bb(white) & msg & reset
+		if info is not "" then set msg to msg & linefeed & info
+		echo(msg)
 	end ofail
 	
 	on owarn(msg)
@@ -58,14 +60,16 @@ script ASMake
 		set pwd to do shell script "pwd"
 		try
 			set t to parseTask(action)
-		on error errMsg
-			ofail("Unknown task: " & action, errMsg)
-			return
+		on error errMsg number errNum
+			ofail("Unknown task: " & action, "")
+			error errMsg number errNum
 		end try
 		try
 			run t
-		on error errMsg
-			ofail("Task failed", errMsg)
+			if t's name is not in {"help", "test", "version"} then ohai("Success!")
+		on error errMsg number errNum
+			ofail("Task failed", "")
+			error errMsg number errNum
 		end try
 	end runTask
 	
@@ -151,7 +155,8 @@ property TopLevel : me
 
 on run {action}
 	set workDir to (folder of file (path to me) of application "Finder") as text
-	set {name, version} to {name, version} of (run script (workDir & "ASUnit.applescript") as alias)
+	set {name, version} to {name, version} of Â
+		(run script (workDir & "ASUnit.applescript") as alias)
 	set fullName to name & space & "v" & version
 	runTask(action)
 end run
@@ -163,31 +168,29 @@ end run
 script api
 	property parent : Task(me)
 	property description : "Build the API documentation."
-	property docDir : "Documentation"
-	
+	property dir : "Documentation"
 	owarn("HeaderDoc's support for AppleScript is definitely broken as of v8.9 (Xcode 5.0)")
 	--Set LANG to get rid of warnings about missing default encoding
-	sh("env LANG=en_US.UTF-8 headerdoc2html -q -o" & space & docDir & space & "ASUnit.applescript")
-	sh("env LANG=en_US.UTF-8 gatherheaderdoc" & space & docDir)
-	sh("open " & docDir & "/ASUnit_applescript/index.html")
+	sh("env LANG=en_US.UTF-8 headerdoc2html -q -o" & space & dir & space & "ASUnit.applescript")
+	sh("env LANG=en_US.UTF-8 gatherheaderdoc" & space & dir)
+	sh("open " & dir & "/ASUnit_applescript/index.html")
 end script
 
-script ASUnit
+script asunit
 	property parent : Task(me)
+	property name : "asunit"
 	property description : "Build ASUnit."
 	osacompile("ASUnit")
-	ohai("Success!")
 end script
 
 script build
 	property parent : Task(me)
 	property description : "Build all source AppleScript scripts."
-	run ASUnit
+	run asunit
 	osacompile({Â
 		"examples/HexString", "examples/Test HexString", "examples/Test Loader", Â
 		"templates/Test Template", Â
 		"templates/Runtime Loader", "templates/MyScript"})
-	ohai("Success!")
 end script
 
 script clean
@@ -200,19 +203,20 @@ script clobber
 	property parent : Task(me)
 	property description : "Remove any generated file."
 	run clean
-	rm({docDir, "ASUnit-*", "*.tar.gz", "*.html"})
+	rm({api's dir, "ASUnit-*", "*.tar.gz", "*.html"})
 end script
 
 script doc
 	property parent : Task(me)
 	property description : "Build an HTML version of the old manual and the README."
-	property markdown : "markdow"
+	property markdown : "markdown"
 	
 	if which(markdown) then
-		sh("markdown OldManual.md >OldManual.html")
-		sh("markdown README.md >README.html")
+		sh(markdown & space & "OldManual.md >OldManual.html")
+		sh(markdown & space & "README.md >README.html")
 	else
-		ofail(markdown & space & "not found.", "PATH: " & (do shell script "echo $PATH"))
+		error markdown & space & "not found." & linefeed & Â
+			"PATH: " & (do shell script "echo $PATH")
 	end if
 end script
 
@@ -220,14 +224,9 @@ script dist
 	property parent : Task(me)
 	property description : "Prepare a directory for distribution."
 	property dir : missing value
-	try
-		run clobber
-		run ASUnit
-		run doc
-	on error errMsg number errNum
-		log errMsg
-		return errNum
-	end try
+	run clobber
+	run asunit
+	run doc
 	set dir to "ASUnit-" & TopLevel's version
 	mkdir(dir)
 	cp({"ASUnit.scpt", "COPYING", "OldManual.html", "README.html", "examples", "templates"}, dir)
@@ -236,20 +235,14 @@ end script
 script gzip
 	property parent : Task(me)
 	property description : "Build a compressed archive for distribution."
-	try
-		run dist
-		sh("tar czf" & space & dist's dir & ".tar.gz" & space & dist's dir & "/*")
-	on error errMsg number errNum
-		log errMsg
-		return errNum
-	end try
+	run dist
+	sh("tar czf" & space & dist's dir & ".tar.gz" & space & dist's dir & "/*")
 end script
 
-script showHelp
+script helpTask
 	property parent : Task(me)
 	property name : "help"
 	property description : "Show this help and exit."
-	
 	repeat with t in my tasks
 		echo(bb(my white) & t's name & my reset & tab & tab & t's description)
 	end repeat
@@ -260,14 +253,10 @@ script install
 	property dir : POSIX path of Â
 		((path to library folder from user domain) as text) & "Script Libraries"
 	property description : "Install ASUnit in" & space & dir & "."
-	try
-		run ASUnit
-		mkdir(dir)
-		cp("ASUnit.scpt", dir)
-		ohai(TopLevel's fullName & space & "installed in" & space & (dir as text))
-	on error errMsg
-		ofail("Could not install ASUnit", errMsg)
-	end try
+	run asunit
+	mkdir(dir)
+	cp("ASUnit.scpt", dir)
+	ohai(TopLevel's fullName & space & "installed in" & space & (dir as text))
 end script
 
 script test
@@ -276,7 +265,7 @@ script test
 	run script "Test ASUnit.applescript"
 end script
 
-script showVersion
+script versionTask
 	property parent : Task(me)
 	property name : "version"
 	property description : "Print ASUnit's version and exit."
