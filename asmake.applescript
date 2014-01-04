@@ -198,7 +198,7 @@ end script
 
 on run {action}
 	set workDir to (folder of file (path to me) of application "Finder") as text
-	set version to version of (run script file (workDir & "ASUnit.applescript"))
+	set version to version of (run script (workDir & "ASUnit.applescript") as alias)
 	try
 		set t to getTask(action)
 	on error errMsg

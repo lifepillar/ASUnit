@@ -44,13 +44,13 @@ script |Load script|
 	script |Loading the script|
 		property parent : UnitTest(me)
 		try
-			set MyScript to load script file Â
+			set MyScript to load script Â
 				((folder of file (path to TopLevel) of application "Finder" as text) Â
-					& scriptName & ".scpt")
+					& scriptName & ".scpt") as alias
 		on error
-			set MyScript to run script file Â
+			set MyScript to run script Â
 				((folder of file (path to TopLevel) of application "Finder" as text) Â
-					& scriptName & ".applescript")
+					& scriptName & ".applescript") as alias
 		end try
 		assert(MyScript's class = script, "The script was not loaded correctly.")
 	end script

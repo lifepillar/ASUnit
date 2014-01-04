@@ -1,6 +1,5 @@
-property parent : Â
-	load script file (((path to library folder from user domain) as text) Â
-		& "Script Libraries:ASUnit.scpt")
+property parent : load script (((path to library folder from user domain) as text) Â
+	& "Script Libraries:ASUnit.scpt") as alias
 
 global HexString
 property suite : makeTestSuite("Tests for HexString")
