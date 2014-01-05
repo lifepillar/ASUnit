@@ -1273,11 +1273,8 @@ script ConsoleLogger
 			aColor <em>[RGB color]</em> The text color. Ignored.
 	*)
 	on printColoredString(aString, aColor)
-		if aString ends with linefeed then
-			if the length of aString > 1 then
-				set my _buffer to my _buffer & (text 1 thru -2 of aString)
-			end if
-			log my _buffer
+		if aString ends with linefeed then -- flush buffer
+			log my _buffer & chomp(aString)
 			set my _buffer to ""
 		else
 			set my _buffer to my _buffer & aString
