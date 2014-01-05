@@ -49,7 +49,7 @@ script build
 	run asunitBuild
 	osacompile({Â
 		"examples/HexString", "examples/Test HexString", "examples/Test Loader", Â
-		"templates/Test Template", Â
+		"examples/Test AppleScript Variable Types and You", "templates/Test Template", Â
 		"templates/Runtime Loader", "templates/MyScript"})
 end script
 
