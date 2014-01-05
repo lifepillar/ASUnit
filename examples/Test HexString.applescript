@@ -14,7 +14,7 @@ script |Load script|
 		property parent : UnitTest(me)
 		set HexString to run script ((folder of file (path to me) of application "Finder" as text) Â
 			& "HexString.applescript") as alias
-		assert(HexString's class = script, "The script was not loaded correctly.")
+		assertInstanceOf(script, HexString)
 	end script
 end script
 
@@ -51,7 +51,7 @@ script |Conversion to decimal|
 	script |Class of toDec()'s result|
 		property parent : UnitTest(me)
 		set x to HexString's new("0")
-		assert(x's toDec()'s class is integer, "class should be integer")
+		assertInstanceOf(integer, x's toDec())
 	end script
 	
 	script |Convert zero|
