@@ -59,6 +59,7 @@ end script -- Stdout
 property parent : Stdout
 property tasks : {}
 property pwd : missing value
+property printSuccess : true -- Print "==> Success!" when a task finishes?
 
 on parseTask(action)
 	repeat with t in (a reference to tasks)
@@ -77,7 +78,7 @@ on runTask(action)
 	end try
 	try
 		run t
-		if t's name is not in {"help", "test", "version"} then ohai("Success!")
+		if t's printSuccess then ohai("Success!")
 	on error errMsg number errNum
 		ofail("Task failed", "")
 		error errMsg number errNum

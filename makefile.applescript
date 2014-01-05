@@ -104,6 +104,7 @@ script helpTask
 	property parent : Task(me)
 	property name : "help"
 	property description : "Show this help and exit."
+	property printSuccess : false
 	repeat with t in my tasks
 		echo(bb(my white) & t's name & my reset & tab & tab & t's description)
 	end repeat
@@ -123,6 +124,7 @@ end script
 script test
 	property parent : Task(me)
 	property description : "Run tests."
+	property printSuccess : false
 	run script "Test ASUnit.applescript"
 end script
 
@@ -130,6 +132,7 @@ script versionTask
 	property parent : Task(me)
 	property name : "version"
 	property description : "Print ASUnit's version and exit."
+	property printSuccess : false
 	set workDir to (folder of file (path to me) of application "Finder") as text
 	set {n, v} to {name, version} of Â
 		(run script (workDir & "ASUnit.applescript") as alias)
