@@ -44,18 +44,22 @@ When you have several test files, you may run them all at once using
 a _test loader_ (there is no need to compile them in advance).
 See `Test Loader.applescript` in the `examples` folder.
 
-By default, if you run the tests in AppleScript Editor, the output is written
-to a new AppleScript Editor document, and if you run the tests in the Terminal,
+By default, if you run the tests in AppleScript Editor the output is written
+to a new AppleScript Editor document; if you run the tests in the Terminal
 the output is sent to stdout. You may, however, change this
 by setting the `suite's loggers` property. The value of this property
 must be a list of _loggers_ (you may send the output to more than one
-destination). Currently, ASUnit defines two loggers:
-`AppleScriptEditorLogger` and `ConsoleLogger`. Defining custom loggers
-should be fairly easy: you simply need to define a script that inherits
-from `TestLogger` and override the `print…()` handlers to generate the output
-you want. A more advanced alternative consists in subclassing _Visitor_: see
-the section _Creating new operations on a test suite_ in `OldManual.md`
-for an example.
+destination). Currently, ASUnit defines three loggers:
+
+- `AppleScriptEditorLogger`: sends colored output to an AS Editor window;
+- `StdoutLogger`: sends colored output to stdout.
+- `ConsoleLogger`: prints the output using `log` statements (most portable logger).
+
+Defining custom loggers should be fairly easy: you simply need to define a
+script that inherits from `TestLogger` and override the `print…()` handlers to
+generate the output you want. A more advanced alternative consists in
+subclassing _Visitor_: see the section _Creating new operations on a test suite_
+in `OldManual.md` for an example.
 
 
 ### Writing the tests
@@ -118,7 +122,7 @@ you may use a number of assertion handlers:
 - `assertInheritsFrom(a, b)`: succeeds iff `b` (directly or indirectly) inherits from `a`.
 - `refuteInheritsFrom(a, b)`: succeeds iff `b` does not inherit from `a`.
 
-Some of the assertions take as an argument a textual message (`msg` parameter),
+Some of the assertions take a textual message as an argument (`msg` parameter),
 which is printed when the assertion fails.
 
 A clarification is in order for the last three types of assertions.
@@ -162,4 +166,3 @@ names, as it was done in the example above.
 GNU GPL, see COPYING for details.
 
 Copyright © 2013–2014 Lifepillar, 2006 Nir Soffer
-
