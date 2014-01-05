@@ -87,7 +87,9 @@ script dist
 	run clobber
 	run asunitBuild
 	run doc
-	set dir to "ASUnit-" & TopLevel's version
+	set {n, v} to {name, version} of Â
+		(run script POSIX file (my pwd & "/ASUnit.applescript"))
+	set dir to n & "-" & v
 	mkdir(dir)
 	cp({"ASUnit.scpt", "COPYING", "OldManual.html", Â
 		"README.html", "examples", "templates"}, dir)
@@ -133,8 +135,8 @@ script versionTask
 	property name : "version"
 	property description : "Print ASUnit's version and exit."
 	property printSuccess : false
-	set workDir to (folder of file (path to me) of application "Finder") as text
 	set {n, v} to {name, version} of Â
-		(run script (workDir & "ASUnit.applescript") as alias)
+		(run script POSIX file (my pwd & "/ASUnit.applescript"))
 	ohai(n & space & "v" & v)
 end script
+
