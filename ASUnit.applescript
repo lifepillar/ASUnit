@@ -1023,6 +1023,7 @@ script TestLogger
 	
 	(*! @abstract Prints the title of the test results. *)
 	on printTitle()
+		printLine("")
 		printLine(((_TestResult's startDate) as text))
 		printLine("")
 		printLine(_TestResult's name)
@@ -1110,9 +1111,9 @@ script TestLogger
 	on printResult()
 		printLine("")
 		if _TestResult's hasPassed() then
-			printColoredLine("OK" & linefeed & linefeed, successColor)
+			printColoredLine("OK", successColor)
 		else
-			printColoredLine("FAILED" & linefeed & linefeed, defectColor)
+			printColoredLine("FAILED", defectColor)
 		end if
 	end printResult
 	
