@@ -57,6 +57,9 @@ script Stdout
 end script -- Stdout
 
 property parent : Stdout
+property name : "ASMake"
+property version : "0.0.0"
+property id : "com.lifepillar.ASMake"
 property tasks : {}
 property pwd : missing value
 property private : false -- Is this task an implementation detail?
