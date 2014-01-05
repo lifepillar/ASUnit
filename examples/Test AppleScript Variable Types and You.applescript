@@ -19,12 +19,12 @@ property parent : load script (((path to library folder from user domain) as tex
 	& "Script Libraries:ASUnit.scpt") as alias
 (* For OS X 10.9 or later you may use the following instead:
 use AppleScript
+use scripting additions
 property parent : script "ASUnit"
 *)
 property TopLevel : me
 property suite : makeTestSuite(suitename)
 
-set suite's loggers to {AppleScriptEditorLogger, ConsoleLogger}
 autorun(suite)
 
 script test
