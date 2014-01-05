@@ -62,14 +62,14 @@ property pwd : missing value
 property printSuccess : true -- Print "==> Success!" when a task finishes?
 
 on parseTask(action)
-	repeat with t in (a reference to tasks)
+	repeat with t in (a reference to my tasks)
 		if t's name = action then return t
 	end repeat
 	error
 end parseTask
 
 on runTask(action)
-	set pwd to do shell script "pwd"
+	set my pwd to do shell script "pwd"
 	try
 		set t to parseTask(action)
 	on error errMsg number errNum
@@ -136,7 +136,7 @@ on Task(t)
 			echo(command)
 			-- Execute command in working directory
 			set command to Â
-				"cd" & space & quoted form of pwd & ";" & space & command
+				"cd" & space & quoted form of my pwd & ";" & space & command
 			set output to (do shell script command & space & "2>&1")
 			if output is not equal to "" then echo(output)
 		end sh

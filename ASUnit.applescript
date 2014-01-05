@@ -95,7 +95,7 @@ on makeTestResult(aName)
 		*)
 		on addObserver(anObject)
 			anObject's setNotifier(me)
-			set the end of observers to anObject
+			set the end of my observers to anObject
 		end addObserver
 		
 		(*!
@@ -117,13 +117,13 @@ on makeTestResult(aName)
 		
 		(*! @abstract Sets the start time of the test and notifies the observers. *)
 		on startTest()
-			set startDate to current date
+			set my startDate to current date
 			notify({name:"start"})
 		end startTest
 		
 		(*! @abstract Sets the end time of the test and notifies the observers. *)
 		on stopTest()
-			set stopDate to current date
+			set my stopDate to current date
 			notify({name:"stop"})
 		end stopTest
 		
@@ -166,7 +166,7 @@ on makeTestResult(aName)
 			 	aTestCase <em>[script]</em> A test case.
 		*)
 		on addSuccess(aTestCase)
-			set end of passed to aTestCase
+			set end of my passed to aTestCase
 			notify({name:"success", test:aTestCase})
 		end addSuccess
 		
@@ -179,7 +179,7 @@ on makeTestResult(aName)
 				message <em>[text]</em> The message to be shown to the user.
 	*)
 		on addSkip(aTestCase, message)
-			set end of skips to {test:aTestCase, message:message}
+			set end of my skips to {test:aTestCase, message:message}
 			notify({name:"skip", test:aTestCase})
 		end addSkip
 		
@@ -192,7 +192,7 @@ on makeTestResult(aName)
 				message <em>[text]</em> The message to be shown to the user.
 		*)
 		on addFailure(aTestCase, message)
-			set end of failures to {test:aTestCase, message:message}
+			set end of my failures to {test:aTestCase, message:message}
 			notify({name:"fail", test:aTestCase})
 		end addFailure
 		
@@ -205,7 +205,7 @@ on makeTestResult(aName)
 				message <em>[text]</em> The message to be shown to the user.
 		*)
 		on addError(aTestCase, message)
-			set end of errors to {test:aTestCase, message:message}
+			set end of my errors to {test:aTestCase, message:message}
 			notify({name:"error", test:aTestCase})
 		end addError
 		
@@ -218,7 +218,7 @@ on makeTestResult(aName)
 				and the <tt>test</tt> object.
 		*)
 		on notify(anEvent)
-			repeat with obs in (a reference to observers)
+			repeat with obs in (a reference to my observers)
 				obs's update(anEvent)
 			end repeat
 		end notify
@@ -229,37 +229,37 @@ on makeTestResult(aName)
 				without errors or failures.
 		*)
 		on hasPassed()
-			return (failures's length) + (errors's length) = 0
+			return (my failures's length) + (my errors's length) = 0
 		end hasPassed
 		
 		(*! @abstract Returns the number of tests run. *)
 		on runCount()
-			return (passed's length) + (skips's length) + (failures's length) + (errors's length)
+			return (my passed's length) + (my skips's length) + (my failures's length) + (my errors's length)
 		end runCount
 		
 		(*! @abstract Returns the number of successful tests. *)
 		on passCount()
-			return count of passed
+			return count of my passed
 		end passCount
 		
 		(*! @abstract Returns the number of skipped test. *)
 		on skipCount()
-			return count of skips
+			return count of my skips
 		end skipCount
 		
 		(*! @abstract Returns the number of tests that generated an error. *)
 		on errorCount()
-			return count of errors
+			return count of my errors
 		end errorCount
 		
 		(*! @abstract Returns the number of failed tests. *)
 		on failureCount()
-			return count of failures
+			return count of my failures
 		end failureCount
 		
 		(*! @abstract Returns the time spent to run the test suite, in seconds. *)
 		on runSeconds()
-			return stopDate - startDate
+			return (my stopDate) - (my startDate)
 		end runSeconds
 		
 	end script -- TestResult
@@ -1024,16 +1024,16 @@ script TestLogger
 	(*! @abstract Prints the title of the test results. *)
 	on printTitle()
 		printLine("")
-		printLine(((_TestResult's startDate) as text))
+		printLine(((my _TestResult's startDate) as text))
 		printLine("")
-		printLine(_TestResult's name)
+		printLine(my _TestResult's name)
 		printLine("")
 	end printTitle
 	
 	(*! @abstract Prints a summary of the test results. *)
 	on printSummary()
-		printDefects("ERRORS", _TestResult's errors)
-		printDefects("FAILURES", _TestResult's failures)
+		printDefects("ERRORS", my _TestResult's errors)
+		printDefects("FAILURES", my _TestResult's failures)
 		printCounts()
 		printResult()
 	end printSummary
@@ -1050,22 +1050,22 @@ script TestLogger
 	
 	(*! @abstract Prints the success string for the current test. *)
 	on printSuccess()
-		printColoredString("ok" & linefeed, successColor)
+		printColoredString("ok" & linefeed, my successColor)
 	end printSuccess
 	
 	(*! @abstract Prints the skip string for the current test. *)
 	on printSkip()
-		printColoredString("skip" & linefeed, successColor)
+		printColoredString("skip" & linefeed, my successColor)
 	end printSkip
 	
 	(*! @abstract Prints the failure string for the current test. *)
 	on printFail()
-		printColoredString("FAIL" & linefeed, defectColor)
+		printColoredString("FAIL" & linefeed, my defectColor)
 	end printFail
 	
 	(*! @abstract Prints the error string for the current test. *)
 	on printError()
-		printColoredString("ERROR" & linefeed, defectColor)
+		printColoredString("ERROR" & linefeed, my defectColor)
 	end printError
 	
 	(*!
@@ -1080,19 +1080,19 @@ script TestLogger
 		printLine("")
 		printLine(title)
 		repeat with aResult in defects
-			printColoredLine(separator, defectColor)
-			printColoredLine("test: " & aResult's test's fullName(), defectColor)
+			printColoredLine(my separator, my defectColor)
+			printColoredLine("test: " & aResult's test's fullName(), my defectColor)
 			repeat with aLine in every paragraph of aResult's message
-				printColoredLine("      " & aLine, defectColor)
+				printColoredLine("      " & aLine, my defectColor)
 			end repeat
 		end repeat
-		printColoredLine(separator, defectColor)
+		printColoredLine(my separator, my defectColor)
 	end printDefects
 	
 	(*! @abstract Prints the counts of passed and skipped tests, failures, and errors. *)
 	on printCounts()
 		printLine("")
-		tell _TestResult
+		tell my _TestResult
 			set elapsed to runSeconds()
 			set timeMsg to (elapsed as text) & " second"
 			if elapsed is not 1 then set timeMsg to timeMsg & "s"
@@ -1110,10 +1110,10 @@ script TestLogger
 	(*! @abstract Prints "OK" or "FAILED" at the end of the test results.  *)
 	on printResult()
 		printLine("")
-		if _TestResult's hasPassed() then
-			printColoredLine("OK", successColor)
+		if my _TestResult's hasPassed() then
+			printColoredLine("OK", my successColor)
 		else
-			printColoredLine("FAILED", defectColor)
+			printColoredLine("FAILED", my defectColor)
 		end if
 	end printResult
 	
@@ -1137,7 +1137,7 @@ script TestLogger
 			aString <em>[text]</em> The text to be printed.
 	*)
 	on printString(aString)
-		printColoredString(aString, defaultColor)
+		printColoredString(aString, my defaultColor)
 	end printString
 	
 	(*!
@@ -1159,7 +1159,7 @@ script TestLogger
 			aString <em>[text]</em> The text to be printed.
 	*)
 	on printLine(aString)
-		printColoredLine(aString, defaultColor)
+		printColoredLine(aString, my defaultColor)
 	end printLine
 	
 end script -- TestLogger		
@@ -1169,23 +1169,23 @@ script AppleScriptEditorLogger
 	property parent : TestLogger
 	property textView : missing value
 	property windowTitle : "Test Results"
-	property loggerPath : ((path to temporary items from user domain) as text) & windowTitle
+	property loggerPath : ((path to temporary items from user domain) as text) & my windowTitle
 	
 	(*! @abstract Creates a ÒTest ResultsÓ document if one does not already exist. *)
 	on printTitle()
 		try -- to reuse an existing window
 			tell application "AppleScript Editor"
-				set textView to get document windowTitle
-				set textView's window's index to 1 -- bring to front
+				set my textView to get document (my windowTitle)
+				set my textView's window's index to 1 -- bring to front
 			end tell
 		on error -- create a new document
 			-- Create a file so later we can use an alias
-			open for access file loggerPath
-			close access file loggerPath
+			open for access file (my loggerPath)
+			close access file (my loggerPath)
 			tell application "AppleScript Editor"
-				set textView to make new document Â
-					with properties {name:windowTitle, path:(POSIX path of loggerPath)}
-				save textView as "text" in (loggerPath as alias)
+				set my textView to make new document Â
+					with properties {name:my windowTitle, path:(POSIX path of my loggerPath)}
+				save my textView as "text" in (my loggerPath as alias)
 			end tell
 		end try
 		continue printTitle()
@@ -1200,7 +1200,7 @@ script AppleScriptEditorLogger
 			aColor <em>[RGB color]</em> The text color.
 	*)
 	on printColoredString(aString, aColor)
-		tell textView
+		tell my textView
 			set selection to insertion point -1
 			set contents of selection to aString
 			if aColor is not missing value then Â
@@ -1255,12 +1255,12 @@ script ConsoleLogger
 	on printColoredString(aString, aColor)
 		if aString ends with linefeed then
 			if the length of aString > 1 then
-				set _buffer to _buffer & (text 1 thru -2 of aString)
+				set my _buffer to my _buffer & (text 1 thru -2 of aString)
 			end if
-			log _buffer
-			set _buffer to ""
+			log my _buffer
+			set my _buffer to ""
 		else
-			set _buffer to _buffer & aString
+			set my _buffer to my _buffer & aString
 		end if
 	end printColoredString
 	
@@ -1323,7 +1323,7 @@ script TestComponent
 			<em>[script]</em> A @link TestResult @/link object.
 	*)
 	on test()
-		set aTestResult to TOP_LEVEL's makeTestResult(name)
+		set aTestResult to TOP_LEVEL's makeTestResult(my name)
 		tell aTestResult
 			runTest(me)
 		end tell
@@ -1403,7 +1403,7 @@ script TestCase
 	
 	(*! @abstract Returns the full name of this test. *)
 	on fullName()
-		return parent's name & " - " & name
+		return my parent's name & " - " & my name
 	end fullName
 	
 end script -- TestCase
@@ -1447,7 +1447,7 @@ end makeFixture
 		May be used to register a fixture inheriting from a <tt>TestCase</tt> subclass.
 *)
 on registerFixtureOfKind(aUserFixture, aParent)
-	set _currentFixture to aUserFixture
+	set my _currentFixture to aUserFixture
 	return aParent
 end registerFixtureOfKind
 
@@ -1469,7 +1469,7 @@ end TestSet
 	 	This feature is essential for ASUnit own unit tests.
 *)
 on makeTestCase()
-	return _currentFixture
+	return my _currentFixture
 end makeTestCase
 
 (*!
@@ -1513,7 +1513,7 @@ on makeTestSuite(aName)
 		(*! @abstract TODO. *)
 		on accept(aVisitor)
 			aVisitor's visitTestSuite(me)
-			repeat with aTest in tests
+			repeat with aTest in my tests
 				aTest's accept(aVisitor)
 			end repeat
 		end accept
@@ -1532,7 +1532,7 @@ on makeTestSuite(aName)
 				and <tt>TestSuite</tt>s.
 		*)
 		on add(aTest)
-			set end of tests to aTest
+			set end of my tests to aTest
 		end add
 		
 	end script -- TestSuite
@@ -1556,12 +1556,13 @@ on makeTestLoader()
 				in the tests scripts in the specified folder.
 		*)
 		on loadTestsFromFolder(aFolder)
+			local suite
 			set suite to makeTestSuite("All Tests in " & (aFolder as text))
 			compileSourceFiles(aFolder)
 			
 			tell application "Finder"
 				set testFiles to files of aFolder Â
-					where name starts with prefix and name ends with Â
+					where name starts with my prefix and name ends with Â
 					".scpt" and name does not start with Â
 					"Test Load" and name does not start with "TestLoad"
 			end tell
@@ -1576,7 +1577,7 @@ on makeTestLoader()
 		on compileSourceFiles(aFolder)
 			tell application "Finder"
 				set testFiles to files of aFolder Â
-					where name starts with prefix and name ends with Â
+					where name starts with my prefix and name ends with Â
 					".applescript" and name does not start with Â
 					"Test Load" and name does not start with "TestLoad"
 			end tell
@@ -1644,6 +1645,8 @@ on autorun(aTestSuite)
 	on error
 		if current application's name is "AppleScript Editor" then
 			set loggers to {AppleScriptEditorLogger}
+		else if current application's name is "osascript" then
+			set loggers to {StdoutLogger}
 		else
 			set loggers to {ConsoleLogger}
 		end if
