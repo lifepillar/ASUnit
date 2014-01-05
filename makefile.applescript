@@ -36,7 +36,7 @@ script api
 	sh("open " & dir & "/ASUnit_applescript/index.html")
 end script
 
-script asunit
+script asunitBuild
 	property parent : Task(me)
 	property name : "asunit"
 	property description : "Build ASUnit."
