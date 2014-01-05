@@ -46,7 +46,7 @@ end script
 script build
 	property parent : Task(me)
 	property description : "Build all source AppleScript scripts."
-	run asunit
+	run asunitBuild
 	osacompile({Â
 		"examples/HexString", "examples/Test HexString", "examples/Test Loader", Â
 		"templates/Test Template", Â
@@ -85,7 +85,7 @@ script dist
 	property description : "Prepare a directory for distribution."
 	property dir : missing value
 	run clobber
-	run asunit
+	run asunitBuild
 	run doc
 	set dir to "ASUnit-" & TopLevel's version
 	mkdir(dir)
@@ -115,7 +115,7 @@ script install
 	property dir : POSIX path of Â
 		((path to library folder from user domain) as text) & "Script Libraries"
 	property description : "Install ASUnit in" & space & dir & "."
-	run asunit
+	run asunitBuild
 	mkdir(dir)
 	cp("ASUnit.scpt", dir)
 	ohai("ASUnit installed in" & space & (dir as text))
