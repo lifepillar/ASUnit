@@ -1162,6 +1162,26 @@ script TestLogger
 		printColoredLine(aString, my defaultColor)
 	end printLine
 	
+	(*!
+		@abstract
+			Removes the trailing newline from the text, if present.
+		@param
+			s <em>[text]</em> A string.
+		@return
+			The string <tt>s</tt> with the trailing newline character removed, if any.
+	*)
+	on chomp(s)
+		if s ends with linefeed or s ends with return then
+			try
+				text 1 thru -2 of s
+			on error -- s is "\n" or "\r"
+				""
+			end try
+		else
+			s
+		end if
+	end chomp
+	
 end script -- TestLogger		
 
 (*! @abstract Displays test results in a new AppleScript Editor document. *)
