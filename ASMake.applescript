@@ -59,6 +59,7 @@ end script -- Stdout
 property parent : Stdout
 property tasks : {}
 property pwd : missing value
+property private : false -- Is this task an implementation detail?
 property printSuccess : true -- Print "==> Success!" when a task finishes?
 
 on parseTask(action)
@@ -85,9 +86,8 @@ on runTask(action)
 	end try
 end runTask
 
--- Registers a task.
 on Task(t)
-	set the end of my tasks to t
+	if not t's private then set the end of my tasks to t -- Register task
 	
 	script BaseTask
 		-- Inherits from top level script
