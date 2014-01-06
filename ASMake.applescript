@@ -4,13 +4,12 @@
  @abstract A draft of a primitive replacement for rake, make, etcÉ, in pure AppleScript.
  @author Lifepillar
  @copyright 2014 Lifepillar
- @version 0.0.0
+ @version 0.0.1
  @charset macintosh
 *)
-
-on run
-	return me
-end run
+property name : "ASMake"
+property version : "0.0.1"
+property id : "com.lifepillar.ASMake"
 
 script Stdout
 	property parent : AppleScript
@@ -56,44 +55,44 @@ script Stdout
 	
 end script -- Stdout
 
-property parent : Stdout
-property name : "ASMake"
-property version : "0.0.0"
-property id : "com.lifepillar.ASMake"
-property tasks : {}
-property pwd : missing value
-property private : false -- Is this task an implementation detail?
-property printSuccess : true -- Print "==> Success!" when a task finishes?
-
-on parseTask(action)
-	repeat with t in (a reference to my tasks)
-		if t's name = action then return t
-	end repeat
-	error
-end parseTask
-
-on runTask(action)
-	set my pwd to do shell script "pwd"
-	try
-		set t to parseTask(action)
-	on error errMsg number errNum
-		ofail("Unknown task: " & action, "")
-		error errMsg number errNum
-	end try
-	try
-		run t
-		if t's printSuccess then ohai("Success!")
-	on error errMsg number errNum
-		ofail("Task failed", "")
-		error errMsg number errNum
-	end try
-end runTask
+script ASMakeBase
+	property parent : Stdout
+	property tasks : {}
+	property pwd : missing value
+	property synonyms : {} -- To define a task name's aliases
+	property printSuccess : true -- Print "==> Success!" when a task finishes?
+	
+	on parseTask(action)
+		repeat with t in (a reference to my tasks)
+			if action = t's name or action is in t's synonyms then return t
+		end repeat
+		error
+	end parseTask
+	
+	on runTask(action)
+		set my pwd to do shell script "pwd"
+		try
+			set t to parseTask(action)
+		on error errMsg number errNum
+			ofail("Unknown task: " & action, "")
+			error errMsg number errNum
+		end try
+		try
+			run t
+			if t's printSuccess then ohai("Success!")
+		on error errMsg number errNum
+			ofail("Task failed", "")
+			error errMsg number errNum
+		end try
+	end runTask
+	
+end script -- ASMakeBase
 
 on Task(t)
-	if not t's private then set the end of my tasks to t -- Register task
+	tell ASMakeBase to set the end of its tasks to t -- Register task
 	
 	script BaseTask
-		-- Inherits from top level script
+		property parent : ASMakeBase
 		property class : "Task"
 		
 		on cp(src, dst) -- src can be a list of POSIX paths
@@ -156,3 +155,11 @@ on Task(t)
 	
 	return BaseTask
 end Task
+
+on run
+	return me
+end run
+
+on runTask(action)
+	ASMakeBase's runTask(action)
+end runTask
