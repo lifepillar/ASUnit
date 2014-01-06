@@ -50,7 +50,8 @@ See `Test Loader.applescript` in the `examples` folder.
 
 By default, if you run the tests in AppleScript Editor the output is written
 to a new AppleScript Editor document; if you run the tests in the Terminal
-the output is sent to stdout. You may, however, change this
+the output is sent to stdout; otherwise, the output is sent to the current
+application's console through `log` statements. You may, however, change this
 by setting the `suite's loggers` property. The value of this property
 must be a list of _loggers_ (you may send the output to more than one
 destination). Currently, ASUnit defines three loggers:
