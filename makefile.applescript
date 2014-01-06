@@ -105,6 +105,7 @@ end script
 script helpTask
 	property parent : Task(me)
 	property name : "help"
+	property synonyms : {"-help", "--help"}
 	property description : "Show this help and exit."
 	property printSuccess : false
 	repeat with t in my tasks
@@ -133,10 +134,10 @@ end script
 script versionTask
 	property parent : Task(me)
 	property name : "version"
+	property synonyms : {"-version", "--version", "-v"}
 	property description : "Print ASUnit's version and exit."
 	property printSuccess : false
 	set {n, v} to {name, version} of Â
 		(run script POSIX file (my pwd & "/ASUnit.applescript"))
 	ohai(n & space & "v" & v)
 end script
-
