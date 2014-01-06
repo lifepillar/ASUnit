@@ -38,7 +38,11 @@ Your test script must define a `suite` property and pass it to ASUnit's
     autorun(suite)
 
 You may run the test script inside AppleScript Editor,
-or from the command-line using `osascript`.
+from the command-line using `osascript`, or in other
+environments ([Script Debugger], [AppleScriptObjC Explorer], …).
+
+[Script Debugger]: http://www.latenightsw.com/sd4/ "Script Debugger"
+[AppleScriptObjC Explorer]: http://www.macosxautomation.com/applescript/apps/explorer.html "AppleScriptObjC Explorer"
 
 When you have several test files, you may run them all at once using
 a _test loader_ (there is no need to compile them in advance).
