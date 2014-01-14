@@ -1036,11 +1036,13 @@ script TestLogger
 	
 	(*! @abstract Prints the title of the test results. *)
 	on printTitle()
+		set {tid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ""}
 		printLine("")
 		printLine(((my _TestResult's startDate) as text))
 		printLine("")
 		printLine(my _TestResult's name)
 		printLine("")
+		set AppleScript's text item delimiters to tid
 	end printTitle
 	
 	(*! @abstract Prints a summary of the test results. *)
@@ -1105,6 +1107,7 @@ script TestLogger
 	(*! @abstract Prints the counts of passed and skipped tests, failures, and errors. *)
 	on printCounts()
 		printLine("")
+		set {tid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ""}
 		tell my _TestResult
 			set elapsed to runSeconds()
 			set timeMsg to (elapsed as text) & " second"
@@ -1118,6 +1121,7 @@ script TestLogger
 		printLine("Finished in " & timeMsg & ".")
 		printLine("")
 		printLine(counts as text)
+		set AppleScript's text item delimiters to tid
 	end printCounts
 	
 	(*! @abstract Prints "OK" or "FAILED" at the end of the test results.  *)
@@ -1202,10 +1206,13 @@ script AppleScriptEditorLogger
 	property parent : TestLogger
 	property textView : missing value
 	property windowTitle : "Test Results"
-	property loggerPath : ((path to temporary items from user domain) as text) & my windowTitle
 	
 	(*! @abstract Creates a ÒTest ResultsÓ document if one does not already exist. *)
 	on printTitle()
+		local loggerPath, tid
+		set {tid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ""}
+		set loggerPath to ((path to temporary items from user domain) as text) & my windowTitle
+		set AppleScript's text item delimiters to tid
 		try -- to reuse an existing window
 			tell application "AppleScript Editor"
 				set my textView to get document (my windowTitle)
@@ -1213,12 +1220,12 @@ script AppleScriptEditorLogger
 			end tell
 		on error -- create a new document
 			-- Create a file so later we can use an alias
-			open for access file (my loggerPath)
-			close access file (my loggerPath)
+			open for access file loggerPath
+			close access file loggerPath
 			tell application "AppleScript Editor"
 				set my textView to make new document Â
-					with properties {name:my windowTitle, path:(POSIX path of my loggerPath)}
-				save my textView as "text" in (my loggerPath as alias)
+					with properties {name:my windowTitle, path:(POSIX path of loggerPath)}
+				save my textView as "text" in (loggerPath as alias)
 			end tell
 		end try
 		continue printTitle()
@@ -1634,7 +1641,9 @@ on makeTestLoader()
 		*)
 		on loadTestsFromFolder(aFolder)
 			local suite
+			set {tid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ""}
 			set suite to makeTestSuite("All Tests in " & (aFolder as text))
+			set AppleScript's text item delimiters to tid
 			compileSourceFiles(aFolder)
 			
 			tell application "Finder"
@@ -1652,6 +1661,7 @@ on makeTestLoader()
 		
 		(*! @abstract Compiles all the test scripts in the specified folder. *)
 		on compileSourceFiles(aFolder)
+			set {tid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ""}
 			tell application "Finder"
 				set testFiles to files of aFolder Â
 					where name starts with my prefix and name ends with Â
@@ -1671,6 +1681,7 @@ on makeTestLoader()
 					log errMsg
 				end try
 			end repeat
+			set AppleScript's text item delimiters to tid
 		end compileSourceFiles
 		
 		(*!
@@ -1680,10 +1691,10 @@ on makeTestLoader()
 				An error if a test file does not have a <tt>suite</tt> property.
 		*)
 		on loadTestsFromFile(aFile)
-			-- TODOs:
-			-- - Should check for comforming suite?
-			-- - How to load tests from text format (.applescript)?
+			-- TODO: Should check for comforming suite?
+			set {tid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ""}
 			set testScript to load script file (aFile as text)
+			set AppleScript's text item delimiters to tid
 			try
 				set aSuite to testScript's suite
 				if testScript's suite is my ASUnitSentinel then MissingSuiteError(aFile)
@@ -1696,7 +1707,10 @@ on makeTestLoader()
 		
 		(*! @abstract Raises a missing suite error. *)
 		on MissingSuiteError(aFile)
-			error (aFile as text) & " does not have a suite property"
+			set {tid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ""}
+			set f to aFile as text
+			set AppleScript's text item delimiters to tid
+			error f & " does not have a suite property"
 		end MissingSuiteError
 		
 	end script -- TestLoader
