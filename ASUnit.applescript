@@ -527,7 +527,7 @@ on makeAssertions(theParent)
 			local n
 			set n to e1 - e2
 			if n < 0.0 then set n to -n
-			if n > delta then fail("The arguments differ by " & (n as text) & " > " & (delta as text))
+			if n > delta then fail("The arguments differ by " & asText(n) & " > " & asText(delta))
 		end assertEqualAbsError
 		
 		(*!
@@ -558,7 +558,7 @@ on makeAssertions(theParent)
 				set min to e2
 			end if
 			if n > min * eps then ¬
-				fail("The relative error is " & ((n / min) as text) & " > " & (eps as text))
+				fail("The relative error is " & asText(n / min) & " > " & asText(eps))
 		end assertEqualRelError
 		
 		(*!
@@ -867,7 +867,7 @@ on makeAssertions(theParent)
 					return res
 				end try
 				try
-					set res to anObject as text
+					set res to asText(anObject)
 					return res
 				on error -- Give up
 					return "«object»"
@@ -906,10 +906,10 @@ on makeAssertions(theParent)
 				return "«application" & res & "»"
 			else
 				try
-					set res to anObject as text
+					set res to asText(anObject)
 				on error
 					try
-						set klass to klass as text
+						set klass to asText(klass)
 						return "«object of class" & space & klass & "»"
 					on error
 						return "«object»"
@@ -977,6 +977,19 @@ on makeAssertions(theParent)
 				end if
 			end if
 		end pp
+		
+		on asText(s)
+			local ss, tid
+			set {tid, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ""}
+			try
+				set ss to s as text
+				set AppleScript's text item delimiters to tid
+				return ss
+			on error errMsg number errNum
+				set AppleScript's text item delimiters to tid
+				error errMsg number errNum
+			end try
+		end asText
 		
 	end script
 end makeAssertions
