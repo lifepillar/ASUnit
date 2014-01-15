@@ -1319,7 +1319,7 @@ script StdoutLogger
 	property reset : esc & "0m"
 	property successColor : green
 	property defectColor : red
-	property defaultColor : white
+	property defaultColor : cyan
 	property _buffer : ""
 	
 	-- Make color bold
