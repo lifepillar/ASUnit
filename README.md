@@ -114,8 +114,10 @@ you may use a number of assertion handlers:
 - `refute(expr, msg)` or `shouldnt(expr, msg)`: succeeds iff `expr` is false.
 - `shouldRaise(num, aScript, msg)`: succeeds iff `aScript` raises exception `num` when run.
 - `shouldntRaise(num, aScript, msg)`: succeeds iff `aScript` does not raise exception `num` when run.
-- `assertEqual(exp, value)` or `shouldEqual(exp, value)`: succeeds iff `exp` = `value`.
-- `assertNotEqual(exp, value)` or `shouldNotEqual(exp, value)`: succeeds iff `exp` ≠ `value`.
+- `assertEqual(expr, value)` or `shouldEqual(expr, value)`: succeeds iff `expr` = `value`.
+- `assertNotEqual(expr, value)` or `shouldNotEqual(expr, value)`: succeeds iff `expr` ≠ `value`.
+- `assertNil(expr): a synonym for `assertEqual(missing value, expr)`.
+- `refuteNil(expr): a synonym for `assertNotEqual(missing value, expr)`.
 - `assertEqualAbsError(e1, e2, delta)`: succeeds iff `|e1-e2| <= delta`.
 - `assertEqualRelError(e1, e2, eps)`: succeeds iff `|e1-e2| <= min(|e1|,|e2|) * eps`.
 - `assertReference(x)` or `shouldBeReference(x)`: succeeds iff `x` is a reference.
