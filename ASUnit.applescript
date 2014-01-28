@@ -4,14 +4,14 @@
  @abstract License: GNU GPL, see COPYING for details.
  @author Nir Soffer, Lifepillar
  @copyright 2013Ð2014 Lifepillar, 2006 Nir Soffer
- @version 1.2.1
+ @version 1.2.2
  @charset macintosh
 *)
 
 (*! @abstract <em>[text]</em> ASUnit's name. *)
 property name : "ASUnit"
 (*! @abstract <em>[text]</em> ASUnit's version. *)
-property version : "1.2.1"
+property version : "1.2.2"
 (*! @abstract <em>[text]</em> ASUnit's id. *)
 property id : "com.lifepillar.ASUnit"
 (*! @abstract Error number signalling a failed test. *)
@@ -565,12 +565,12 @@ on makeAssertions(theParent)
 		on assertNil(expr)
 			assertEqual(missing value, expr)
 		end assertNil
-
+		
 		(*! @abstract A shortcut for @link refuteEqual @/link(missing value, expr). *)
 		on refuteNil(expr)
 			refuteEqual(missing value, expr)
 		end refuteNil
-
+		
 		(*!
 			@abstract
 				Tests whether the given expression belongs to the given class.
