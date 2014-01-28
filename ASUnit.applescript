@@ -561,6 +561,16 @@ on makeAssertions(theParent)
 				fail("The relative error is " & asText(n / min) & " > " & asText(eps))
 		end assertEqualRelError
 		
+		(*! @abstract A shortcut for @link assertEqual @/link(missing value, expr). *)
+		on assertNil(expr)
+			assertEqual(missing value, expr)
+		end assertNil
+
+		(*! @abstract A shortcut for @link refuteEqual @/link(missing value, expr). *)
+		on refuteNil(expr)
+			refuteEqual(missing value, expr)
+		end refuteNil
+
 		(*!
 			@abstract
 				Tests whether the given expression belongs to the given class.
