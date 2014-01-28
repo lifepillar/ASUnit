@@ -1020,6 +1020,16 @@ script TestLogger
 	
 	(*!
 		@abstract
+			Initializes this logger.
+		@discussion
+			This handler may be overriden by subclasses to perform any needed
+			initialization step. This handler is called automatically by @link autorun @/link.
+	*)
+	on initialize()
+	end initialize
+
+	(*!
+		@abstract
 			Logs the given event.
 		@param
 			anEvent <em>[record]</em> An event. For the structure of an event,
@@ -1216,7 +1226,7 @@ script AppleScriptEditorLogger
 	property windowTitle : "Test Results"
 	
 	(*! @abstract Creates a “Test Results” document if one does not already exist. *)
-	on printTitle()
+	on initialize()
 		local loggerPath, tid
 		set loggerPath to ((path to temporary items from user domain) as text) & my windowTitle
 		try -- to reuse an existing window
@@ -1234,8 +1244,7 @@ script AppleScriptEditorLogger
 				save my textView as "text" in (loggerPath as alias)
 			end tell
 		end try
-		continue printTitle()
-	end printTitle
+	end initialize
 	
 	(*!
 		@abstract
@@ -1741,6 +1750,7 @@ on autorun(aTestSuite)
 		end if
 	end try
 	repeat with aLogger in loggers
+		aLogger's initialize()
 		tell theTestRunner to addObserver(aLogger)
 	end repeat
 	tell theTestRunner to runTest(aTestSuite)
