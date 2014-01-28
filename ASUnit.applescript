@@ -1235,13 +1235,9 @@ script AppleScriptEditorLogger
 				set my textView's window's index to 1 -- bring to front
 			end tell
 		on error -- create a new document
-			-- Create a file so later we can use an alias
-			open for access file loggerPath
-			close access file loggerPath
 			tell application "AppleScript Editor"
-				set my textView to make new document Â
-					with properties {name:my windowTitle, path:(POSIX path of loggerPath)}
-				save my textView as "text" in (loggerPath as alias)
+				save (make new document) in file loggerPath as "text"
+				set my textView to document (my windowTitle)
 			end tell
 		end try
 	end initialize
