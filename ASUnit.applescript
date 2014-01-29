@@ -929,7 +929,7 @@ on makeAssertions(theParent)
 					date, file, integer, POSIX file, real, text} then
 					return res
 				else if klass is in {centimeters, feet, inches, kilometers, meters, miles, yards, square feet, square kilometers, square meters, square miles, square yards, cubic centimeters, cubic feet, cubic inches, cubic meters, cubic yards, gallons, liters, quarts, grams, kilograms, ounces, pounds, degrees Celsius, degrees Fahrenheit, degrees Kelvin} then
-					return res & (klass as text)
+					return res & space & (klass as text)
 				else
 					return res
 				end if
