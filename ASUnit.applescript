@@ -928,60 +928,8 @@ on makeAssertions(theParent)
 				if klass is in {alias, boolean, class, constant, Â
 					date, file, integer, POSIX file, real, text} then
 					return res
-				else if klass is centimeters then
-					return res & " centimeters"
-				else if klass is feet then
-					return res & " feet"
-				else if klass is inches then
-					return res & " inches"
-				else if klass is kilometers then
-					return res & " kilometers"
-				else if klass is meters then
-					return res & " meters"
-				else if klass is miles then
-					return res & " miles"
-				else if klass is yards then
-					return res & " yards"
-				else if klass is square feet then
-					return res & " square feet"
-				else if klass is square kilometers then
-					return res & " square kilometers"
-				else if klass is square meters then
-					return res & " square meters"
-				else if klass is square miles then
-					return res & " square miles"
-				else if klass is square yards then
-					return res & " square yards"
-				else if klass is cubic centimeters then
-					return res & " cubic centimeters"
-				else if klass is cubic feet then
-					return res & " cubic feet"
-				else if klass is cubic inches then
-					return res & " cubic inches"
-				else if klass is cubic meters then
-					return res & " cubic meters"
-				else if klass is cubic yards then
-					return res & " cubic yards"
-				else if klass is gallons then
-					return res & " gallons"
-				else if klass is liters then
-					return res & " liters"
-				else if klass is quarts then
-					return res & " quarts"
-				else if klass is grams then
-					return res & " grams"
-				else if klass is kilograms then
-					return res & " kilograms"
-				else if klass is ounces then
-					return res & " ounces"
-				else if klass is pounds then
-					return res & " pounds"
-				else if klass is degrees Celsius then
-					return res & " degrees Celsius"
-				else if klass is degrees Fahrenheit then
-					return res & " degrees Fahrenheit"
-				else if klass is degrees Kelvin then
-					return res & " degrees Kelvin"
+				else if klass is in {centimeters, feet, inches, kilometers, meters, miles, yards, square feet, square kilometers, square meters, square miles, square yards, cubic centimeters, cubic feet, cubic inches, cubic meters, cubic yards, gallons, liters, quarts, grams, kilograms, ounces, pounds, degrees Celsius, degrees Fahrenheit, degrees Kelvin} then
+					return res & (klass as text)
 				else
 					return res
 				end if
@@ -1027,7 +975,7 @@ script TestLogger
 	*)
 	on initialize()
 	end initialize
-
+	
 	(*!
 		@abstract
 			Logs the given event.
