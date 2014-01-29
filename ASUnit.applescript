@@ -106,6 +106,7 @@ on makeTestResult(aName)
 			 	aTest <em>[script]</em> May be a test case or a test suite.
 		*)
 		on runTest(aTest)
+			set assertions to 0
 			try
 				startTest()
 				aTest's accept(me)
