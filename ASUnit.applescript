@@ -892,8 +892,14 @@ on makeAssertions(theParent)
 				end if
 				error number TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED
 			on error errMsg number errNum
-				if errNum is TEST_FAILED then return
-				if errNum is TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED then fail(msg)
+				if errNum is TEST_FAILED then
+					countAssertion()
+					return
+				end if
+				if errNum is TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED then
+					set my nAssertions to (my nAssertions) - 1
+					fail(msg)
+				end if
 				if errNum is TEST_SKIPPED then skip(msg)
 				error errMsg number errNum
 			end try
