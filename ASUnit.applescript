@@ -385,7 +385,6 @@ on makeAssertions(theParent)
 		(*! @abstract A synonym for @link assert @/link. *)
 		on should(expr, message)
 			assert(expr, message)
-			countAssertion()
 		end should
 		
 		(*!
@@ -406,7 +405,6 @@ on makeAssertions(theParent)
 		(*! @abstract A synonym for @link refute @/link. *)
 		on shouldnt(expr, message)
 			refute(expr, message)
-			countAssertion()
 		end shouldnt
 		
 		(*!
