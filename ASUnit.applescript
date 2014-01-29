@@ -81,6 +81,7 @@ on makeTestResult(aName)
 		property skips : {}
 		property failures : {}
 		property errors : {}
+		property assertions : 0
 		
 		(*!
 			@abstract
@@ -148,7 +149,9 @@ on makeTestResult(aName)
 			try
 				aTestCase's runCase()
 				addSuccess(aTestCase)
+				set my assertions to (my assertions) + (aTestCase's numberOfAssertions())
 			on error message number errorNumber
+				set my assertions to (my assertions) + (aTestCase's numberOfAssertions())
 				if errorNumber is TEST_SKIPPED then
 					addSkip(aTestCase, message)
 				else if errorNumber is TEST_FAILED then
@@ -241,6 +244,11 @@ on makeTestResult(aName)
 		on passCount()
 			return count of my passed
 		end passCount
+		
+		(*! @abstract Returns the total number of successful assertions. *)
+		on assertionCount()
+			return assertions
+		end assertionCount
 		
 		(*! @abstract Returns the number of skipped test. *)
 		on skipCount()
@@ -343,6 +351,7 @@ on makeAssertions(theParent)
 		*)
 		on ok(expr)
 			if not expr then fail("The given expression did not evaluate to true.")
+			countAssertion()
 		end ok
 		
 		(*!
@@ -355,6 +364,7 @@ on makeAssertions(theParent)
 		*)
 		on notOk(expr)
 			if expr then fail("The given expression did not evaluate to false.")
+			countAssertion()
 		end notOk
 		
 		(*!
@@ -369,11 +379,13 @@ on makeAssertions(theParent)
 		*)
 		on assert(expr, message)
 			if not expr then fail(message)
+			countAssertion()
 		end assert
 		
 		(*! @abstract A synonym for @link assert @/link. *)
 		on should(expr, message)
 			assert(expr, message)
+			countAssertion()
 		end should
 		
 		(*!
@@ -388,11 +400,13 @@ on makeAssertions(theParent)
 		*)
 		on refute(expr, message)
 			if expr then fail(message)
+			countAssertion()
 		end refute
 		
 		(*! @abstract A synonym for @link refute @/link. *)
 		on shouldnt(expr, message)
 			refute(expr, message)
+			countAssertion()
 		end shouldnt
 		
 		(*!
@@ -421,6 +435,7 @@ on makeAssertions(theParent)
 				if (length of expectedErrorNumber > 0) and (expectedErrorNumber does not contain errNum) then
 					fail(message & linefeed & errMsg & linefeed & "Exception raised: " & errNum)
 				end if
+				countAssertion()
 				return
 			end try
 			fail(message)
@@ -453,6 +468,7 @@ on makeAssertions(theParent)
 					fail(message & linefeed & errMsg & linefeed & "Exception raised: " & errNum)
 				end if
 			end try
+			countAssertion()
 		end shouldntRaise
 		
 		(*!
@@ -472,6 +488,7 @@ on makeAssertions(theParent)
 					fail("Expected: " & pp(expected) & linefeed & "  Actual: " & pp(value))
 				end if
 			end considering
+			countAssertion()
 		end assertEqual
 		
 		(*! @abstract A synonym for @link assertEqual @/link. *)
@@ -496,6 +513,7 @@ on makeAssertions(theParent)
 					fail("Expected a value different from " & pp(unexpected) & ".")
 				end if
 			end considering
+			countAssertion()
 		end assertNotEqual
 		
 		(*! @abstract A synonym for @link assertNotEqual @/link. *)
@@ -528,6 +546,7 @@ on makeAssertions(theParent)
 			set n to e1 - e2
 			if n < 0.0 then set n to -n
 			if n > delta then fail("The arguments differ by " & asText(n) & " > " & asText(delta))
+			countAssertion()
 		end assertEqualAbsError
 		
 		(*!
@@ -559,6 +578,7 @@ on makeAssertions(theParent)
 			end if
 			if n > min * eps then Â
 				fail("The relative error is " & asText(n / min) & " > " & asText(eps))
+			countAssertion()
 		end assertEqualRelError
 		
 		(*! @abstract A shortcut for @link assertEqual @/link(missing value, expr). *)
@@ -592,6 +612,7 @@ on makeAssertions(theParent)
 				fail("Expected class: " & pp(klass) & linefeed & Â
 					"  Actual class: " & pp(k))
 			end if
+			countAssertion()
 		end assertInstanceOf
 		
 		(*!
@@ -609,10 +630,12 @@ on makeAssertions(theParent)
 			try
 				set k to class of expr
 			on error
+				countAssertion()
 				return
 			end try
 			if k is klass then Â
 				fail("Expected class of " & pp(expr) & linefeed & "to be different from " & pp(klass) & ".")
+			countAssertion()
 		end refuteInstanceOf
 		
 		(*!
@@ -643,8 +666,14 @@ on makeAssertions(theParent)
 					set the end of inheritanceChain to curr
 					exit repeat
 				end try
-				if k is klass then return
-				if klass is number and k is in {integer, real} then return
+				if k is klass then
+					countAssertion()
+					return
+				end if
+				if klass is number and k is in {integer, real} then
+					countAssertion()
+					return
+				end if
 				set the end of the inheritanceChain to curr
 				try
 					set curr to curr's parent
@@ -681,6 +710,7 @@ on makeAssertions(theParent)
 				try
 					set k to class of curr
 				on error
+					countAssertion()
 					return
 				end try
 				set the end of the inheritanceChain to curr
@@ -688,9 +718,15 @@ on makeAssertions(theParent)
 				if klass is number and k is in {integer, real} then exit repeat
 				try
 					set curr to curr's parent
-					if curr is in inheritanceChain then return -- cycle
+					if curr is in inheritanceChain then -- cycle
+						countAssertion()
+						return
+					end if
 				on error errMsg number errNum
-					if errNum is -1728 then return -- Can't get parent (end of inheritance chain)
+					if errNum is -1728 then -- Can't get parent (end of inheritance chain)
+						countAssertion()
+						return
+					end if
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
@@ -720,7 +756,10 @@ on makeAssertions(theParent)
 				set the end of the inheritanceChain to currObj
 				try
 					set currObj to currObj's parent
-					if currObj is equal to ancestor then return
+					if currObj is equal to ancestor then
+						countAssertion()
+						return
+					end if
 					if currObj is in inheritanceChain then -- cycle
 						set the end of inheritanceChain to currObj
 						exit repeat
@@ -757,9 +796,15 @@ on makeAssertions(theParent)
 						set the end of inheritanceChain to currObj
 						exit repeat
 					end if
-					if currObj is in inheritanceChain then return -- cycle
+					if currObj is in inheritanceChain then -- cycle
+						countAssertion()
+						return
+					end if
 				on error errMsg number errNum
-					if errNum is -1728 then return -- Can't get parent (end of inheritance chain)
+					if errNum is -1728 then -- Can't get parent (end of inheritance chain)
+						countAssertion()
+						return
+					end if
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
@@ -781,6 +826,7 @@ on makeAssertions(theParent)
 			on error
 				fail(pp(anObject) & space & "is not a reference.")
 			end try
+			countAssertion()
 		end assertReference
 		
 		(*! @abstract A synonym for @link assertReference @/link. *)
@@ -800,6 +846,7 @@ on makeAssertions(theParent)
 			try
 				anObject as reference -- Try to coerce to reference class
 			on error
+				countAssertion()
 				return
 			end try
 			fail("Got a reference to " & pp(anObject) & ".")
@@ -1079,7 +1126,8 @@ script TestLogger
 			set timeMsg to (elapsed as text) & " second"
 			if elapsed is not 1 then set timeMsg to timeMsg & "s"
 			set counts to {runCount() & " tests, ", Â
-				passCount() & " passed, ", Â
+				passCount() & " passed (", Â
+				assertionCount() & " assertions), ", Â
 				failureCount() & " failures, ", Â
 				errorCount() & " errors, ", Â
 				skipCount() & " skips."}
@@ -1404,9 +1452,27 @@ end script -- TestComponent
 *)
 script TestCase
 	property parent : TestComponent
+	(*! @abstract Maintains the count of non-failing assertions in the current test case. *)
+	property nAssertions : 0
+	
+	(*! @abstract Returns the count of assertions run successfully in the current test case. *)
+	on numberOfAssertions()
+		return nAssertions
+	end numberOfAssertions
+	
+	(*!
+		@abstract
+			Increments the count of successful assertions in the current test case.
+		@discussion
+			Each assertion must call this handler after checking its assertion.
+	*)
+	on countAssertion()
+		set nAssertions to nAssertions + 1
+	end countAssertion
 	
 	(*! @abstract TODO. *)
 	on accept(aVisitor)
+		set nAssertions to 0
 		tell aVisitor
 			visitTestCase(me)
 		end tell
