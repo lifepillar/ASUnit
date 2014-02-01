@@ -410,7 +410,7 @@ on makeAssertions(theParent)
 		
 		(*!
 			@abstract
-				Fails unless <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>.
+				Fails unless <tt>expectedErrorNumber</tt> is raised by executing <tt>object</tt>.
 			@discussion
 				Fails if an unexpected error was raised or no error was raised.
 			@param
@@ -418,15 +418,27 @@ on makeAssertions(theParent)
 				An exception number or a list of exception numbers. To make this assertion
 				succeed no matter what exception is raised, pass an empty list.
 			@param
-				aScript <em>[script]</em> The script to be run.
+				object <em>[script]</em> or <em>[handler]</em> A script or a handler without parameters.
 			@param
 				message <em>[text]</em> A message that is printed when the assertion fails.
 			@throws
 				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
-		on shouldRaise(expectedErrorNumber, aScript, message)
+		on shouldRaise(expectedErrorNumber, object, message)
+			local aScript
 			if expectedErrorNumber's class is integer then
 				set expectedErrorNumber to {expectedErrorNumber}
+			end if
+			if the class of the object is handler then
+				script
+					property f : object
+					f()
+				end script
+				set aScript to the result
+			else if the class of the object is script then
+				set aScript to the object
+			else
+				error "shouldRaise()'s second argument must be a script or a handler with no parametrs."
 			end if
 			try
 				run aScript
@@ -442,7 +454,7 @@ on makeAssertions(theParent)
 		
 		(*!
 			@abstract
-				Fails if <tt>expectedErrorNumber</tt> is raised by running <tt>aScript</tt>.
+				Fails if <tt>expectedErrorNumber</tt> is raised by executing <tt>object</tt>.
 			@discussion
 				Fails if a certain error is raised.
 			@param
@@ -450,15 +462,26 @@ on makeAssertions(theParent)
 				An exception number or a list of exception numbers. To make this assertion
 				succeed only when no exception is raised, pass an empty list.
 			@param
-				aScript <em>[script]</em> The script to be run.
+				object <em>[script]</em> or <em>[handler]</em> A script or a handler without parameters.
 			@param
 				message <em>[text]</em> A message that is printed when this assertion fails.
 			@throws
 				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
-		on shouldntRaise(expectedErrorNumber, aScript, message)
+		on shouldntRaise(expectedErrorNumber, object, message)
 			if expectedErrorNumber's class is integer then
 				set expectedErrorNumber to {expectedErrorNumber}
+			end if
+			if the class of the object is handler then
+				script
+					property f : object
+					f()
+				end script
+				set aScript to the result
+			else if the class of the object is script then
+				set aScript to the object
+			else
+				error "shouldNotRaise()'s second argument must be a script or a handler with no parametrs."
 			end if
 			try
 				run aScript
