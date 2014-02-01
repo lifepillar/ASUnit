@@ -112,10 +112,12 @@ you may use a number of assertion handlers:
 - `notOk(expr)`: succeeds iff `expr` evaluates to false.
 - `assert(expr, msg)` or `should(expr, msg)`: succeeds iff `expr` is true.
 - `refute(expr, msg)` or `shouldnt(expr, msg)`: succeeds iff `expr` is false.
-- `shouldRaise(num, aScript, msg)`: succeeds iff `aScript` raises exception `num` when run.
-- `shouldntRaise(num, aScript, msg)`: succeeds iff `aScript` does not raise exception `num` when run.
+- `shouldRaise(num, object, msg)`: succeeds iff `object` raises exception `num` when executed.
+   The `object` can be a script object or a handler without parameters.
+- `shouldNotRaise(num, object, msg)`: succeeds iff `object` does not raise exception `num` when executed.
+   The `object` can be a script object or a handler without parameters.
 - `assertEqual(expr, value)` or `shouldEqual(expr, value)`: succeeds iff `expr` = `value`.
-- `assertNotEqual(expr, value)` or `shouldNotEqual(expr, value)`: succeeds iff `expr` ≠ `value`.
+- `refuteEqual(expr, value)` or `shouldNotEqual(expr, value)`: succeeds iff `expr` ≠ `value`.
 - `assertNil(expr)`: a synonym for `assertEqual(missing value, expr)`.
 - `refuteNil(expr)`: a synonym for `assertNotEqual(missing value, expr)`.
 - `assertEqualAbsError(e1, e2, delta)`: succeeds iff `|e1-e2| <= delta`.
