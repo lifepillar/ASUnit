@@ -468,7 +468,7 @@ on makeAssertions(theParent)
 			@throws
 				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
-		on shouldntRaise(expectedErrorNumber, object, message)
+		on shouldNotRaise(expectedErrorNumber, object, message)
 			if expectedErrorNumber's class is integer then
 				set expectedErrorNumber to {expectedErrorNumber}
 			end if
@@ -491,6 +491,11 @@ on makeAssertions(theParent)
 				end if
 			end try
 			countAssertion()
+		end shouldNotRaise
+		
+		(*! @abstract A synonym for @link shouldNotRaise@/link(). Deprecated. *)
+		on shouldntRaise(expectedErrorNumber, object, message)
+			shouldNotRaise(expectedErrorNumber, object, message)
 		end shouldntRaise
 		
 		(*!
