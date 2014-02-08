@@ -37,10 +37,7 @@ script build
 	property parent : Task(me)
 	property description : "Build all source AppleScript scripts."
 	run asunitBuild
-	osacompile({Â
-		"examples/HexString", "examples/Test HexString", "examples/Test Loader", Â
-		"examples/Test AppleScript Variable Types and You", "templates/Test Template", Â
-		"templates/Runtime Loader", "templates/MyScript"}, "scpt", {"-x"})
+	osacompile({"examples/*.applescript", "templates/*.applescript"}, "scpt", {"-x"})
 end script
 
 script clean
