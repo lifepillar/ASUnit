@@ -25,8 +25,8 @@ Otherwise, you can install it manually with the following commands:
 
     cd ASUnit
     osacompile -o ASUnit.scpt -x ASUnit.applescript
-    mkdir -p '/Users/nicola/Library/Script Libraries'
-    cp ASUnit.scpt '/Users/nicola/Library/Script Libraries'
+    mkdir -p ~/Library/'Script Libraries'
+    cp ASUnit.scpt ~/Library/'Script Libraries'
 
 In either case, the file `ASUnit.scpt` will be installed in `~/Library/Script Libraries`
 (creating that folder if it does not exist).
