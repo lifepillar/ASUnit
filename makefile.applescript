@@ -61,13 +61,9 @@ script doc
 	set markdown to which("markdown")
 	if markdown is not missing value then
 		set out to sh(markdown, {"OldManual.md"})
-		set fp to open for access POSIX file (my PWD & "/OldManual.html") with write permission
-		write out to fp as Çclass utf8È
-		close access fp
+		writeUTF8(POSIX file (my PWD & "/OldManual.html"), out)
 		set out to sh(markdown, {"README.md"})
-		set fp to open for access POSIX file (my PWD & "/README.html") with write permission
-		write out to fp as Çclass utf8È
-		close access fp
+		writeUTF8(POSIX file (my PWD & "/README.html"), out)
 	else
 		error markdown & space & "not found." & linefeed & Â
 			"PATH: " & (do shell script "echo $PATH")
