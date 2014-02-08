@@ -6,13 +6,29 @@ For a detailed description of the architecture of the original ASUnit framework,
 read the file `OldManual.md`. Some advanced features of ASUnit (e.g., custom
 TestCases and Visitors) are still described only in that document.
 
-To build and install ASUnit:
+## Obtaining and installing
+
+To get ASUnit, you may clone it from the GitHub repository:
 
     git clone https://github.com/lifepillar/ASUnit.git
-    cd ASUnit
-    ./asmake install
 
-The file `ASUnit.scpt` will be installed in `~/Library/Script Libraries`
+Alternatively, you may download a [tarball](https://github.com/lifepillar/ASUnit/releases)
+containing the source code.
+
+To build and install ASUnit, you have two options. If you have installed
+[ASMake](https://github.com/lifepillar/ASMake), you may just write:
+
+    cd ASUnit
+    asmake install
+
+Otherwise, you can install it manually with the following commands:
+
+    cd ASUnit
+    osacompile -o ASUnit.scpt -x ASUnit.applescript
+    mkdir -p '/Users/nicola/Library/Script Libraries'
+    cp ASUnit.scpt '/Users/nicola/Library/Script Libraries'
+
+In either case, the file `ASUnit.scpt` will be installed in `~/Library/Script Libraries`
 (creating that folder if it does not exist).
 
 
