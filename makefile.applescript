@@ -60,10 +60,8 @@ script doc
 	
 	set markdown to which("markdown")
 	if markdown is not missing value then
-		set out to sh(markdown, {"OldManual.md"})
-		writeUTF8(POSIX file (my PWD & "/OldManual.html"), out)
-		set out to sh(markdown, {"README.md"})
-		writeUTF8(POSIX file (my PWD & "/README.html"), out)
+		sh(markdown, {"-o", "OldManual.html", "OldManual.md"})
+		sh(markdown, {"-o", "README.html", "README.md"})
 	else
 		error markdown & space & "not found." & linefeed & Â
 			"PATH: " & (do shell script "echo $PATH")
