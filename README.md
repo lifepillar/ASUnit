@@ -19,7 +19,7 @@ To build and install ASUnit, you have two options. If you have installed
 [ASMake](https://github.com/lifepillar/ASMake), you may just write:
 
     cd ASUnit
-    asmake install
+    ./asmake install
 
 Otherwise, you can install it manually with the following commands:
 
