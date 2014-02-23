@@ -1,3 +1,4 @@
+#!/usr/bin/osascript
 use AppleScript version "2.3"
 use scripting additions
 use ASMake : script "ASMake" version "0.1.0"
