@@ -26,7 +26,7 @@ script api
 	--Set LANG to get rid of warnings about missing default encoding
 	sh("env LANG=en_US.UTF-8 ${HOME}/Downloads/headerdoc-8.9.14/headerDoc2HTML.pl", {"-q", "-o", dir, "ASUnit-UTF8.applescript"})
 	sh("env LANG=en_US.UTF-8 ${HOME}/Downloads/headerdoc-8.9.14/gatherHeaderDoc.pl", dir)
-	sh("open", dir & "/ASUnit-UTF8_applescript/index.html")
+	sh("open", dir & "/masterTOC.html")
 end script
 
 
