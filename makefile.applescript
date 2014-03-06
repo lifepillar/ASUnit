@@ -20,6 +20,7 @@ script api
 	property dir : "Documentation"
 	
 	owarn("HeaderDoc's support for AppleScript is definitely broken as of v8.9 (Xcode 5.0)")
+	sh("iconv", {"-f", "UTF-16LE", "-t", "UTF-8", "ASUnit.applescript", {redirect:">ASUnit-UTF8.applescript"}})
 	--Set LANG to get rid of warnings about missing default encoding
 	sh("env LANG=en_US.UTF-8 headerdoc2html", {"-q", "-o", dir, "ASUnit.applescript"})
 	sh("env LANG=en_US.UTF-8 gatherheaderdoc", dir)
