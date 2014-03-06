@@ -19,12 +19,14 @@ script api
 	property description : "Build the API documentation."
 	property dir : "Documentation"
 	
-	owarn("HeaderDoc's support for AppleScript is definitely broken as of v8.9 (Xcode 5.0)")
+	owarn("HeaderDoc 8.9.14 must be patched before generating the documentation.")
+	echo("HeaderDoc 8.9.14 can be downloaded at http://opensource.apple.com/release/developer-tools-46/")
+	echo("Patches can be found at: http://www.darwin-development.org/headerdoc_patches/Xcode_5/")
 	sh("iconv", {"-f", "UTF-16LE", "-t", "UTF-8", "ASUnit.applescript", {redirect:">ASUnit-UTF8.applescript"}})
 	--Set LANG to get rid of warnings about missing default encoding
-	sh("env LANG=en_US.UTF-8 headerdoc2html", {"-q", "-o", dir, "ASUnit.applescript"})
-	sh("env LANG=en_US.UTF-8 gatherheaderdoc", dir)
-	sh("open", dir & "/ASUnit_applescript/index.html")
+	sh("env LANG=en_US.UTF-8 ${HOME}/Downloads/headerdoc-8.9.14/headerDoc2HTML.pl", {"-q", "-o", dir, "ASUnit-UTF8.applescript"})
+	sh("env LANG=en_US.UTF-8 ${HOME}/Downloads/headerdoc-8.9.14/gatherHeaderDoc.pl", dir)
+	sh("open", dir & "/ASUnit-UTF8_applescript/index.html")
 end script
 
 
