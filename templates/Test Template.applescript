@@ -30,11 +30,11 @@ property suite : makeTestSuite(suitename)
 
 (*
 -- Optional: choose loggers
-set suite's loggers to {AppleScriptEditorLogger, ConsoleLogger}
+set suite's loggers to {ScriptEditorLogger, ConsoleLogger}
 *)
 (*
 -- Optional: customize colors for AS Editor output
-tell AppleScriptEditorLogger
+tell ScriptEditorLogger
 	set its defaultColor to {256 * 1, 256 * 102, 256 * 146}
 	set its successColor to {256 * 0, 256 * 159, 256 * 120}
 	set its defectColor to {256 * 137, 256 * 89, 256 * 168}
