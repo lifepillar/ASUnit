@@ -943,19 +943,19 @@ on makeAssertions(theParent)
 						set tid to AppleScript's text item delimiters
 						set AppleScript's text item delimiters to space
 						set x to text items of res
-						set AppleScript's text item delimiters to Çdata utxtFF65È as text -- small bullet
+						set AppleScript's text item delimiters to Çdata utxtFF65È as Unicode text -- small bullet
 						set res to x as text
 						set AppleScript's text item delimiters to tab
 						set x to text items of res
-						set AppleScript's text item delimiters to Çdata utxt21A6È as text -- rightwards arrow from bar
+						set AppleScript's text item delimiters to Çdata utxt21A6È as Unicode text -- rightwards arrow from bar
 						set res to x as text
 						set AppleScript's text item delimiters to linefeed
 						set x to text items of res
-						set AppleScript's text item delimiters to Çdata utxt00ACÈ as text -- not sign
+						set AppleScript's text item delimiters to Çdata utxt00ACÈ as Unicode text -- not sign
 						set res to x as text
 						set AppleScript's text item delimiters to return
 						set x to text items of res
-						set AppleScript's text item delimiters to Çdata utxt21A9È as text -- hook arrow
+						set AppleScript's text item delimiters to Çdata utxt21A9È as Unicode text -- hook arrow
 						set res to x as text
 						set AppleScript's text item delimiters to tid
 					end if

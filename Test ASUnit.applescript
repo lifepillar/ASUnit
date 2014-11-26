@@ -1142,10 +1142,10 @@ script |pretty print|
 		assertEqual(pi as text, pp(pi))
 		assertEqual(quote, pp(quote))
 		assert(my showInvisibles, "Show invisibles should be turned on by default")
-		assertEqual(Çdata utxt00ACÈ as text, pp(linefeed)) -- not sign
-		assertEqual(Çdata utxt21A9È as text, pp(return)) -- hook arrow
-		assertEqual(Çdata utxtFF65È as text, pp(space)) -- small bullet
-		assertEqual(Çdata utxt21A6È as text, pp(tab)) -- rightwards arrow from bar
+		assertEqual(Çdata utxt00ACÈ as Unicode text, pp(linefeed)) -- not sign
+		assertEqual(Çdata utxt21A9È as Unicode text, pp(return)) -- hook arrow
+		assertEqual(Çdata utxtFF65È as Unicode text, pp(space)) -- small bullet
+		assertEqual(Çdata utxt21A6È as Unicode text, pp(tab)) -- rightwards arrow from bar
 		set my showInvisibles to false
 		assertEqual(linefeed, pp(linefeed))
 		assertEqual(return, pp(return))
