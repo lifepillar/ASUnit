@@ -1430,6 +1430,39 @@ script |Count assertions|
 	
 end script -- Count assertions
 
+script TestSetObjCRef
+	property parent : TestSet(me)
+	property name : "Objective-C references"
+	
+	script TestObjCRef
+		property parent : UnitTest(me)
+		property name : "assertObjCReference() fails with AppleScript objects"
+		
+		failIf(my assertObjCReference, {""}, "Should fail with string")
+		failIf(my assertObjCReference, {text}, "Should fail with class object")
+		
+	end script
+	
+	script TestObjCRefWithReferences
+		property parent : UnitTest(me)
+		property name : "assertObjCReference() fails with AppleScript references"
+		property a : a reference to name
+		property b : a reference to a
+		property c : a reference to b
+		property d : a reference to e
+		property e : a reference to f
+		property f : a reference to (class of e)
+		
+		failIf(my assertObjCReference, {a}, "a")
+		failIf(my assertObjCReference, {b}, "b")
+		failIf(my assertObjCReference, {c}, "c")
+		failIf(my assertObjCReference, {d}, "d")
+		failIf(my assertObjCReference, {e}, "e")
+		failIf(my assertObjCReference, {f}, "f")
+	end script
+end script -- TestSetObjCRef
+
+
 log my parent's name & space & my parent's version
 tell my ScriptEditorLogger -- Customize colors
 	set its defaultColor to {256 * 30, 256 * 20, 256 * 10} -- RGB(30,20,10)

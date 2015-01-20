@@ -812,6 +812,34 @@ on makeAssertions(theParent)
 		
 		(*!
 			@abstract
+				Fails when the given argument is not a reference to a Cocoa object.
+				Succeeds otherwise.
+			@discussion
+				TODO
+			@param
+				anObject <em>[anything]</em> An expression.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+			@seealso
+				http://macscripter.net/viewtopic.php?pid=177998
+		*)
+		on assertObjCReference(anObject)
+			try
+				(class of x) as reference
+				(contents of class of x is class of x)
+			on error
+				fail(pp(anObject) & space & "is not a reference to a Cocoa object.")
+			end try
+			countAssertion()
+		end assertObjCReference
+		
+		(*! @abstract A synonym for @link assertObjCReference @/link. *)
+		on shouldBeObjCReference(anObject)
+			assertObjCReference(anObject)
+		end shouldBeObjCReference
+		
+		(*!
+			@abstract
 				Fails when the given assertion succeeds.
 			@discussion
 				This is mostly a convenience for testing ASUnit itself, since for every
