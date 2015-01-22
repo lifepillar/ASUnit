@@ -6,17 +6,12 @@
 	@copyright 2013Ð2014 Lifepillar, 2006 Nir Soffer
 	@charset: macintosh
 *)
-
-on _setpath()
-	if current application's id is "com.apple.ScriptEditor2" or Â
-		current application's name starts with "Script Debugger" then
-		(folder of file (document 1's path as POSIX file) of application "Finder") as text
-	else if current application's name is in {"osacompile", "osascript"} then
-		((POSIX file (do shell script "pwd")) as text) & ":"
-	else
-		error "This file cannot be compiled with this application: " & current application's name
-	end if
-end _setpath
+use scripting additions
+use ASUnit : script "com.lifepillar/ASUnit"
+property parent : ASUnit
+property name : "Unit tests for ASUnit"
+property TestASUnit : me -- Needed to refer to top level entities from some tests
+property suite : makeTestSuite("ASUnit Tests")
 
 -- Test ASUnit with non-standard text item delimiters
 on changeTextItemDelimiters()
@@ -25,16 +20,8 @@ on changeTextItemDelimiters()
 	return astid
 end changeTextItemDelimiters
 
--- Required ASUnit header
--- Load  ASUnit from current folder using text format during development
-property ASUnitPath : _setpath() & "ASUnit.applescript" -- set at compile time
--- Change text item delimiters at compile time, before loading ASUnit
 property tid : changeTextItemDelimiters()
-property parent : run script ASUnitPath as alias
-property name : "Unit tests for ASUnit"
-property ASUnit : my parent -- Needed to refer to ASUnit in some tests
-property TestASUnit : me -- Needed to refer to top level entities from some tests
-property suite : makeTestSuite("ASUnit Tests")
+
 
 script |ASUnit name and bundle id|
 	property parent : TestSet(me)

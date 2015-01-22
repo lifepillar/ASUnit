@@ -123,8 +123,8 @@ script test
 	property description : "Run tests"
 	property printSuccess : false
 	
-	osacompile("Test ASUnit.applescript", "scpt", {})
-	set testSuite to load script POSIX file (joinPath(workingDirectory(), "Test ASUnit.scpt"))
+	makeScriptBundle from "test/Test ASUnit.applescript" at "test" with overwriting
+	set testSuite to load script POSIX file (joinPath(workingDirectory(), "test/Test ASUnit.scptd"))
 	run testSuite
 end script
 
