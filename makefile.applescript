@@ -135,12 +135,9 @@ script RunTests
 	property printSuccess : false
 	
 	tell BuildTests to exec:{}
-	ohai("Tests built")
-	owarn("Due to bugs in OS X Yosemite, tests cannot be run from the makefile.")
-	owarn("Please run the tests with `osascript 'test/Test ASUnit.scptd'`.")
-	-- The following causes a segmentation fault
-	--set testSuite to load script POSIX file (joinPath(workingDirectory(), "test/Test ASUnit.scptd"))
-	--run testSuite
+	-- The following causes a segmentation fault unless ASUnit in installed in a shared location
+	set testSuite to load script POSIX file (joinPath(workingDirectory(), "test/Test ASUnit.scptd"))
+	run testSuite
 end script
 
 script uninstall
