@@ -315,6 +315,9 @@ Succeeds otherwise.
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/formatInheritanceChain//(chain)" target="_top">formatInheritanceChain</a></tt></dt>
 <dd><p>Helper handler that returns a textual representation of an inheritance chain.
 </p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x)" target="_top">isObjCRef</a></tt></dt>
+<dd><p>Utility handler to check whether a given expression is a reference to a Cocoa object.
+</p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/notOk//(expr)" target="_top">notOk</a></tt></dt>
 <dd><p>Succeeds when its argument is false.
 </p></dd>
@@ -871,6 +874,17 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
     <span class="param">chain</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/formatInheritanceChain//(chain);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);   name=TestAssertions::isObjCRef --><a name="//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x)"></a>
+<h3><a name="isObjCRef">isObjCRef</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);name=start --><!-- begin abstract --></p>
+<p>Utility handler to check whether a given expression is a reference to a Cocoa object.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x)" logicalPath="//apple_ref/applescript/instm/TestAssertions/isObjCRef" target="_top"><span class="function">isObjCRef</span></a>(
+    <span class="param">x</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);name=end --></pre>
+</div>
+<hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/notOk//(expr);   name=TestAssertions::notOk --><a name="//apple_ref/applescript/instm/TestAssertions/notOk//(expr)"></a>
 <h3><a name="notOk">notOk</a></h3>
 <hr class="afterName">
@@ -954,7 +968,7 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
 <p>Succeeds when the given expression is false.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteInstanceOf//(klass,expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refute" target="_top"><span class="function">refute</span></a>(
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteInheritsFrom//(obj,anotherObj)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refute" target="_top"><span class="function">refute</span></a>(
     <span class="param">expr</span>,
     <span class="param">message</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=end --></pre>
 </div>
@@ -1115,7 +1129,7 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
 <p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=start --><!-- begin abstract --></p>
 <p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" target="_top">assert</a>. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/should" target="_top"><span class="function">should</span></a>(
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/should//(expr,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/should" target="_top"><span class="function">should</span></a>(
     <span class="param">expr</span>,
     <span class="param">message</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=end --></pre>
 </div>
@@ -1225,7 +1239,7 @@ succeed only when no exception is raised, pass an empty list.</p></dd>
 <p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldnt//(expr,message);name=start --><!-- begin abstract --></p>
 <p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refute//(expr,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refute//(expr,message)" target="_top">refute</a>. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldnt//(expr,message);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldnt//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldnt//(expr,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/shouldnt" target="_top"><span class="function">shouldnt</span></a>(
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldnt//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldntRaise//(expectedErrorNumber,object,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/shouldnt" target="_top"><span class="function">shouldnt</span></a>(
     <span class="param">expr</span>,
     <span class="param">message</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldnt//(expr,message);name=end --></pre>
 </div>
@@ -1299,7 +1313,7 @@ expected value does not have.
 <p class="gapBeforeFooter"> </p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Tuesday, January 20, 2015
+<p class="hd_timestamp">Last Updated: Thursday, January 22, 2015
 </p>
 </div>
 </td>
