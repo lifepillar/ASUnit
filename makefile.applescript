@@ -38,14 +38,14 @@ script build
 	property description : "Build all source AppleScript scripts"
 	
 	tell BuildASUnit to exec:{}
-	osacompile({"examples/*.applescript", "templates/*.applescript"}, "scpt", {"-x"})
+	osacompile(glob({"examples/*.applescript", "templates/*.applescript"}), "scpt", {"-x"})
 end script
 
 script clean
 	property parent : Task(me)
 	property description : "Remove any temporary products"
 	
-	removeItems at glob({"build/*.scptd", "examples/*.scpt*", "templates/*.scpt*", "tmp"}) with forcing
+	removeItems at {"build"} & glob({"**/*.scpt", "**/*.scptd", "tmp"}) with forcing
 end script
 
 script clobber
@@ -53,7 +53,7 @@ script clobber
 	property description : "Remove any generated file"
 	
 	tell clean to exec:{}
-	removeItems at {"build", api's dir} & glob({"ASUnit-*", "*.tar.gz", "*.html"}) with forcing
+	removeItems at glob({"ASUnit-*", "*.tar.gz", "*.html"}) with forcing
 end script
 
 script doc
@@ -118,14 +118,27 @@ script install
 	ohai("ASUnit installed at" & space & targetPath)
 end script
 
-script test
+script BuildTests
 	property parent : Task(me)
-	property description : "Run tests"
-	property printSuccess : false
+	property name : "test/build"
+	property description : "Build tests, but do not run them"
 	
 	makeScriptBundle from "test/Test ASUnit.applescript" at "test" with overwriting
-	set testSuite to load script POSIX file (joinPath(workingDirectory(), "test/Test ASUnit.scptd"))
-	run testSuite
+end script
+
+script RunTests
+	property parent : Task(me)
+	property name : "test/run"
+	property description : "Buidl and run tests"
+	property printSuccess : false
+	
+	tell BuildTests to exec:{}
+	ohai("Tests built")
+	owarn("Due to bugs in OS X Yosemite, tests cannot be run from the makefile.")
+	owarn("Please run the tests with `osascript 'test/Test ASUnit.scptd'`.")
+	-- The following causes a segmentation fault
+	--set testSuite to load script POSIX file (joinPath(workingDirectory(), "test/Test ASUnit.scptd"))
+	--run testSuite
 end script
 
 script uninstall
