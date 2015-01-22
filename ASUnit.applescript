@@ -885,6 +885,7 @@ on makeAssertions(theParent)
 			end try
 		end failIf
 		
+		
 		(*!
 			@abstract
 				Utility handler to check whether a given expression is a reference to a Cocoa object.
@@ -905,110 +906,146 @@ on makeAssertions(theParent)
 			anObject <em>[anything]</em> An expression.
 		*)
 		on pp(anObject)
-			local res, klass, refTo
+			local res, klass, referencedObject
+			
 			try -- Is it a reference?
 				anObject as reference
-				set refTo to "A reference to" & space
-			on error
-				set refTo to ""
+				
+				try
+					set referencedObject to contents of anObject
+				on error
+					return "«undefined reference»"
+				end try
+				
+				if anObject is not equal to referencedObject then
+					return "a reference to" & space & pp(contents of anObject)
+				end if
+				
+				-- Is it an Objective-C reference?
+				if isObjCRef(anObject) then return "«class ocid»"
+				
+				-- Is it a file reference?
+				try
+					if class of anObject is alias then
+						return "alias" & space & asText(anObject)
+					end if
+				end try
+				try
+					anObject as «class furl»
+					return "file" & space & asText(anObject)
+				end try
+				
+				-- Is it a date?
+				try
+					if class of anObject is date then return asText(anObject)
+				end try
+				
+				-- Is it a unit type?
+				try
+					set klass to class of anObject
+					if klass is in {centimeters, feet, inches, kilometers, meters, miles, yards, square feet, square kilometers, square meters, square miles, square yards, cubic centimeters, cubic feet, cubic inches, cubic meters, cubic yards, gallons, liters, quarts, grams, kilograms, ounces, pounds, degrees Celsius, degrees Fahrenheit, degrees Kelvin} then
+						return asText(anObject) & space & asText(klass)
+					end if
+				end try
+				
+				return "Unrecognized reference [please report as ASUnit bug]" -- We should never get here
 			end try
+			
+			-- Ok, not a reference. Let's try to get anObject's class
 			try
 				set klass to class of anObject
-			on error -- can't get class
+			on error
 				try
-					set res to refTo & "«" & anObject's name & "»"
-					return res
+					return "«" & asText(anObject's name) & "»"
 				end try
 				try
-					set res to refTo & "«" & anObject's id & "'»"
-					return res
+					return "«" & asText(anObject's id) & "'»"
 				end try
 				try
-					set res to refTo & "«" & anObject's description & "»"
-					return res
+					return "«" & asText(anObject's description) & "»"
 				end try
 				try
-					set res to refTo & asText(anObject)
-					return res
+					return asText(anObject)
 				on error -- Give up
-					return refTo & "«object»"
+					return "«object»"
 				end try
 			end try
 			
 			if klass is in {list, RGB color} then
 				local s, n
+				
 				set n to anObject's length
-				if n = 0 then return refTo & "{}"
+				if n = 0 then return "{}"
 				set s to "{"
 				repeat with i from 1 to n - 1
 					set s to s & pp(item i of anObject) & "," & space
 				end repeat
-				return refTo & s & pp(item n of anObject) & "}"
-			else if klass is record then
-				return refTo & "«record " & pp(anObject as list) & "»"
-			else if klass is script then
-				if anObject is AppleScript then return refTo & "AppleScript"
+				return s & pp(item n of anObject) & "}"
+			end if
+			
+			if klass is record then
+				return "«record " & pp(anObject as list) & "»"
+			end if
+			
+			if klass is in {script, application, null} then
+				if anObject is AppleScript then return "AppleScript"
 				try
-					set res to space & anObject's name
+					set res to anObject's id
+					if res is missing value then error
+					set res to asText(res)
 				on error
 					try
-						set res to space & anObject's id
+						set res to anObject's name
+						if res is missing value then error
+						set res to asText(res)
 					on error
 						set res to ""
 					end try
 				end try
-				return refTo & "«script" & res & "»"
-			else if klass is in {application, null} then
-				try
-					set res to space & anObject's name
-				on error
-					set res to ""
-				end try
-				return refTo & "«application" & res & "»"
-			else
-				try
-					set res to asText(anObject)
-				on error
-					try
-						set klass to asText(klass)
-						return refTo & "«object of class" & space & klass & "»"
-					on error
-						return refTo & "«object»"
-					end try
-				end try
-				if klass is text then
-					if my showInvisibles then -- show invisible characters
-						local tid, x
-						set tid to AppleScript's text item delimiters
-						set AppleScript's text item delimiters to space
-						set x to text items of res
-						set AppleScript's text item delimiters to «data utxtFF65» as Unicode text -- small bullet
-						set res to x as text
-						set AppleScript's text item delimiters to tab
-						set x to text items of res
-						set AppleScript's text item delimiters to «data utxt21A6» as Unicode text -- rightwards arrow from bar
-						set res to x as text
-						set AppleScript's text item delimiters to linefeed
-						set x to text items of res
-						set AppleScript's text item delimiters to «data utxt00AC» as Unicode text -- not sign
-						set res to x as text
-						set AppleScript's text item delimiters to return
-						set x to text items of res
-						set AppleScript's text item delimiters to «data utxt21A9» as Unicode text -- hook arrow
-						set res to x as text
-						set AppleScript's text item delimiters to tid
-					end if
-					return refTo & res
-				end if
-				if klass is in {alias, boolean, class, constant, ¬
-					date, file, integer, POSIX file, real} then
-					return refTo & res
-				else if klass is in {centimeters, feet, inches, kilometers, meters, miles, yards, square feet, square kilometers, square meters, square miles, square yards, cubic centimeters, cubic feet, cubic inches, cubic meters, cubic yards, gallons, liters, quarts, grams, kilograms, ounces, pounds, degrees Celsius, degrees Fahrenheit, degrees Kelvin} then
-					return res & space & (klass as text) -- These are always references
+				
+				if klass is script then
+					return "«script" & space & res & "»"
 				else
-					return refTo & res
+					return "«application" & space & res & "»"
 				end if
 			end if
+			
+			try
+				set res to asText(anObject)
+			on error
+				try
+					return "«object of class" & space & asText(klass) & "»"
+				on error
+					return "«object»"
+				end try
+			end try
+			
+			if klass is text then
+				if my showInvisibles then -- show invisible characters
+					local tid, x
+					set tid to AppleScript's text item delimiters
+					set AppleScript's text item delimiters to space
+					set x to text items of res
+					set AppleScript's text item delimiters to «data utxtFF65» as Unicode text -- small bullet
+					set res to x as text
+					set AppleScript's text item delimiters to tab
+					set x to text items of res
+					set AppleScript's text item delimiters to «data utxt21A6» as Unicode text -- rightwards arrow from bar
+					set res to x as text
+					set AppleScript's text item delimiters to linefeed
+					set x to text items of res
+					set AppleScript's text item delimiters to «data utxt00AC» as Unicode text -- not sign
+					set res to x as text
+					set AppleScript's text item delimiters to return
+					set x to text items of res
+					set AppleScript's text item delimiters to «data utxt21A9» as Unicode text -- hook arrow
+					set res to x as text
+					set AppleScript's text item delimiters to tid
+				end if
+				return res
+			end if
+			
+			return res
 		end pp
 		
 		(*! @abstract Utility handler to coerce an object to <code>text</code>. *)
