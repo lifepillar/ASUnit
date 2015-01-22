@@ -1814,7 +1814,7 @@ on makeTestLoader()
 	script TestLoader
 		property name : "TestLoader"
 		
-		(*! @abstract Only files that starts with prefix will be considered as tests. *)
+		(*! @abstract Only files that start with 'prefix' will be considered as tests. *)
 		property prefix : "Test"
 		
 		(*!
