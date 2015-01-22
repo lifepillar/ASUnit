@@ -22,6 +22,24 @@ end changeTextItemDelimiters
 
 property tid : changeTextItemDelimiters()
 
+log my parent's name & space & my parent's version
+tell my ScriptEditorLogger -- Customize colors
+	set its defaultColor to {256 * 30, 256 * 20, 256 * 10} -- RGB(30,20,10)
+	set its successColor to {256 * 1, 256 * 102, 256 * 146} -- RGB(1,102,146)
+	set its defectColor to {256 * 255, 256 * 108, 256 * 96} -- RGB(255,108,96)
+end tell
+tell my StdoutLogger -- Customize colors when tests are run with osascript
+	--set its defaultColor to its boldType
+	--set its successColor to bb(its green) -- bold green
+	--set its defectColor to bb(its red) -- bold red
+end tell
+
+--set suite's loggers to {ScriptEditorLogger, ConsoleLogger}
+set AppleScript's text item delimiters to "%%"
+my autorun(suite)
+set AppleScript's text item delimiters to my tid
+return
+
 
 script |ASUnit name and bundle id|
 	property parent : TestSet(me)
@@ -1448,22 +1466,3 @@ script TestSetObjCRef
 		failIf(my assertObjCReference, {f}, "f")
 	end script
 end script -- TestSetObjCRef
-
-
-log my parent's name & space & my parent's version
-tell my ScriptEditorLogger -- Customize colors
-	set its defaultColor to {256 * 30, 256 * 20, 256 * 10} -- RGB(30,20,10)
-	set its successColor to {256 * 1, 256 * 102, 256 * 146} -- RGB(1,102,146)
-	set its defectColor to {256 * 255, 256 * 108, 256 * 96} -- RGB(255,108,96)
-end tell
-tell my StdoutLogger -- Customize colors when tests are run with osascript
-	--set its defaultColor to its boldType
-	--set its successColor to bb(its green) -- bold green
-	--set its defectColor to bb(its red) -- bold red
-end tell
-
---set suite's loggers to {ScriptEditorLogger, ConsoleLogger}
-set AppleScript's text item delimiters to "%%"
-my autorun(suite)
-set AppleScript's text item delimiters to my tid
-return
