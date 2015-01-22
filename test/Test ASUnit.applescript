@@ -225,9 +225,11 @@ script |ASUnit architecture|
 		property parent : UnitTest(me)
 		property TestLoader : missing value
 		set TestLoader to ASUnit's makeTestLoader()
-		assertEqual(ASUnit, TestLoader's parent)
+		assertEqual(contents of ASUnit, TestLoader's parent)
+		assertEqual(script "com.lifepillar/ASUnit", TestLoader's parent)
 		assertEqual("TestLoader", TestLoader's name)
-		assertInheritsFrom(ASUnit, TestLoader)
+		assertInheritsFrom(contents of ASUnit, TestLoader)
+		assertInheritsFrom(script "com.lifepillar/ASUnit", TestLoader)
 	end script
 end script
 
@@ -508,11 +510,14 @@ script |Test inheritance assertions|
 		end script
 		set x to scriptWithParent(Loop)
 		assertInheritsFrom(Loop, Loop)
+		
 		failIf(my refuteInheritsFrom, {Loop, Loop}, "")
+		(*
 		assertInheritsFrom(Loop, x)
 		assertNotEqual(x, Loop) -- "x's class" hangs if x's class is not explicitly defined (AS 2.3, OS X 10.9)
 		assertNotEqual(Loop's parent, x)
 		refuteInheritsFrom(x, Loop)
+		*)
 	end script
 	
 end script
@@ -541,6 +546,20 @@ script |assert (not) reference|
 		assertNotReference({})
 		set y to a reference to x
 		assertNotReference(contents of y)
+	end script
+	
+	script |use ASUnit sets a reference|
+		property parent : UnitTest(me)
+		assertReference(ASUnit)
+		assertNotReference(contents of ASUnit)
+	end script
+	
+	script |Reference to ASUnit|
+		property parent : UnitTest(me)
+		property scriptRef : a reference to TestASUnit's ASUnit
+		assertReference(scriptRef)
+		assertReference(contents of scriptRef)
+		assertNotReference(contents of (contents of (scriptRef)))
 	end script
 	
 end script -- assert (not) reference
@@ -1110,31 +1129,44 @@ script |pretty print|
 	
 	script |pp alias|
 		property parent : UnitTest(me)
-		assertEqual("A reference to " & ((path to me) as text), pp(path to me))
+		assertEqual("alias" & space & ((path to me) as text), pp(path to me))
+		assertEqual("alias" & space & ((path to me) as text), ¬
+			pp(a reference to (path to me)))
+		assertEqual("alias" & space & ((path to me) as text), ¬
+			pp(a reference to (a reference to (path to me))))
 	end script
 	
 	script |pp application|
 		property parent : UnitTest(me)
-		assertEqual("«application Finder»", pp(application "Finder"))
+		assertEqual("«application com.apple.finder»", pp(application "Finder"))
+		assertEqual("«application com.apple.finder»", ¬
+			pp(a reference to (application "Finder")))
+		assertEqual("«application com.apple.finder»", ¬
+			pp(a reference to (a reference to (application "Finder"))))
 	end script
 	
 	script |pp AppleScript|
 		property parent : UnitTest(me)
 		assertEqual("AppleScript", pp(AppleScript))
+		assertEqual("AppleScript", pp(a reference to AppleScript))
 	end script
 	
 	script |pp boolean|
 		property parent : UnitTest(me)
+		property flag : true
 		assertEqual("true", pp(true))
 		assertEqual("false", pp(false))
 		assertEqual("true", pp(1 = 1))
 		assertEqual("false", pp(1 = 2))
+		assertEqual("a reference to true", pp(a reference to flag))
 	end script
 	
 	script |pp class|
 		property parent : UnitTest(me)
 		assertEqual("integer", pp(class of 1))
+		assertEqual("a reference to integer", pp(a reference to (class of 1)))
 		assertEqual("class", pp(class of class of 1))
+		assertEqual("a reference to class", pp(a reference to (class of class of 1)))
 	end script
 	
 	script |pp constant|
@@ -1161,12 +1193,18 @@ script |pretty print|
 	
 	script |pp date|
 		property parent : UnitTest(me)
-		set d to current date
+		property d : current date
+		property d1 : a reference to d
+		property d2 : a reference to d1
+		
 		set day of d to 19
 		set month of d to 12
 		set year of d to 2014
 		set time of d to 2700
-		assertEqual("A reference to " & (d as text), pp(d))
+		assertEqual(d as text, pp(d))
+		assertEqual("a reference to " & (d as text), pp(d1))
+		assertEqual("a reference to " & (d as text), pp(a reference to d))
+		assertEqual("a reference to a reference to " & (d as text), pp(d2))
 	end script
 	
 	script |pp list|
@@ -1174,7 +1212,7 @@ script |pretty print|
 		assertEqual("{}", pp({}))
 		assertEqual("{1, " & (3.4 as text) & ", abc}", pp({1, 3.4, "abc"}))
 		assertEqual("{1, {2, {3, 4}}, 5}", pp({1, {2, {3, 4}}, 5}))
-		assertEqual("{«script pp list», «record {1, {«application Finder», {1, 2}}, x}», true}", ¬
+		assertEqual("{«script pp list», «record {1, {«application com.apple.finder», {1, 2}}, x}», true}", ¬
 			pp({me, {a:1, b:{application "Finder", {1, 2}}, c:"x"}, true}))
 	end script
 	
@@ -1182,12 +1220,21 @@ script |pretty print|
 		property parent : UnitTest(me)
 		assertEqual("42", pp(42))
 		assertEqual(2.71828 as text, pp(2.71828))
+		assertEqual(2.71828 as text, pp(a reference to 2.71828))
+		assertEqual(2.71828 as text, pp(a reference to (a reference to 2.71828)))
 	end script
 	
 	script |pp POSIX file|
 		property parent : UnitTest(me)
-		set f to POSIX file "/Users/myUser/Feb_Meeting_Notes.rtf"
-		assertEqual("A reference to " & (f as text), pp(f))
+		property f : POSIX file "/Users/myUser/Feb_Meeting_Notes.rtf"
+		property f1 : a reference to f
+		property f2 : a reference to f1
+		
+		assertEqual("file" & space & (f as text), pp(f))
+		assertEqual("a reference to file" & space & (f as text), pp(f1))
+		assertEqual("a reference to file" & space & (f as text), pp(a reference to f))
+		assertEqual("a reference to a reference to file" & space & (f as text), ¬
+			pp(f2))
 	end script
 	
 	script |pp record|
@@ -1197,7 +1244,38 @@ script |pretty print|
 	
 	script |pp script|
 		property parent : UnitTest(me)
+		property ppScriptRef : a reference to ppScript
+		
+		script ppScript
+			property id : "com.lifepillar.ppscript"
+		end script
+		
 		assertEqual("«script pp script»", pp(me))
+		assertEqual("«script pp script»", pp(a reference to me))
+		assertEqual("«script pp script»", pp(a reference to (a reference to me)))
+		assertEqual("«script com.lifepillar.ppscript»", pp(ppScript))
+		assertEqual("a reference to «script com.lifepillar.ppscript»", pp(ppScriptRef))
+	end script
+	
+	script |pp script called 'missing value'|
+		property parent : UnitTest(me)
+		property ppScriptRef : a reference to ppScript
+		
+		script ppScript
+			property id : missing value
+			property name : "missing value"
+		end script
+		
+		assertEqual("«script missing value»", pp(ppScript))
+		assertEqual("a reference to «script missing value»", pp(ppScriptRef))
+	end script
+	
+	script |pp ASUnit|
+		property parent : UnitTest(me)
+		property scriptRef : a reference to TestASUnit's ASUnit
+		
+		assertEqual("a reference to «script" & space & ASUnit's id & "»", pp(TestASUnit's ASUnit))
+		assertEqual("a reference to a reference to «script" & space & ASUnit's id & "»", pp(scriptRef))
 	end script
 	
 	script |pp text|
@@ -1234,7 +1312,21 @@ script |pretty print|
 		assertEqual("34 degrees Celsius", pp(34 as degrees Celsius))
 		assertEqual("35 degrees Fahrenheit", pp(35 as degrees Fahrenheit))
 		assertEqual("36 degrees Kelvin", pp(36 as degrees Kelvin))
+		assertEqual("36 degrees Kelvin", pp(a reference to (36 as degrees Kelvin)))
+		assertEqual("36 degrees Kelvin", pp(a reference to (a reference to (36 as degrees Kelvin))))
 	end script
+	
+	script |References|
+		property parent : UnitTest(me)
+		property x : 0
+		property y : a reference to x
+		property w : a reference to y
+		property z : a reference to w
+		assertEqual("a reference to 0", pp(y))
+		assertEqual("a reference to a reference to 0", pp(w))
+		assertEqual("a reference to a reference to a reference to 0", pp(z))
+	end script
+	
 end script -- pretty print
 
 script |Count assertions|
