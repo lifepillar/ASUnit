@@ -63,7 +63,7 @@ script |ASUnit name and bundle id|
 	script |A test set descends from TestCase|
 		property parent : UnitTest(me)
 		assertEqual("TestCase", ThisTestSet's parent's parent's name)
-		assertInheritsFrom(ASUnit's TestCase, ThisTestSet)
+		assertInheritsFrom(ASUnit's TestCase, ASUnit's TestSet(me))
 	end script
 	
 	script |Bundle name|
@@ -226,10 +226,8 @@ script |ASUnit architecture|
 		property TestLoader : missing value
 		set TestLoader to ASUnit's makeTestLoader()
 		assertEqual(contents of ASUnit, TestLoader's parent)
-		assertEqual(script "com.lifepillar/ASUnit", TestLoader's parent)
 		assertEqual("TestLoader", TestLoader's name)
 		assertInheritsFrom(contents of ASUnit, TestLoader)
-		assertInheritsFrom(script "com.lifepillar/ASUnit", TestLoader)
 	end script
 end script
 
