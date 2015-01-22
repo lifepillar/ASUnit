@@ -10,14 +10,13 @@
 
 	@charset macintosh
 *)
-property parent : load script Â
-	(((path to library folder from user domain) as text) Â
-		& "Script Libraries:ASUnit.scpt") as alias
-(*
--- For OS X 10.9 or later, use this instead of the definition above:
 use AppleScript
 use scripting additions
-property parent : script "ASUnit"
+property parent : script "com.lifepillar/ASUnit"
+(* For OS X 10.8 and earlier, use this instead:
+property parent : load script Â
+	(((path to library folder from user domain) as text) Â
+		& "Script Libraries:com.lifepillar:ASUnit.scptd") as alias
 *)
 ---------------------------------------------------------------------------------------
 property suitename : "The test suite description goes here"

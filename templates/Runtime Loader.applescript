@@ -2,9 +2,13 @@
 	@abstract
 		Illustrates a trick to load ASUnit at runtime.
 	@discussion
-		This script shows a method to load ASUnit at runtime. Why would you want to do that? Suppose that you want to load ASUnit.scpt from the same folder containing the test script. You may determine the path where the script is saved with <tt>path to me</tt>, but <tt>path to me</tt> does not evaluate to the correct path if it is executed at compile-time.
-		The drawback of this method is that it breaks test loaders (but it can be used for the test loader itself, i.e., the test loader can import ASUnit at runtime).
-		All in all, loading scripts at compile time is more robust.	
+		This script shows a method to load ASUnit at runtime. Why would you want to do that? 
+		Suppose that you want to load ASUnit.scptd from the same folder containing the test
+		script. You may determine the path where the script is saved with <tt>path to me</tt>,
+		but <tt>path to me</tt> does not evaluate to the correct path if it is executed at
+		compile-time. The drawback of this method is that it breaks test loaders (but it
+		can be used for the test loader itself, i.e., the test loader can import ASUnit at
+		runtime). All in all, loading scripts at compile time is probably the best thing to do.	
 *)
 global ASUnit
 set ASUnit to run script Â

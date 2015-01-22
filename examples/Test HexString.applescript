@@ -1,9 +1,8 @@
-property parent : load script (((path to library folder from user domain) as text) Â
-	& "Script Libraries:ASUnit.scpt") as alias
-
+property parent : script "com.lifepillar/ASUnit"
 global HexString
 property suite : makeTestSuite("Tests for HexString")
-return autorun(suite)
+
+autorun(suite)
 
 -- Tests
 
