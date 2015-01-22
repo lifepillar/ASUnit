@@ -824,13 +824,11 @@ on makeAssertions(theParent)
 				http://macscripter.net/viewtopic.php?pid=177998
 		*)
 		on assertObjCReference(anObject)
-			try
-				(class of x) as reference
-				(contents of class of x is class of x)
-			on error
+			if isObjCRef(anObject) then
+				countAssertion()
+			else
 				fail(pp(anObject) & space & "is not a reference to a Cocoa object.")
-			end try
-			countAssertion()
+			end if
 		end assertObjCReference
 		
 		(*! @abstract A synonym for @link assertObjCReference @/link. *)
@@ -889,9 +887,22 @@ on makeAssertions(theParent)
 		
 		(*!
 			@abstract
-				Returns a textual representation of an object.
-			@param
-				anObject <em>[anything]</em> An expression.
+				Utility handler to check whether a given expression is a reference to a Cocoa object.
+		*)
+		on isObjCRef(x)
+			try
+				(class of x) as reference
+				(contents of class of x is class of x)
+			on error
+				false
+			end try
+		end isObjCRef
+		
+		(*!
+		@abstract
+			Returns a textual representation of an object.
+		@param
+			anObject <em>[anything]</em> An expression.
 		*)
 		on pp(anObject)
 			local res, klass, refTo
