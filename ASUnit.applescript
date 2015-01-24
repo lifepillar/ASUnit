@@ -299,7 +299,7 @@ on makeAssertions(theParent)
 				Determines whether invisible characters should be made visible.
 			@discussion
 				When this property is set to true (which is the default), invisible
-				characters (spaces, tabulations, linfeeds, and returns) are printed
+				characters (spaces, tabulations, linefeeds, and returns) are printed
 				as visible characters.
 				This is especially useful when a test like @link assertEqual() @/link fails
 				because the expected value and the actual value differ, say, just
