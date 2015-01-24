@@ -1470,18 +1470,18 @@ end script -- ConsoleLogger
 (*! @abstract Prints colorful test results to the standard output. *)
 script StdoutLogger
 	property parent : TestLogger
-	property esc : "\\033["
-	property black : esc & "0;30m"
-	property blue : esc & "0;34m"
-	property cyan : esc & "0;36m"
-	property green : esc & "0;32m"
-	property magenta : esc & "0;35m"
-	property purple : esc & "0;35m"
-	property red : esc & "0;31m"
-	property yellow : esc & "0;33m"
-	property white : esc & "0;37m"
-	property boldType : esc & "1m"
-	property reset : esc & "0m"
+	property esc : Çdata utxt001BÈ as Unicode text
+	property black : esc & "[0;30m"
+	property blue : esc & "[0;34m"
+	property cyan : esc & "[0;36m"
+	property green : esc & "[0;32m"
+	property magenta : esc & "[0;35m"
+	property purple : esc & "[0;35m"
+	property red : esc & "[0;31m"
+	property yellow : esc & "[0;33m"
+	property white : esc & "[0;37m"
+	property boldType : esc & "[1m"
+	property reset : esc & "[0m"
 	property successColor : green
 	property defectColor : red
 	property defaultColor : reset
@@ -1491,11 +1491,6 @@ script StdoutLogger
 	on bb(kolor)
 		esc & "1;" & text -3 thru -1 of kolor
 	end bb
-	
-	on echo(s)
-		set s to do shell script "echo " & quoted form of s without altering line endings
-		log chomp(s) -- Remove echo's linefeed (log adds its own)
-	end echo
 	
 	(*!
 		@abstract
@@ -1507,7 +1502,7 @@ script StdoutLogger
 	*)
 	on printColoredString(aString, aColor)
 		if aString ends with linefeed then
-			echo(_buffer & aColor & chomp(aString) & reset)
+			log _buffer & aColor & chomp(aString) & reset
 			set _buffer to ""
 		else
 			set _buffer to _buffer & aColor & aString & reset
