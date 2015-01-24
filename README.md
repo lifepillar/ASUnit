@@ -27,25 +27,24 @@ To build and install ASUnit, you have two options. If you have installed
 Otherwise, you can install it manually with the following commands:
 
     cd ASUnit
-    osacompile -o ASUnit.scpt -x ASUnit.applescript
-    mkdir -p ~/Library/'Script Libraries'
-    cp ASUnit.scpt ~/Library/'Script Libraries'
+    osacompile -o ASUnit.scptd -x ASUnit.applescript
+    mkdir -p ~/Library/'Script Libraries'/com.lifepillar
+    cp ASUnit.scptd ~/Library/'Script Libraries/com.lifepillar'
 
-In either case, the file `ASUnit.scpt` will be installed in `~/Library/Script Libraries`
-(creating that folder if it does not exist).
+In either case, the file `ASUnit.scptd` will be installed in `~/Library/Script Libraries/com.lifepillar`.
 
 
 ### Importing ASUnit in a test script
 
 To use ASUnit with AppleScript 2.3 or later (OS X 10.9 or later), add
 
-    property parent : script "ASUnit"
+    property parent : script "com.lifepillar/ASUnit"
 
 at the top of your test script. For previous systems, use:
 
     property parent : ¬
       load script (((path to library folder from user domain) as text) ¬
-        & "Script Libraries:ASUnit.scpt") as alias
+        & "Script Libraries:com.lifepillar:ASUnit.scptd") as alias
 
 
 ### Running the tests
