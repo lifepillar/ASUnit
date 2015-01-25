@@ -1335,7 +1335,7 @@ script |pretty print|
 		assertEqual("«object of class self»", pp(Self))
 	end script
 	
-	script |pp recursive|
+	script |pp recursive undefined|
 		property parent : UnitTest(me)
 		
 		script SX
@@ -1346,10 +1346,27 @@ script |pretty print|
 			property class : SX
 		end script
 		
-		assertEqual("", pp(SX))
-		assertEqual("", pp(SY))
+		assertEqual("«object of class «undefined reference»»", pp(SX))
+		assertEqual("«object of class «object of class «undefined reference»»»", pp(SY))
 	end script
 	
+	property PPRL : a reference to |pp recursive loop|
+	
+	script |pp recursive loop|
+		property parent : UnitTest(me)
+		
+		script SX
+			property class : a reference to PPRL's SY
+		end script
+		
+		script SY
+			property class : SX
+		end script
+		
+		set my maxRecursionDepth to 4
+		assertEqual("«object of class a reference to «object of class «object of class a reference to ...»»»", pp(SX))
+		assertEqual("«object of class «object of class a reference to «object of class «object of class ...»»»»", pp(SY))
+	end script
 end script -- pretty print
 
 script |Count assertions|
