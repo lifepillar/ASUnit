@@ -1013,10 +1013,11 @@ on makeAssertions(theParent)
 			try
 				set res to asText(anObject)
 			on error
+				if klass is anObject then return "«object of class self»"
 				try
-					return "«object of class" & space & asText(klass) & "»"
+					return "«object of class" & space & pp(klass) & "»"
 				on error
-					return "«object»"
+					return "Unrecognized object [please report as ASUnit bug]" -- We should never get here
 				end try
 			end try
 			
