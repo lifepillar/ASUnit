@@ -995,7 +995,7 @@ on makeAssertions(theParent)
 			
 			if klass is record then
 				return "«record " & _pp(anObject as list, depth + 1) & "»"
-			end if
+			end if -- list, RGB color
 			
 			if klass is script or klass is application or klass is null then
 				if anObject is AppleScript then return "AppleScript"
@@ -1018,7 +1018,9 @@ on makeAssertions(theParent)
 				else
 					return "«application" & space & res & "»"
 				end if
-			end if
+			end if -- script, application, null
+			
+			if klass is handler then return "«handler»" 
 			
 			try
 				set res to asText(anObject)

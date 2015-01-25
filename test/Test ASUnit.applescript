@@ -1205,6 +1205,16 @@ script |pretty print|
 		assertEqual("a reference to a reference to " & (d as text), pp(d2))
 	end script
 	
+	script |pp handler|
+		property parent : UnitTest(me)
+		
+		on f(x, y)
+		end f
+		
+		assertEqual("«handler»", pp(f))
+		assertEqual("a reference to «handler»", pp(a reference to f))
+	end script
+	
 	script |pp list|
 		property parent : UnitTest(me)
 		assertEqual("{}", pp({}))
