@@ -1325,6 +1325,31 @@ script |pretty print|
 		assertEqual("a reference to a reference to a reference to 0", pp(z))
 	end script
 	
+	script |pp object of class self|
+		property parent : UnitTest(me)
+		
+		script Self
+			property class : me -- Weird, but legal
+		end script
+		
+		assertEqual("«object of class self»", pp(Self))
+	end script
+	
+	script |pp recursive|
+		property parent : UnitTest(me)
+		
+		script SX
+			property class : a reference to SY
+		end script
+		
+		script SY
+			property class : SX
+		end script
+		
+		assertEqual("", pp(SX))
+		assertEqual("", pp(SY))
+	end script
+	
 end script -- pretty print
 
 script |Count assertions|
