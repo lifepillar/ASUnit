@@ -981,7 +981,7 @@ on makeAssertions(theParent)
 				end try
 			end try
 			
-			if klass is in {list, RGB color} then
+			if klass is list or class is RGB color then
 				local s, n
 				
 				set n to anObject's length
@@ -997,7 +997,7 @@ on makeAssertions(theParent)
 				return "Çrecord " & _pp(anObject as list, depth + 1) & "È"
 			end if
 			
-			if klass is in {script, application, null} then
+			if klass is script or klass is application or klass is null then
 				if anObject is AppleScript then return "AppleScript"
 				try
 					set res to anObject's id
