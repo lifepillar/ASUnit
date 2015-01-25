@@ -22,8 +22,6 @@ property TEST_SKIPPED : 1001
 property TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED : 1002
 (*! @abstract A property that refers to the top-level script. *)
 property TOP_LEVEL : me
-(*! @abstract The maximum recursion depth for @link pp() @/link. *)
-property maxRecursionDepth : 50
 
 
 (*!
@@ -310,6 +308,9 @@ on makeAssertions(theParent)
 				expected value does not have.
 		*)
 		property showInvisibles : true
+		
+		(*! @abstract The maximum recursion depth for @link pp() @/link. *)
+		property maxRecursionDepth : 50
 		
 		on test_failed_error_number()
 			return TEST_FAILED
