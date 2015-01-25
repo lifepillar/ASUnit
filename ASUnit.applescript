@@ -22,6 +22,9 @@ property TEST_SKIPPED : 1001
 property TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED : 1002
 (*! @abstract A property that refers to the top-level script. *)
 property TOP_LEVEL : me
+(*! @abstract The maximum recursion depth for @link pp() @/link. *)
+property maxRecursionDepth : 50
+
 
 (*!
  @abstract
@@ -906,7 +909,13 @@ on makeAssertions(theParent)
 			anObject <em>[anything]</em> An expression.
 		*)
 		on pp(anObject)
+			_pp(anObject, 0)
+		end pp
+		
+		on _pp(anObject, depth)
 			local res, klass, referencedObject
+			
+			if depth > my maxRecursionDepth then return "..."
 			
 			try -- Is it a reference?
 				anObject as reference
@@ -918,7 +927,7 @@ on makeAssertions(theParent)
 				end try
 				
 				if anObject is not equal to referencedObject then
-					return "a reference to" & space & pp(contents of anObject)
+					return "a reference to" & space & _pp(contents of anObject, depth + 1)
 				end if
 				
 				-- Is it an Objective-C reference?
@@ -978,13 +987,13 @@ on makeAssertions(theParent)
 				if n = 0 then return "{}"
 				set s to "{"
 				repeat with i from 1 to n - 1
-					set s to s & pp(item i of anObject) & "," & space
+					set s to s & _pp(item i of anObject, depth + 1) & "," & space
 				end repeat
-				return s & pp(item n of anObject) & "}"
+				return s & _pp(item n of anObject, depth + 1) & "}"
 			end if
 			
 			if klass is record then
-				return "«record " & pp(anObject as list) & "»"
+				return "«record " & _pp(anObject as list, depth + 1) & "»"
 			end if
 			
 			if klass is in {script, application, null} then
@@ -1015,9 +1024,9 @@ on makeAssertions(theParent)
 			on error
 				if klass is anObject then return "«object of class self»"
 				try
-					return "«object of class" & space & pp(klass) & "»"
-				on error
-					return "Unrecognized object [please report as ASUnit bug]" -- We should never get here
+					return "«object of class" & space & _pp(klass, depth + 1) & "»"
+				on error errMsg
+					return "ERROR:" & errMsg -- We should never get here
 				end try
 			end try
 			
@@ -1047,7 +1056,7 @@ on makeAssertions(theParent)
 			end if
 			
 			return res
-		end pp
+		end _pp
 		
 		(*! @abstract Utility handler to coerce an object to <code>text</code>. *)
 		on asText(s)
