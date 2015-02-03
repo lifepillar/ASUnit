@@ -541,12 +541,12 @@ on makeAssertions(theParent)
 		(*! @abstract A shortcut for @link assertEqual @/link(missing value, expr). *)
 		on assertMissing(expr)
 			assertEqual(missing value, expr)
-		end assertMissingValue
+		end assertMissing
 		
 		(*! @abstract A shortcut for @link refuteEqual @/link(missing value, expr). *)
 		on refuteMissing(expr)
 			refuteEqual(missing value, expr)
-		end refuteMissingValue
+		end refuteMissing
 		
 		(*! @abstract Deprecated. @see assertMissing() *)
 		on assertNil(expr)
@@ -836,16 +836,12 @@ on makeAssertions(theParent)
 		
 		(*!
 			@abstract
-				Fails when the given argument is not a reference to a Cocoa object.
-				Succeeds otherwise.
-			@discussion
-				TODO
+				Succeeds when the given argument is a reference to a Cocoa object.
+				Fails otherwise.
 			@param
 				anObject <em>[anything]</em> An expression.
 			@throws
 				A @link TEST_FAILED @/link error if the assertion fails.
-			@seealso
-				http://macscripter.net/viewtopic.php?pid=177998
 		*)
 		on assertObjCReference(anObject)
 			if isObjCRef(anObject) then
@@ -855,10 +851,32 @@ on makeAssertions(theParent)
 			end if
 		end assertObjCReference
 		
-		(*! @abstract A synonym for @link assertObjCReference @/link. *)
+		(*! @abstract A synonym for @link assertObjCReference() @/link. *)
 		on shouldBeObjCReference(anObject)
 			assertObjCReference(anObject)
 		end shouldBeObjCReference
+		
+		(*!
+			@abstract
+				Succeeds when the given argument is not a reference to a Cocoa object.
+				Fails otherwise.
+			@param
+				anObject <em>[anything]</em> An expression.
+			@throws
+				A @link TEST_FAILED @/link error if the assertion fails.
+		*)
+		on refuteObjCReference(anObject)
+			if isObjCRef(anObject) then
+				fail(pp(anObject) & space & "is a reference to a Cocoa object.")
+			else
+				countAssertion()
+			end if
+		end refuteObjCReference
+		
+		(*! @abstract A synonym for @link refuteObjCReference() @/link. *)
+		on shouldNotBeObjCReference(anObject)
+			refuteObjCReference(anObject)
+		end shouldNotBeObjCReference
 		
 		(*!
 			@abstract
@@ -913,6 +931,8 @@ on makeAssertions(theParent)
 		(*!
 			@abstract
 				Utility handler to check whether a given expression is a reference to a Cocoa object.
+			@seealso
+				http://macscripter.net/viewtopic.php?pid=177998
 		*)
 		on isObjCRef(x)
 			try
