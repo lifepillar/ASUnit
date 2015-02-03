@@ -136,8 +136,12 @@ you may use a number of assertion handlers:
    The `object` can be a script object or a handler without parameters.
 - `assertEqual(expr, value)` or `shouldEqual(expr, value)`: succeeds iff `expr` = `value`.
 - `refuteEqual(expr, value)` or `shouldNotEqual(expr, value)`: succeeds iff `expr` ≠ `value`.
-- `assertNil(expr)`: a synonym for `assertEqual(missing value, expr)`.
-- `refuteNil(expr)`: a synonym for `assertNotEqual(missing value, expr)`.
+- `assertMissing(expr)`: a synonym for `assertEqual(missing value, expr)`.
+- `assertObjCReference(expr)`: succeeds iff `expr` is a reference to a Cocoa object.
+- `refuteObjCReference(expr)`: succeeds iff `expr` is not a reference to a Cocoa object.
+- `refuteMissing(expr)`: a synonym for `assertNotEqual(missing value, expr)`.
+- `assertNull(expr)`: a synonym for `assertEqual(null, expr)`.
+- `refuteNull(expr)`: a synonym for `assertNotEqual(null, expr)`.
 - `assertEqualAbsError(e1, e2, delta)`: succeeds iff `|e1-e2| <= delta`.
 - `assertEqualRelError(e1, e2, eps)`: succeeds iff `|e1-e2| <= min(|e1|,|e2|) * eps`.
 - `assertReference(x)` or `shouldBeReference(x)`: succeeds iff `x` is a reference.
