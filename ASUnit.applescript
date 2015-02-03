@@ -539,23 +539,23 @@ on makeAssertions(theParent)
 		end assertEqualRelError
 		
 		(*! @abstract A shortcut for @link assertEqual @/link(missing value, expr). *)
-		on assertMissingValue(expr)
+		on assertMissing(expr)
 			assertEqual(missing value, expr)
 		end assertMissingValue
 		
 		(*! @abstract A shortcut for @link refuteEqual @/link(missing value, expr). *)
-		on refuteMissingValue(expr)
+		on refuteMissing(expr)
 			refuteEqual(missing value, expr)
 		end refuteMissingValue
 		
-		(*! @abstract Deprecated. @see assertMissingValue() *)
+		(*! @abstract Deprecated. @see assertMissing() *)
 		on assertNil(expr)
-			assertMissingValue(expr)
+			assertMissing(expr)
 		end assertNil
 		
-		(*! @abstract Deprecated. @see refuteMissingValue() *)
+		(*! @abstract Deprecated. @see refuteMissing() *)
 		on refuteNil(expr)
-			refuteMissingValue(expr)
+			refuteMissing(expr)
 		end refuteNil
 		
 		(*! @abstract A shortcut for @link assertEqual @/link(null, expr). *)
