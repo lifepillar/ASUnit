@@ -1602,25 +1602,42 @@ script TestSetObjCRef
 		property name : "assertObjCReference() fails with AppleScript objects"
 		
 		failIf(my assertObjCReference, {""}, "Should fail with string")
+		refuteObjCReference("")
 		failIf(my assertObjCReference, {text}, "Should fail with class object")
-		
+		refuteObjCReference(text)
 	end script
 	
 	script TestObjCRefWithReferences
 		property parent : UnitTest(me)
 		property name : "assertObjCReference() fails with AppleScript references"
-		property a : a reference to name
+		property a : a reference to my name
 		property b : a reference to a
 		property c : a reference to b
 		property d : a reference to e
-		property e : a reference to f
-		property f : a reference to (class of e)
 		
 		failIf(my assertObjCReference, {a}, "a")
 		failIf(my assertObjCReference, {b}, "b")
 		failIf(my assertObjCReference, {c}, "c")
 		failIf(my assertObjCReference, {d}, "d")
-		failIf(my assertObjCReference, {e}, "e")
-		failIf(my assertObjCReference, {f}, "f")
+		refuteObjCReference(a)
+		refuteObjCReference(b)
+		refuteObjCReference(c)
+		refuteObjCReference(d)
+	end script
+	
+	script TestObjCRefCritical
+		property parent : UnitTest(me)
+		property name : "assertObjCReference() fails with cyclic AppleScript references"
+		property e : a reference to f
+		property f : a reference to (class of e)
+		
+		if current application's name is not "osascript" then
+			skip("This test causes Script Editor 2.7 (and possibly other AppleScript editors) to crash")
+		else
+			failIf(my assertObjCReference, {e}, "e")
+			failIf(my assertObjCReference, {f}, "f")
+			refuteObjCReference(e)
+			refuteObjCReference(f)
+		end if
 	end script
 end script -- TestSetObjCRef
