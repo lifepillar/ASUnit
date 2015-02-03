@@ -539,13 +539,23 @@ on makeAssertions(theParent)
 		end assertEqualRelError
 		
 		(*! @abstract A shortcut for @link assertEqual @/link(missing value, expr). *)
-		on assertNil(expr)
+		on assertMissingValue(expr)
 			assertEqual(missing value, expr)
-		end assertNil
+		end assertMissingValue
 		
 		(*! @abstract A shortcut for @link refuteEqual @/link(missing value, expr). *)
-		on refuteNil(expr)
+		on refuteMissingValue(expr)
 			refuteEqual(missing value, expr)
+		end refuteMissingValue
+		
+		(*! @abstract Deprecated. @see assertMissingValue() *)
+		on assertNil(expr)
+			assertMissingValue(expr)
+		end assertNil
+		
+		(*! @abstract Deprecated. @see refuteMissingValue() *)
+		on refuteNil(expr)
+			refuteMissingValue(expr)
 		end refuteNil
 		
 		(*!
@@ -1020,7 +1030,7 @@ on makeAssertions(theParent)
 				end if
 			end if -- script, application, null
 			
-			if klass is handler then return "«handler»" 
+			if klass is handler then return "«handler»"
 			
 			try
 				set res to asText(anObject)
