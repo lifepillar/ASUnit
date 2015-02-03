@@ -396,18 +396,33 @@ script |assert instance of|
 	
 end script
 
-script |Test for missing values|
+script |Test for missing values and nulls|
 	property parent : TestSet(me)
 	
-	script |test assertNil|
+	script |test assertMissing|
 		property x : missing value
-		assertNil(missing value)
-		assertNil(x)
+		assertMissing(missing value)
+		assertMissing(x)
+		failIf(assertMissing, {null}, "null should not be equal to missing value")
 	end script
 	
-	script |test refuteNil|
+	script |test refuteMissing|
 		property x : {}
-		refuteNil(x)
+		refuteMissing(x)
+		refuteMissing(null)
+	end script
+	
+	script |test assertNull|
+		property x : null
+		assertNull(null)
+		assertNull(x)
+		failIf(assertNull, {missing value}, "missing value should not be equal to null")
+	end script
+	
+	script |test refuteNull|
+		property x : {}
+		refuteNull(x)
+		refuteNull(missing value)
 	end script
 	
 end script
