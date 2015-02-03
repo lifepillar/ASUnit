@@ -558,6 +558,16 @@ on makeAssertions(theParent)
 			refuteMissingValue(expr)
 		end refuteNil
 		
+		(*! @abstract A shortcut for @link assertEqual @/link(null, expr). *)
+		on assertNull(expr)
+			assertEqual(null, expr)
+		end assertNull
+		
+		(*! @abstract A shortcut for @link refuteEqual @/link(null, expr). *)
+		on refuteNull(expr)
+			refuteEqual(null, expr)
+		end refuteNull
+		
 		(*!
 			@abstract
 				Tests whether the given expression belongs to the given class.
