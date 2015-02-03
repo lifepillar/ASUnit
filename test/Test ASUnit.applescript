@@ -1188,6 +1188,7 @@ script |pretty print|
 		assertEqual("Ç" & current application's name & "È", pp(current application))
 		assertEqual("missing value", pp(missing value))
 		assertEqual("missing value", pp(x))
+		assertEqual("null", pp(null))
 		assertEqual("hyphens", pp(hyphens))
 		assertEqual(pi as text, pp(pi))
 		assertEqual(quote, pp(quote))
