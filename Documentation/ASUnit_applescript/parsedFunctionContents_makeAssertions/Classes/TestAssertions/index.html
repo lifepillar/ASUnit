@@ -289,14 +289,18 @@ function disclosure_triangle(elt) {
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertKindOf//(klass,expr)" target="_top">assertKindOf</a></tt></dt>
 <dd><p>Tests whether the given object or any of its ancestors belongs to the given class.
 </p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNil//(expr)" target="_top">assertNil</a></tt></dt>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr)" target="_top">assertMissing</a></tt></dt>
 <dd><p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" target="_top">assertEqual</a>(missing value, expr). </p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNil//(expr)" target="_top">assertNil</a></tt></dt>
+<dd><p>Deprecated. </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNotEqual//(unexpected,value)" target="_top">assertNotEqual</a></tt></dt>
 <dd><p>Succeeds when the two given expressions are not equal.
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNotReference//(anObject)" target="_top">assertNotReference</a></tt></dt>
 <dd><p>Fails when a variable is a reference.
 </p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNull//(expr)" target="_top">assertNull</a></tt></dt>
+<dd><p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" target="_top">assertEqual</a>(null, expr). </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)" target="_top">assertObjCReference</a></tt></dt>
 <dd><p>Fails when the given argument is not a reference to a Cocoa object.
 Succeeds otherwise.
@@ -342,8 +346,12 @@ Succeeds otherwise.
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteKindOf//(klass,expr)" target="_top">refuteKindOf</a></tt></dt>
 <dd><p>Verifies that neither the given object nor any of its ancestors belong to the given class.
 </p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr)" target="_top">refuteNil</a></tt></dt>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr)" target="_top">refuteMissing</a></tt></dt>
 <dd><p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" target="_top">refuteEqual</a>(missing value, expr). </p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr)" target="_top">refuteNil</a></tt></dt>
+<dd><p>Deprecated. </p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr)" target="_top">refuteNull</a></tt></dt>
+<dd><p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" target="_top">refuteEqual</a>(null, expr). </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/should//(expr,message)" target="_top">should</a></tt></dt>
 <dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" target="_top">assert</a>. </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject)" target="_top">shouldBeObjCReference</a></tt></dt>
@@ -643,15 +651,30 @@ but it does not matter if it is an <tt>integer</tt> or <tt>real</tt>
  A <a href="../../../index.html#//apple_ref/applescript/data/TEST_FAILED" logicalPath="//apple_ref/applescript/data/TEST_FAILED" target="_top">TEST_FAILED</a> error if the assertion fails.<br></p></dd>
 </dl>
 <hr class="betweenAPIEntries">
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr);   name=TestAssertions::assertMissing --><a name="//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr)"></a>
+<h3><a name="assertMissing">assertMissing</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr);name=start --><!-- begin abstract --></p>
+<p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" target="_top">assertEqual</a>(missing value, expr). <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr);name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertMissing" target="_top"><span class="function">assertMissing</span></a>(
+    <span class="param">expr</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr);name=end --></pre>
+</div>
+<hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertNil//(expr);   name=TestAssertions::assertNil --><a name="//apple_ref/applescript/instm/TestAssertions/assertNil//(expr)"></a>
 <h3><a name="assertNil">assertNil</a></h3>
 <hr class="afterName">
 <p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertNil//(expr);name=start --><!-- begin abstract --></p>
-<p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" target="_top">assertEqual</a>(missing value, expr). <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertNil//(expr);name=end --></p>
+<p>Deprecated. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertNil//(expr);name=end --></p>
 <div class="declaration_indent">
 <pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertNil//(expr);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNil//(expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertNil" target="_top"><span class="function">assertNil</span></a>(
     <span class="param">expr</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertNil//(expr);name=end --></pre>
 </div>
+<p><b>See</b></p>
+<div class="list_indent"><dl>
+<dt><p><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertMissing//(expr)" target="_top">assertMissing()</a></p></dt>
+<dd></dd>
+</dl></div>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertNotEqual//(unexpected,value);   name=TestAssertions::assertNotEqual --><a name="//apple_ref/applescript/instm/TestAssertions/assertNotEqual//(unexpected,value)"></a>
 <h3><a name="assertNotEqual">assertNotEqual</a></h3>
@@ -713,6 +736,16 @@ but it does not matter if it is an <tt>integer</tt> or <tt>real</tt>
 <dd><p>
  A <a href="../../../index.html#//apple_ref/applescript/data/TEST_FAILED" logicalPath="//apple_ref/applescript/data/TEST_FAILED" target="_top">TEST_FAILED</a> error if the assertion fails.<br></p></dd>
 </dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertNull//(expr);   name=TestAssertions::assertNull --><a name="//apple_ref/applescript/instm/TestAssertions/assertNull//(expr)"></a>
+<h3><a name="assertNull">assertNull</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertNull//(expr);name=start --><!-- begin abstract --></p>
+<p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" target="_top">assertEqual</a>(null, expr). <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertNull//(expr);name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertNull//(expr);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNull//(expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertNull" target="_top"><span class="function">assertNull</span></a>(
+    <span class="param">expr</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertNull//(expr);name=end --></pre>
+</div>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject);   name=TestAssertions::assertObjCReference --><a name="//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)"></a>
 <h3><a name="assertObjCReference">assertObjCReference</a></h3>
@@ -968,7 +1001,7 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
 <p>Succeeds when the given expression is false.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteInheritsFrom//(obj,anotherObj)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refute" target="_top"><span class="function">refute</span></a>(
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteKindOf//(klass,expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refute" target="_top"><span class="function">refute</span></a>(
     <span class="param">expr</span>,
     <span class="param">message</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=end --></pre>
 </div>
@@ -1113,14 +1146,39 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
  A <a href="../../../index.html#//apple_ref/applescript/data/TEST_FAILED" logicalPath="//apple_ref/applescript/data/TEST_FAILED" target="_top">TEST_FAILED</a> error if the assertion fails.<br></p></dd>
 </dl>
 <hr class="betweenAPIEntries">
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr);   name=TestAssertions::refuteMissing --><a name="//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr)"></a>
+<h3><a name="refuteMissing">refuteMissing</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr);name=start --><!-- begin abstract --></p>
+<p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" target="_top">refuteEqual</a>(missing value, expr). <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr);name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteMissing" target="_top"><span class="function">refuteMissing</span></a>(
+    <span class="param">expr</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr);name=end --></pre>
+</div>
+<hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr);   name=TestAssertions::refuteNil --><a name="//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr)"></a>
 <h3><a name="refuteNil">refuteNil</a></h3>
 <hr class="afterName">
 <p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr);name=start --><!-- begin abstract --></p>
-<p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" target="_top">refuteEqual</a>(missing value, expr). <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr);name=end --></p>
+<p>Deprecated. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr);name=end --></p>
 <div class="declaration_indent">
 <pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteNil" target="_top"><span class="function">refuteNil</span></a>(
     <span class="param">expr</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteNil//(expr);name=end --></pre>
+</div>
+<p><b>See</b></p>
+<div class="list_indent"><dl>
+<dt><p><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteMissing//(expr)" target="_top">refuteMissing()</a></p></dt>
+<dd></dd>
+</dl></div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr);   name=TestAssertions::refuteNull --><a name="//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr)"></a>
+<h3><a name="refuteNull">refuteNull</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr);name=start --><!-- begin abstract --></p>
+<p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" target="_top">refuteEqual</a>(null, expr). <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr);name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteNull" target="_top"><span class="function">refuteNull</span></a>(
+    <span class="param">expr</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);   name=TestAssertions::should --><a name="//apple_ref/applescript/instm/TestAssertions/should//(expr,message)"></a>
@@ -1129,7 +1187,7 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
 <p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=start --><!-- begin abstract --></p>
 <p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" target="_top">assert</a>. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/should//(expr,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/should" target="_top"><span class="function">should</span></a>(
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldNotBeReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/should" target="_top"><span class="function">should</span></a>(
     <span class="param">expr</span>,
     <span class="param">message</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=end --></pre>
 </div>
@@ -1324,7 +1382,7 @@ expected value does not have.
 <p class="gapBeforeFooter"> </p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Sunday, January 25, 2015
+<p class="hd_timestamp">Last Updated: Tuesday, February 03, 2015
 </p>
 </div>
 </td>
