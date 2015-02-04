@@ -1593,51 +1593,51 @@ script |Count assertions|
 	
 end script -- Count assertions
 
-script TestSetObjCRef
+script TestSetCocoaRef
 	property parent : TestSet(me)
 	property name : "Objective-C references"
 	
-	script TestObjCRef
+	script TestCocoaRef
 		property parent : UnitTest(me)
-		property name : "assertObjCReference() fails with AppleScript objects"
+		property name : "assertCocoaReference() fails with AppleScript objects"
 		
-		failIf(my assertObjCReference, {""}, "Should fail with string")
-		refuteObjCReference("")
-		failIf(my assertObjCReference, {text}, "Should fail with class object")
-		refuteObjCReference(text)
+		failIf(my assertCocoaReference, {""}, "Should fail with string")
+		refuteCocoaReference("")
+		failIf(my assertCocoaReference, {text}, "Should fail with class object")
+		refuteCocoaReference(text)
 	end script
 	
-	script TestObjCRefWithReferences
+	script TestCocoaRefWithReferences
 		property parent : UnitTest(me)
-		property name : "assertObjCReference() fails with AppleScript references"
+		property name : "assertCocoaReference() fails with AppleScript references"
 		property a : a reference to my name
 		property b : a reference to a
 		property c : a reference to b
 		property d : a reference to e
 		
-		failIf(my assertObjCReference, {a}, "a")
-		failIf(my assertObjCReference, {b}, "b")
-		failIf(my assertObjCReference, {c}, "c")
-		failIf(my assertObjCReference, {d}, "d")
-		refuteObjCReference(a)
-		refuteObjCReference(b)
-		refuteObjCReference(c)
-		refuteObjCReference(d)
+		failIf(my assertCocoaReference, {a}, "a")
+		failIf(my assertCocoaReference, {b}, "b")
+		failIf(my assertCocoaReference, {c}, "c")
+		failIf(my assertCocoaReference, {d}, "d")
+		refuteCocoaReference(a)
+		refuteCocoaReference(b)
+		refuteCocoaReference(c)
+		refuteCocoaReference(d)
 	end script
 	
-	script TestObjCRefCritical
+	script TestCocoaRefCritical
 		property parent : UnitTest(me)
-		property name : "assertObjCReference() fails with cyclic AppleScript references"
+		property name : "assertCocoaReference() fails with cyclic AppleScript references"
 		property e : a reference to f
 		property f : a reference to (class of e)
 		
 		if current application's name is not "osascript" then
 			skip("This test causes Script Editor 2.7 (and possibly other AppleScript editors) to crash")
 		else
-			failIf(my assertObjCReference, {e}, "e")
-			failIf(my assertObjCReference, {f}, "f")
-			refuteObjCReference(e)
-			refuteObjCReference(f)
+			failIf(my assertCocoaReference, {e}, "e")
+			failIf(my assertCocoaReference, {f}, "f")
+			refuteCocoaReference(e)
+			refuteCocoaReference(f)
 		end if
 	end script
-end script -- TestSetObjCRef
+end script -- TestSetCocoaRef

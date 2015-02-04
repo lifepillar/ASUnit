@@ -843,18 +843,18 @@ on makeAssertions(theParent)
 			@throws
 				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
-		on assertObjCReference(anObject)
-			if isObjCRef(anObject) then
+		on assertCocoaReference(anObject)
+			if isCocoaRef(anObject) then
 				countAssertion()
 			else
 				fail(pp(anObject) & space & "is not a reference to a Cocoa object.")
 			end if
-		end assertObjCReference
+		end assertCocoaReference
 		
-		(*! @abstract A synonym for @link assertObjCReference() @/link. *)
-		on shouldBeObjCReference(anObject)
-			assertObjCReference(anObject)
-		end shouldBeObjCReference
+		(*! @abstract A synonym for @link assertCocoaReference() @/link. *)
+		on shouldBeCocoaReference(anObject)
+			assertCocoaReference(anObject)
+		end shouldBeCocoaReference
 		
 		(*!
 			@abstract
@@ -865,18 +865,18 @@ on makeAssertions(theParent)
 			@throws
 				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
-		on refuteObjCReference(anObject)
-			if isObjCRef(anObject) then
+		on refuteCocoaReference(anObject)
+			if isCocoaRef(anObject) then
 				fail(pp(anObject) & space & "is a reference to a Cocoa object.")
 			else
 				countAssertion()
 			end if
-		end refuteObjCReference
+		end refuteCocoaReference
 		
-		(*! @abstract A synonym for @link refuteObjCReference() @/link. *)
-		on shouldNotBeObjCReference(anObject)
-			refuteObjCReference(anObject)
-		end shouldNotBeObjCReference
+		(*! @abstract A synonym for @link refuteCocoaReference() @/link. *)
+		on shouldNotBeCocoaReference(anObject)
+			refuteCocoaReference(anObject)
+		end shouldNotBeCocoaReference
 		
 		(*!
 			@abstract
@@ -934,14 +934,14 @@ on makeAssertions(theParent)
 			@seealso
 				http://macscripter.net/viewtopic.php?pid=177998
 		*)
-		on isObjCRef(x)
+		on isCocoaRef(x)
 			try
 				(class of x) as reference
 				(contents of class of x is class of x)
 			on error
 				false
 			end try
-		end isObjCRef
+		end isCocoaRef
 		
 		(*!
 		@abstract
@@ -972,7 +972,7 @@ on makeAssertions(theParent)
 				end if
 				
 				-- Is it an Objective-C reference?
-				if isObjCRef(anObject) then return "«class ocid»"
+				if isCocoaRef(anObject) then return "«class ocid»"
 				
 				-- Is it a file reference?
 				try

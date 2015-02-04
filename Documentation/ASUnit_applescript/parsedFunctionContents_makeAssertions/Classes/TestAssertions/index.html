@@ -271,6 +271,10 @@ function disclosure_triangle(elt) {
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" target="_top">assert</a></tt></dt>
 <dd><p>Succeeds when the given expression is true.
 </p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject)" target="_top">assertCocoaReference</a></tt></dt>
+<dd><p>Succeeds when the given argument is a reference to a Cocoa object.
+Fails otherwise.
+</p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" target="_top">assertEqual</a></tt></dt>
 <dd><p>Succeeds when the two given expressions have the same value.
 </p></dd>
@@ -301,10 +305,6 @@ function disclosure_triangle(elt) {
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNull//(expr)" target="_top">assertNull</a></tt></dt>
 <dd><p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" target="_top">assertEqual</a>(null, expr). </p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)" target="_top">assertObjCReference</a></tt></dt>
-<dd><p>Succeeds when the given argument is a reference to a Cocoa object.
-Fails otherwise.
-</p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertReference//(anObject)" target="_top">assertReference</a></tt></dt>
 <dd><p>Tests whether a variable is a reference.
 </p></dd>
@@ -319,7 +319,7 @@ Fails otherwise.
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/formatInheritanceChain//(chain)" target="_top">formatInheritanceChain</a></tt></dt>
 <dd><p>Helper handler that returns a textual representation of an inheritance chain.
 </p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x)" target="_top">isObjCRef</a></tt></dt>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/isCocoaRef//(x)" target="_top">isCocoaRef</a></tt></dt>
 <dd><p>Utility handler to check whether a given expression is a reference to a Cocoa object.
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/notOk//(expr)" target="_top">notOk</a></tt></dt>
@@ -333,6 +333,10 @@ Fails otherwise.
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refute//(expr,message)" target="_top">refute</a></tt></dt>
 <dd><p>Succeeds when the given expression is false.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject)" target="_top">refuteCocoaReference</a></tt></dt>
+<dd><p>Succeeds when the given argument is not a reference to a Cocoa object.
+Fails otherwise.
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" target="_top">refuteEqual</a></tt></dt>
 <dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNotEqual//(unexpected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertNotEqual//(unexpected,value)" target="_top">assertNotEqual</a>. </p></dd>
@@ -352,20 +356,16 @@ Fails otherwise.
 <dd><p>Deprecated. </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr)" target="_top">refuteNull</a></tt></dt>
 <dd><p>A shortcut for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteEqual//(unexpected,value)" target="_top">refuteEqual</a>(null, expr). </p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject)" target="_top">refuteObjCReference</a></tt></dt>
-<dd><p>Succeeds when the given argument is not a reference to a Cocoa object.
-Fails otherwise.
-</p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/should//(expr,message)" target="_top">should</a></tt></dt>
 <dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assert//(expr,message)" target="_top">assert</a>. </p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject)" target="_top">shouldBeObjCReference</a></tt></dt>
-<dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)" target="_top">assertObjCReference()</a>. </p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference//(anObject)" target="_top">shouldBeCocoaReference</a></tt></dt>
+<dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject)" target="_top">assertCocoaReference()</a>. </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldBeReference//(anObject)" target="_top">shouldBeReference</a></tt></dt>
 <dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertReference//(anObject)" target="_top">assertReference</a>. </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldEqual//(expected,value)" target="_top">shouldEqual</a></tt></dt>
 <dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" target="_top">assertEqual</a>. </p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference//(anObject)" target="_top">shouldNotBeObjCReference</a></tt></dt>
-<dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject)" target="_top">refuteObjCReference()</a>. </p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference//(anObject)" target="_top">shouldNotBeCocoaReference</a></tt></dt>
+<dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject)" target="_top">refuteCocoaReference()</a>. </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldNotBeReference//(anObject)" target="_top">shouldNotBeReference</a></tt></dt>
 <dd><p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertNotReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertNotReference//(anObject)" target="_top">assertNotReference()</a>. </p></dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldNotEqual//(unexpected,value)" target="_top">shouldNotEqual</a></tt></dt>
@@ -389,7 +389,7 @@ Fails otherwise.
 <p>Succeeds when the given expression is true.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assert//(expr,message);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assert//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assert" target="_top"><span class="function">assert</span></a>(
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assert//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assert" target="_top"><span class="function">assert</span></a>(
     <span class="param">expr</span>,
     <span class="param">message</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assert//(expr,message);name=end --></pre>
 </div>
@@ -416,6 +416,34 @@ Fails otherwise.
  A <a href="../../../index.html#//apple_ref/applescript/data/TEST_FAILED" logicalPath="//apple_ref/applescript/data/TEST_FAILED" target="_top">TEST_FAILED</a> error if the assertion fails.<br></p></dd>
 </dl>
 <hr class="betweenAPIEntries">
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject);   name=TestAssertions::assertCocoaReference --><a name="//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject)"></a>
+<h3><a name="assertCocoaReference">assertCocoaReference</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject);name=start --><!-- begin abstract --></p>
+<p>Succeeds when the given argument is a reference to a Cocoa object.
+Fails otherwise.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject);name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertCocoaReference" target="_top"><span class="function">assertCocoaReference</span></a>(
+    <span class="param">anObject</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject);name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/TestAssertions/assertCocoaReference/anObject;   name=assertCocoaReference::anObject -->
+<a name="//apple_ref/doc/functionparam/TestAssertions/assertCocoaReference/anObject"></a>
+<code>anObject</code>
+</dt>
+<dd><p><em>[anything]</em> An expression.</p></dd>
+</dl>
+</div>
+<dl>
+<dt><b>Throws</b></dt>
+<dd><p>
+ A <a href="../../../index.html#//apple_ref/applescript/data/TEST_FAILED" logicalPath="//apple_ref/applescript/data/TEST_FAILED" target="_top">TEST_FAILED</a> error if the assertion fails.<br></p></dd>
+</dl>
+<hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value);   name=TestAssertions::assertEqual --><a name="//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)"></a>
 <h3><a name="assertEqual">assertEqual</a></h3>
 <hr class="afterName">
@@ -423,7 +451,7 @@ Fails otherwise.
 <p>Succeeds when the two given expressions have the same value.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual" target="_top"><span class="function">assertEqual</span></a>(
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertEqualAbsError//(e1,e2,delta)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertEqual" target="_top"><span class="function">assertEqual</span></a>(
     <span class="param">expected</span>,
     <span class="param">value</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertEqual//(expected,value);name=end --></pre>
 </div>
@@ -753,34 +781,6 @@ but it does not matter if it is an <tt>integer</tt> or <tt>real</tt>
     <span class="param">expr</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertNull//(expr);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
-<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject);   name=TestAssertions::assertObjCReference --><a name="//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)"></a>
-<h3><a name="assertObjCReference">assertObjCReference</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject);name=start --><!-- begin abstract --></p>
-<p>Succeeds when the given argument is a reference to a Cocoa object.
-Fails otherwise.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject);name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertObjCReference" target="_top"><span class="function">assertObjCReference</span></a>(
-    <span class="param">anObject</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject);name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/TestAssertions/assertObjCReference/anObject;   name=assertObjCReference::anObject -->
-<a name="//apple_ref/doc/functionparam/TestAssertions/assertObjCReference/anObject"></a>
-<code>anObject</code>
-</dt>
-<dd><p><em>[anything]</em> An expression.</p></dd>
-</dl>
-</div>
-<dl>
-<dt><b>Throws</b></dt>
-<dd><p>
- A <a href="../../../index.html#//apple_ref/applescript/data/TEST_FAILED" logicalPath="//apple_ref/applescript/data/TEST_FAILED" target="_top">TEST_FAILED</a> error if the assertion fails.<br></p></dd>
-</dl>
-<hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/assertReference//(anObject);   name=TestAssertions::assertReference --><a name="//apple_ref/applescript/instm/TestAssertions/assertReference//(anObject)"></a>
 <h3><a name="assertReference">assertReference</a></h3>
 <hr class="afterName">
@@ -904,15 +904,15 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
     <span class="param">chain</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/formatInheritanceChain//(chain);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
-<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);   name=TestAssertions::isObjCRef --><a name="//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x)"></a>
-<h3><a name="isObjCRef">isObjCRef</a></h3>
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/isCocoaRef//(x);   name=TestAssertions::isCocoaRef --><a name="//apple_ref/applescript/instm/TestAssertions/isCocoaRef//(x)"></a>
+<h3><a name="isCocoaRef">isCocoaRef</a></h3>
 <hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);name=start --><!-- begin abstract --></p>
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/isCocoaRef//(x);name=start --><!-- begin abstract --></p>
 <p>Utility handler to check whether a given expression is a reference to a Cocoa object.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);name=end --></p>
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/isCocoaRef//(x);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x)" logicalPath="//apple_ref/applescript/instm/TestAssertions/isObjCRef" target="_top"><span class="function">isObjCRef</span></a>(
-    <span class="param">x</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/isObjCRef//(x);name=end --></pre>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/isCocoaRef//(x);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/isCocoaRef//(x)" logicalPath="//apple_ref/applescript/instm/TestAssertions/isCocoaRef" target="_top"><span class="function">isCocoaRef</span></a>(
+    <span class="param">x</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/isCocoaRef//(x);name=end --></pre>
 </div>
 <p><b>See Also</b></p>
 <div class="list_indent"><dl>
@@ -1003,7 +1003,7 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
 <p>Succeeds when the given expression is false.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteKindOf//(klass,expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refute" target="_top"><span class="function">refute</span></a>(
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteInstanceOf//(klass,expr)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refute" target="_top"><span class="function">refute</span></a>(
     <span class="param">expr</span>,
     <span class="param">message</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refute//(expr,message);name=end --></pre>
 </div>
@@ -1022,6 +1022,34 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
 <code>message</code>
 </dt>
 <dd><p><em>[text][</em> A message that is printed when the test fails.</p></dd>
+</dl>
+</div>
+<dl>
+<dt><b>Throws</b></dt>
+<dd><p>
+ A <a href="../../../index.html#//apple_ref/applescript/data/TEST_FAILED" logicalPath="//apple_ref/applescript/data/TEST_FAILED" target="_top">TEST_FAILED</a> error if the assertion fails.<br></p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject);   name=TestAssertions::refuteCocoaReference --><a name="//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject)"></a>
+<h3><a name="refuteCocoaReference">refuteCocoaReference</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject);name=start --><!-- begin abstract --></p>
+<p>Succeeds when the given argument is not a reference to a Cocoa object.
+Fails otherwise.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject);name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference" target="_top"><span class="function">refuteCocoaReference</span></a>(
+    <span class="param">anObject</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject);name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/TestAssertions/refuteCocoaReference/anObject;   name=refuteCocoaReference::anObject -->
+<a name="//apple_ref/doc/functionparam/TestAssertions/refuteCocoaReference/anObject"></a>
+<code>anObject</code>
+</dt>
+<dd><p><em>[anything]</em> An expression.</p></dd>
 </dl>
 </div>
 <dl>
@@ -1183,34 +1211,6 @@ defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>
     <span class="param">expr</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteNull//(expr);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
-<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject);   name=TestAssertions::refuteObjCReference --><a name="//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject)"></a>
-<h3><a name="refuteObjCReference">refuteObjCReference</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject);name=start --><!-- begin abstract --></p>
-<p>Succeeds when the given argument is not a reference to a Cocoa object.
-Fails otherwise.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject);name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteObjCReference" target="_top"><span class="function">refuteObjCReference</span></a>(
-    <span class="param">anObject</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject);name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/TestAssertions/refuteObjCReference/anObject;   name=refuteObjCReference::anObject -->
-<a name="//apple_ref/doc/functionparam/TestAssertions/refuteObjCReference/anObject"></a>
-<code>anObject</code>
-</dt>
-<dd><p><em>[anything]</em> An expression.</p></dd>
-</dl>
-</div>
-<dl>
-<dt><b>Throws</b></dt>
-<dd><p>
- A <a href="../../../index.html#//apple_ref/applescript/data/TEST_FAILED" logicalPath="//apple_ref/applescript/data/TEST_FAILED" target="_top">TEST_FAILED</a> error if the assertion fails.<br></p></dd>
-</dl>
-<hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);   name=TestAssertions::should --><a name="//apple_ref/applescript/instm/TestAssertions/should//(expr,message)"></a>
 <h3><a name="should">should</a></h3>
 <hr class="afterName">
@@ -1222,14 +1222,14 @@ Fails otherwise.
     <span class="param">message</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/should//(expr,message);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
-<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject);   name=TestAssertions::shouldBeObjCReference --><a name="//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject)"></a>
-<h3><a name="shouldBeObjCReference">shouldBeObjCReference</a></h3>
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference//(anObject);   name=TestAssertions::shouldBeCocoaReference --><a name="//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference//(anObject)"></a>
+<h3><a name="shouldBeCocoaReference">shouldBeCocoaReference</a></h3>
 <hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject);name=start --><!-- begin abstract --></p>
-<p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertObjCReference//(anObject)" target="_top">assertObjCReference()</a>. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject);name=end --></p>
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference//(anObject);name=start --><!-- begin abstract --></p>
+<p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/assertCocoaReference//(anObject)" target="_top">assertCocoaReference()</a>. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference//(anObject);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference" target="_top"><span class="function">shouldBeObjCReference</span></a>(
-    <span class="param">anObject</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldBeObjCReference//(anObject);name=end --></pre>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference//(anObject);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference" target="_top"><span class="function">shouldBeCocoaReference</span></a>(
+    <span class="param">anObject</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldBeCocoaReference//(anObject);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/shouldBeReference//(anObject);   name=TestAssertions::shouldBeReference --><a name="//apple_ref/applescript/instm/TestAssertions/shouldBeReference//(anObject)"></a>
@@ -1253,14 +1253,14 @@ Fails otherwise.
     <span class="param">value</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldEqual//(expected,value);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
-<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference//(anObject);   name=TestAssertions::shouldNotBeObjCReference --><a name="//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference//(anObject)"></a>
-<h3><a name="shouldNotBeObjCReference">shouldNotBeObjCReference</a></h3>
+<!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference//(anObject);   name=TestAssertions::shouldNotBeCocoaReference --><a name="//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference//(anObject)"></a>
+<h3><a name="shouldNotBeCocoaReference">shouldNotBeCocoaReference</a></h3>
 <hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference//(anObject);name=start --><!-- begin abstract --></p>
-<p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteObjCReference//(anObject)" target="_top">refuteObjCReference()</a>. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference//(anObject);name=end --></p>
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference//(anObject);name=start --><!-- begin abstract --></p>
+<p>A synonym for <a href="index.html#//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/refuteCocoaReference//(anObject)" target="_top">refuteCocoaReference()</a>. <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference//(anObject);name=end --></p>
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference//(anObject);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference" target="_top"><span class="function">shouldNotBeObjCReference</span></a>(
-    <span class="param">anObject</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeObjCReference//(anObject);name=end --></pre>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference//(anObject);name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference//(anObject)" logicalPath="//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference" target="_top"><span class="function">shouldNotBeCocoaReference</span></a>(
+    <span class="param">anObject</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeCocoaReference//(anObject);name=end --></pre>
 </div>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=instm;  uid=//apple_ref/applescript/instm/TestAssertions/shouldNotBeReference//(anObject);   name=TestAssertions::shouldNotBeReference --><a name="//apple_ref/applescript/instm/TestAssertions/shouldNotBeReference//(anObject)"></a>
@@ -1422,7 +1422,7 @@ expected value does not have.
 <p class="gapBeforeFooter"> </p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Tuesday, February 03, 2015
+<p class="hd_timestamp">Last Updated: Wednesday, February 04, 2015
 </p>
 </div>
 </td>
