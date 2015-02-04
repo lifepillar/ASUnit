@@ -3,9 +3,9 @@
  	An AppleScript testing framework.
  @abstract License: GNU GPL, see COPYING for details.
  @author Nir Soffer, Lifepillar
- @copyright 2013–2015 Lifepillar, 2006 Nir Soffer
+ @copyright 2013-2015 Lifepillar, 2006 Nir Soffer
  @version 1.2.4
- @charset macintosh
+ @charset utf-8
 *)
 
 (*! @abstract <em>[text]</em> ASUnit's name. *)
@@ -1431,7 +1431,7 @@ script ScriptEditorLogger
 	property textView : missing value
 	property windowTitle : "Test Results"
 	
-	(*! @abstract Creates a “Test Results” document if one does not already exist. *)
+	(*! @abstract Creates a "Test Results" document if one does not already exist. *)
 	on initialize()
 		local loggerPath, tid
 		set loggerPath to ((path to temporary items from user domain) as text) & my windowTitle
@@ -1450,7 +1450,7 @@ script ScriptEditorLogger
 	
 	(*!
 		@abstract
-			Prints the given string to the “Test Results” document.
+			Prints the given string to the "Test Results" document.
 		@param
 			aString <em>[text]</em> The text to be printed.
 		@param
@@ -1468,7 +1468,7 @@ script ScriptEditorLogger
 	
 	(*!
 		@abstract
-			Prints the given string to the “Test Results” document and starts a new line.
+			Prints the given string to the "Test Results" document and starts a new line.
 		@discussion
 			The string is automatically prefixed by <tt>--</tt>,
 			so that it is treated as a comment by AppleScript Editor.

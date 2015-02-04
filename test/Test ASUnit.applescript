@@ -3,8 +3,7 @@
 		ASUnit self tests.
 	@abstract License: GNU GPL, see COPYING for details.
 	@author NirSoffer, Lifepillar
-	@copyright 2013Ð2015 Lifepillar, 2006 Nir Soffer
-	@charset: macintosh
+	@copyright 2013-2015 Lifepillar, 2006 Nir Soffer
 *)
 use scripting additions
 use ASUnit : script "com.lifepillar/ASUnit"
