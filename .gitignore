@@ -6,3 +6,4 @@ OldManual.html
 README.html
 *.tar.gz
 tmp
+/Documentation/**/*-temp*
