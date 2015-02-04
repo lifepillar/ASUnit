@@ -18,7 +18,7 @@ property id : "com.lifepillar.ASUnit"
 property TEST_FAILED : 1000
 (*! @abstract Error number signalling a skipped test. *)
 property TEST_SKIPPED : 1001
-(*! @abstract Error number used inside @link failIf @/link. *)
+(*! @abstract Error number used inside @link failIf() @/link. *)
 property TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED : 1002
 (*! @abstract A property that refers to the top-level script. *)
 property TOP_LEVEL : me
@@ -44,27 +44,27 @@ end script -- Observer
 	 @abstract
 	 	Base class for visitors.
 	 @discussion
-	 	This script defines the interface for a Visitor object.
+	 	This script defines the interface for a @link Visitor @/link object.
 	 	Subclasses are supposed to override some handlers.
-	 	To operate on a suite, you call the suite <tt>accept()</tt> with a visitor.
-		ASUnit defines only one visitor, <tt>TestResult</tt>, which runs all the tests in a suite.
+	 	To operate on a suite, you call the suite @link accept() @/link with a visitor.
+		ASUnit defines only one visitor, @link TestResult @/link, which runs all the tests in a suite.
 		You may create other visitors to do filtered testing, custom reporting and like.
-		Your custom visitor should inherit from one of the framework visitors or from <tt>Visitor</tt>.
+		Your custom visitor should inherit from one of the framework visitors or from @link Visitor @/link.
 	*)
 script Visitor
 	property parent : AppleScript
 	
-	(*! @abstract See <tt>visitTestSuite</tt> in @link TestResult @/link. *)
+	(*! @abstract @see visitTestSuite() *)
 	on visitTestSuite(aTestSuite)
 	end visitTestSuite
 	
-	(*! @abstract See <tt>visitTestCase</tt> in @link TestResult @/link. *)
+	(*! @abstract @see visitTestCase() *)
 	on visitTestCase(TestCase)
 	end visitTestCase
 	
 end script -- Visitor
 
-(*! @abstract Builds and returns a TestResult object. *)
+(*! @abstract Builds and returns a @link TestResult @/link object. *)
 on makeTestResult(aName)
 	
 	(*! @abstract Runs test cases and collects the results. *)
@@ -394,7 +394,7 @@ on makeAssertions(theParent)
 			@param
 				expr <em>[boolean]</em> An expression that evaluates to true or false.
 			@param
-				message <em>[text][</em> A message that is printed when the test fails.
+				message <em>[text]</em> A message that is printed when the test fails.
 			@throws
 				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
@@ -403,7 +403,7 @@ on makeAssertions(theParent)
 			countAssertion()
 		end assert
 		
-		(*! @abstract A synonym for @link assert @/link. *)
+		(*! @abstract A synonym for @link assert() @/link. *)
 		on should(expr, message)
 			assert(expr, message)
 		end should
@@ -414,7 +414,7 @@ on makeAssertions(theParent)
 			@param
 				expr <em>[boolean]</em> An expression that evaluates to true or false.
 			@param
-				message <em>[text][</em> A message that is printed when the test fails.
+				message <em>[text]</em> A message that is printed when the test fails.
 			@throws
 				A @link TEST_FAILED @/link error if the assertion fails.
 		*)
@@ -423,7 +423,7 @@ on makeAssertions(theParent)
 			countAssertion()
 		end refute
 		
-		(*! @abstract A synonym for @link refute @/link. *)
+		(*! @abstract A synonym for @link refute() @/link. *)
 		on shouldnt(expr, message)
 			refute(expr, message)
 		end shouldnt
@@ -448,7 +448,7 @@ on makeAssertions(theParent)
 			countAssertion()
 		end assertEqual
 		
-		(*! @abstract A synonym for @link assertEqual @/link. *)
+		(*! @abstract A synonym for @link assertEqual() @/link. *)
 		on shouldEqual(expected, value)
 			assertEqual(expected, value)
 		end shouldEqual
@@ -473,12 +473,12 @@ on makeAssertions(theParent)
 			countAssertion()
 		end assertNotEqual
 		
-		(*! @abstract A synonym for @link assertNotEqual @/link. *)
+		(*! @abstract A synonym for @link assertNotEqual() @/link. *)
 		on refuteEqual(unexpected, value)
 			assertNotEqual(unexpected, value)
 		end refuteEqual
 		
-		(*! @abstract A synonym for @link assertNotEqual @/link. *)
+		(*! @abstract A synonym for @link assertNotEqual() @/link. *)
 		on shouldNotEqual(unexpected, value)
 			assertNotEqual(unexpected, value)
 		end shouldNotEqual
@@ -487,7 +487,7 @@ on makeAssertions(theParent)
 			@abstract
 				Fails unless <tt>e1</tt> and <tt>e2</tt> are within <tt>delta</tt> from each other.
 			@discussion
-				This assertion succeeds if and only if |e1-e2| ≤ delta.
+				This assertion succeeds if and only if |e1-e2| <= delta.
 			@param
 				e1 <em>[number]</em> A number.
 			@param
@@ -510,7 +510,7 @@ on makeAssertions(theParent)
 			@abstract
 				Fails unless <tt>e1</tt> and <tt>e2</tt> have a relative error less than <tt>eps</tt>.
 			@discussion
-				This assertion succeeds if and only if |e1-e2| ≤ min(|e1|,|e2|) * eps.
+				This assertion succeeds if and only if |e1-e2| <= min(|e1|,|e2|) * eps.
 			@param
 				e1 <em>[number]</em> A number.
 			@param
@@ -621,10 +621,10 @@ on makeAssertions(theParent)
 			@discussion
 				This is mainly useful for user-defined scripts and user-defined
 				inheritance hierarchies. For built-in types, it is almost equivalent
-				to @link assertInstanceOf @/link. The main difference is that it can be
+				to @link assertInstanceOf() @/link. The main difference is that it can be
 				used to test whether an expression is a <tt>number</tt>,
 				but it does not matter if it is an <tt>integer</tt> or <tt>real</tt>
-				(you cannot do that with @link assertInstanceOf @/link).
+				(you cannot do that with @link assertInstanceOf() @/link).
 			@param
 				klass <em>[class]</em> A class name.
 			@param
@@ -671,7 +671,7 @@ on makeAssertions(theParent)
 			@abstract
 				Verifies that neither the given object nor any of its ancestors belong to the given class.
 			@discussion
-				See @link assertKindOf @/link.
+				See @link assertKindOf() @/link.
 			@param
 				klass <em>[class]</em> A class name.
 			@param
@@ -806,7 +806,7 @@ on makeAssertions(theParent)
 			countAssertion()
 		end assertReference
 		
-		(*! @abstract A synonym for @link assertReference @/link. *)
+		(*! @abstract A synonym for @link assertReference() @/link. *)
 		on shouldBeReference(anObject)
 			assertReference(anObject)
 		end shouldBeReference
@@ -883,8 +883,8 @@ on makeAssertions(theParent)
 				Fails when the given assertion succeeds.
 			@discussion
 				This is mostly a convenience for testing ASUnit itself, since for every
-				positive assertion (<tt>assert…</tt>, <tt>should…</tt>), ASUnit already
-				defines a corresponding negative assertion (<tt>refute…</tt>, <tt>shouldnt…</tt>).
+				positive assertion (<tt>assert...</tt>, <tt>should...</tt>), ASUnit already
+				defines a corresponding negative assertion (<tt>refute...</tt>, <tt>shouldnt...</tt>).
 			@param
 				assertion <em>[handler]</em> An assertion handler.
 			@param
@@ -931,8 +931,8 @@ on makeAssertions(theParent)
 		(*!
 			@abstract
 				Utility handler to check whether a given expression is a reference to a Cocoa object.
-			@seealso
-				http://macscripter.net/viewtopic.php?pid=177998
+			@discussion
+				See <a href="http://macscripter.net/viewtopic.php?pid=177998">this MacScripter's thread</a>.
 		*)
 		on isCocoaRef(x)
 			try
@@ -1116,7 +1116,7 @@ on makeAssertions(theParent)
 		end asText
 		
 		
-		(*! @abstract A synonym for @link shouldNotRaise@/link(). Deprecated. *)
+		(*! @abstract A synonym for @link shouldNotRaise() @/link. Deprecated. *)
 		on shouldntRaise(expectedErrorNumber, object, message)
 			shouldNotRaise(expectedErrorNumber, object, message)
 		end shouldntRaise
@@ -1218,7 +1218,7 @@ script TestLogger
 	property defectColor : {256 * 215, 256 * 67, 256 * 34} -- RGB (215,67,34)
 	property defaultColor : {256 * 12, 256 * 56, 256 * 67} -- RGB (12,56,67)
 	
-	(*! @abstract Overrides @link Observer @/link's <tt>setNotifier()</tt>. *)
+	(*! @abstract Overrides @link Observer @/link's @link setNotifier() @/link. *)
 	on setNotifier(aTestResult)
 		set my _TestResult to aTestResult
 	end setNotifier
@@ -1228,7 +1228,7 @@ script TestLogger
 			Initializes this logger.
 		@discussion
 			This handler may be overriden by subclasses to perform any needed
-			initialization step. This handler is called automatically by @link autorun @/link.
+			initialization step. This handler is called automatically by @link autorun() @/link.
 	*)
 	on initialize()
 	end initialize
@@ -1238,7 +1238,7 @@ script TestLogger
 			Logs the given event.
 		@param
 			anEvent <em>[record]</em> An event. For the structure of an event,
-			see <tt>notify()</tt> in @link TestResult @/link.
+			see @link notify() @/link in @link TestResult @/link.
 	*)
 	on update(anEvent)
 		set eventName to anEvent's name
@@ -1598,9 +1598,9 @@ property suite : ASUnitSentinel
 		The base class for test components.
 	@discussion Test suites are a composite of components.
 	 	The basic unit is a single @link TestCase @/link, which may be tested as is.
-		Several <tt>TestCase</tt>s are grouped in a @link TestSuite @/link,
-		which can test all its tests. A <tt>TestSuite</tt> may contain other
-		<tt>TestSuite</tt>s, which may contain other suites.
+		Several instances of @link TestCase @/link are grouped in a @link TestSuite @/link,
+		which can test all its tests. A @link TestSuite @/link object may contain other
+		@link TestSuite @/link objects, which may contain other suites.
 		Testing a composite returns a @link TestResult @/link object.
 *)
 script TestComponent
@@ -1771,7 +1771,7 @@ on registerFixture(aUserFixture)
 	TestSet(aUserFixture)
 end registerFixture
 
-(*! @abstract A more user-friendly name for @link registerFixture @/link. *)
+(*! @abstract A more user-friendly name for @link registerFixture() @/link. *)
 on TestSet(aUserFixture)
 	return registerFixtureOfKind(aUserFixture, makeAssertions(TestCase))
 end TestSet
@@ -1797,7 +1797,7 @@ on registerTestCase(aUserTestCase)
 	UnitTest(aUserTestCase)
 end registerTestCase
 
-(*! @abstract A more user-friendly name for @link registerTestCase @/link. *)
+(*! @abstract A more user-friendly name for @link registerTestCase() @/link. *)
 on UnitTest(aUserTestCase)
 	set aSuite to aUserTestCase's parent's suite
 	if aSuite is not ASUnitSentinel then aSuite's add(aUserTestCase)
@@ -1813,7 +1813,7 @@ end UnitTest
 		tests will have to be registered with a suite manually. You may define
 		your own suite class, inheriting from @link TestSuite @/link.
 		Each test script should define a <tt>suite</tt> property and initialize it
-		with @link makeTestSuite @/link, or with a @link TestSuite @/link subclass.
+		with @link makeTestSuite() @/link, or with a @link TestSuite @/link subclass.
 	*)
 on makeTestSuite(aName)
 	
@@ -1842,9 +1842,9 @@ on makeTestSuite(aName)
 			@abstract
 				Adds a test case or test suite to this suite.
 			@param
-				aTest <em>[script]</em> May be a @link TestCase @/link
-			 	or another @link TestSuite @/link containing other <tt>TestCase</tt>s
-				and <tt>TestSuite</tt>s.
+				aTest <em>[script]</em> May be a @link TestCase @/link object,
+			 	or a @link TestSuite @/link object containing other @link TestCase @/link
+				and @link TestSuite @/link objects.
 		*)
 		on add(aTest)
 			set end of my tests to aTest
