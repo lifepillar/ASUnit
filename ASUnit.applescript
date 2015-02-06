@@ -998,7 +998,11 @@ on makeAssertions(theParent)
 					end if
 				end try
 				
-				return "Unrecognized reference [please report as ASUnit bug]" -- We should never get here
+				try
+					return "a reference of class" & space & _pp(klass, depth + 1)
+				on error
+					return "Unrecognized reference [please report as ASUnit bug]" -- We should never get here
+				end try
 			end try
 			
 			-- Ok, not a reference. Let's try to get anObject's class

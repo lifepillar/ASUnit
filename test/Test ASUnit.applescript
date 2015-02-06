@@ -1392,6 +1392,22 @@ script |pretty print|
 		assertEqual("«object of class a reference to «object of class «object of class a reference to ...»»»", pp(SX))
 		assertEqual("«object of class «object of class a reference to «object of class «object of class ...»»»»", pp(SY))
 	end script
+	
+	script |Pretty print document|
+		property parent : UnitTest(me)
+		property x : missing value
+		
+		tell application "Finder"
+			try
+				set x to some window
+			on error
+				tell application "Finder" to make new Finder window
+				set x to the result
+			end try
+		end tell
+		assertEqual("a reference of class Finder window", pp(x))
+		assertEqual("a reference to a reference of class Finder window", pp(a reference to x))
+	end script
 end script -- pretty print
 
 script |Count assertions|
