@@ -131,7 +131,7 @@ end script
 script RunTests
 	property parent : Task(me)
 	property name : "test/run"
-	property description : "Buidl and run tests"
+	property description : "Build and run tests"
 	property printSuccess : false
 	
 	tell BuildTests to exec:{}
