@@ -165,25 +165,25 @@ which is printed when the assertion fails.
 A clarification is in order for the last three types of assertions.
 Consider the following two scripts:
 
-		script A
-			property class : "Father"
-		end script
+    script A
+      property class : "Father"
+    end script
 
-		script B
-			property parent : A
-			property class : "Child"
-		end script
+    script B
+      property parent : A
+      property class : "Child"
+    end script
 
 Then, these assertions must succeed:
 
-		assertInstanceOf("Father", A)
-		assertInstanceOf("Child", B)
-		refuteInstanceOf("Father", B)
-		assertKindOf("Father", B)
-		refuteInstanceOf(script, A)
-		assertKindOf(script, A)
-		assertInheritsFrom(A, B)
-		refuteInheritsFrom(B, A)
+    assertInstanceOf("Father", A)
+    assertInstanceOf("Child", B)
+    refuteInstanceOf("Father", B)
+    assertKindOf("Father", B)
+    refuteInstanceOf(script, A)
+    assertKindOf(script, A)
+    assertInheritsFrom(A, B)
+    refuteInheritsFrom(B, A)
 
 Related unit tests can be grouped together into a script that must
 inherit from `TestSet(me)`. One advantage of grouping
