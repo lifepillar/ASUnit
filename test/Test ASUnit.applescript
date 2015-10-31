@@ -1646,7 +1646,11 @@ script TestSetCocoaRef
 		property e : a reference to f
 		property f : a reference to (class of e)
 		
-		if current application's name is not "osascript" then
+		considering numeric strings
+			set osx_yosemite_or_earlier to system version of (system info) < "10.11.0"
+		end considering
+		
+		if osx_yosemite_or_earlier and current application's name is not "osascript" then
 			skip("This test causes Script Editor 2.7 (and possibly other AppleScript editors) to crash")
 		else
 			failIf(my assertCocoaReference, {e}, "e")
