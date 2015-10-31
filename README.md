@@ -33,6 +33,12 @@ Otherwise, you can install it manually with the following commands:
 
 In either case, the file `ASUnit.scptd` will be installed in `~/Library/Script Libraries/com.lifepillar`.
 
+**Note:** If you get an error like the following:
+
+    The file “ASUnit.applescript” couldn’t be opened because
+    the text encoding of its contents can’t be determined. (-2700)
+
+open the file with Script Editor, save it and try again.
 
 ### Importing ASUnit in a test script
 
