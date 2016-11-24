@@ -6,7 +6,7 @@ For a detailed description of the architecture of the original ASUnit framework,
 read the file `OldManual.md`. Some advanced features of ASUnit (e.g., custom
 TestCases and Visitors) are still described only in that document.
 
-ASUnit's source code is [thoroughly commented](http://lifepillar.com/ASUnit/)
+ASUnit's source code is [thoroughly commented](http://lifepillar.me/ASUnit/)
 using [HeaderDoc](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/HeaderDoc/intro/intro.html).
 
 ## Obtaining and installing
