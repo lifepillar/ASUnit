@@ -1461,13 +1461,15 @@ script ScriptEditorLogger
 			aColor <em>[RGB color]</em> The text color.
 	*)
 	on printColoredString(aString, aColor)
-		tell my textView
-			set selection to insertion point -1
-			set contents of selection to aString
-			if aColor is not missing value then Â
-				set color of contents of selection to aColor
-			set selection to insertion point -1
-		end tell
+		using terms from application id "com.apple.ScriptEditor2"
+			tell my textView
+				set selection to insertion point -1
+				set contents of selection to aString
+				if aColor is not missing value then Â
+					set color of contents of selection to aColor
+				set selection to insertion point -1
+			end tell
+		end using terms from
 	end printColoredString
 	
 	(*!
