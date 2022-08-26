@@ -27,9 +27,9 @@ To build and install ASUnit, you have two options. If you have installed
 Otherwise, you can install it manually with the following commands:
 
     cd ASUnit
-    osacompile -o ASUnit.scptd -x ASUnit.applescript
+    osacompile -o ASUnit.scpt -x ASUnit.applescript
     mkdir -p ~/Library/'Script Libraries'/com.lifepillar
-    mv ASUnit.scptd ~/Library/'Script Libraries/com.lifepillar'
+    mv ASUnit.scpt ~/Library/'Script Libraries/com.lifepillar'
 
 In either case, the file `ASUnit.scptd` will be installed in `~/Library/Script Libraries/com.lifepillar`.
 
