@@ -1,11 +1,11 @@
 (*!
- @header ASUnit
- 	An AppleScript testing framework.
- @abstract License: GNU GPL, see COPYING for details.
- @author Nir Soffer, Lifepillar
- @copyright 2013-2015 Lifepillar, 2006 Nir Soffer
- @version 1.2.4
- @charset utf-8
+	@header ASUnit
+		An AppleScript testing framework.
+	@abstract License: GNU GPL, see COPYING for details.
+	@author Nir Soffer, Lifepillar
+	@copyright 2013-2015 Lifepillar, 2006 Nir Soffer
+	@version 1.2.4
+	@charset utf-8
 *)
 
 (*! @abstract <em>[text]</em> ASUnit's name. *)
@@ -23,13 +23,12 @@ property TEST_SUCCEEDED_BUT_SHOULD_HAVE_FAILED : 1002
 (*! @abstract A property that refers to the top-level script. *)
 property TOP_LEVEL : me
 
-
 (*!
- @abstract
- 	Base class for observers.
- @discussion
- 	Observers are objects that may get notified by visitors.
- 	Concrete observers are supposed to inherit from this script.
+	@abstract
+		Base class for observers.
+	@discussion
+		Observers are objects that may get notified by visitors.
+		Concrete observers are supposed to inherit from this script.
 *)
 script Observer
 	property parent : AppleScript
@@ -41,12 +40,12 @@ script Observer
 end script -- Observer
 
 (*!
-	 @abstract
-	 	Base class for visitors.
-	 @discussion
-	 	This script defines the interface for a @link Visitor @/link object.
-	 	Subclasses are supposed to override some handlers.
-	 	To operate on a suite, you call the suite @link accept() @/link with a visitor.
+	@abstract
+			Base class for visitors.
+	@discussion
+			This script defines the interface for a @link Visitor @/link object.
+			Subclasses are supposed to override some handlers.
+			To operate on a suite, you call the suite @link accept() @/link with a visitor.
 		ASUnit defines only one visitor, @link TestResult @/link, which runs all the tests in a suite.
 		You may create other visitors to do filtered testing, custom reporting and like.
 		Your custom visitor should inherit from one of the framework visitors or from @link Visitor @/link.
@@ -101,10 +100,10 @@ on makeTestResult(aName)
 		end addObserver
 		
 		(*!
-			 @abstract
-			 	Runs the given test case or test suite.
-			 @param
-			 	aTest <em>[script]</em> May be a test case or a test suite.
+			@abstract
+					Runs the given test case or test suite.
+			@param
+					aTest <em>[script]</em> May be a test case or a test suite.
 		*)
 		on runTest(aTest)
 			set assertions to 0
@@ -134,17 +133,17 @@ on makeTestResult(aName)
 			@abstract
 				Notifies the observers that the given test has started.
 			@param
-			 	aTestCase <em>[script]</em> A test case.
+				aTestCase <em>[script]</em> A test case.
 		*)
 		on startTestCase(aTestCase)
 			notify({name:"start test case", test:aTestCase})
 		end startTestCase
 		
 		(*!
-			 @abstract
-			 	Runs a test case and collects results.
-			 @param
-			 	aTestCase <em>[script]</em> A test case.
+			@abstract
+					Runs a test case and collects results.
+			@param
+					aTestCase <em>[script]</em> A test case.
 		*)
 		on visitTestCase(aTestCase)
 			startTestCase(aTestCase)
@@ -168,7 +167,7 @@ on makeTestResult(aName)
 			@abstract
 				Registers the fact that the given test has succeeded and notifies the observers.
 			@param
-			 	aTestCase <em>[script]</em> A test case.
+				aTestCase <em>[script]</em> A test case.
 		*)
 		on addSuccess(aTestCase)
 			set end of my passed to aTestCase
@@ -179,7 +178,7 @@ on makeTestResult(aName)
 			@abstract
 				Registers the fact that the given test was skipped and notifies the observers.
 			@param
-			 	aTestCase <em>[script]</em> A test case.
+				aTestCase <em>[script]</em> A test case.
 			@param
 				message <em>[text]</em> The message to be shown to the user.
 	*)
@@ -192,7 +191,7 @@ on makeTestResult(aName)
 			@abstract
 				Registers the fact that the given test has failed and notifies the observers.
 			@param
-			 	aTestCase <em>[script]</em> A test case.
+				aTestCase <em>[script]</em> A test case.
 			@param
 				message <em>[text]</em> The message to be shown to the user.
 		*)
@@ -205,7 +204,7 @@ on makeTestResult(aName)
 			@abstract
 				Registers the fact that the given test raised an error and notifies the observers.
 			@param
-			 	aTestCase <em>[script]</em> A test case.
+				aTestCase <em>[script]</em> A test case.
 			@param
 				message <em>[text]</em> The message to be shown to the user.
 		*)
@@ -279,15 +278,15 @@ on makeTestResult(aName)
 end makeTestResult
 
 (*!
-	 @abstract
-	 	Factory handler to generate a test script.
-	 @discussion
-	 	This handler is used to create a script that inherits
-	 	from <code>theParent</code> and implements testing assertions.
-	 @param
-	 	theParent <em>[script]</em> The script to inherit from.
-	 @return
-	 	A script inheriting from the given script and implementing assertions.
+	@abstract
+		Factory handler to generate a test script.
+	@discussion
+		This handler is used to create a script that inherits
+		from <code>theParent</code> and implements testing assertions.
+	@param
+		theParent <em>[script]</em> The script to inherit from.
+	@return
+		A script inheriting from the given script and implementing assertions.
 	*)
 on makeAssertions(theParent)
 	
@@ -1461,7 +1460,7 @@ script ScriptEditorLogger
 			aColor <em>[RGB color]</em> The text color.
 	*)
 	on printColoredString(aString, aColor)
-		using terms from application id "com.apple.ScriptEditor2"
+		using terms from application "Script Editor"
 			tell my textView
 				set selection to insertion point -1
 				set contents of selection to aString
@@ -1577,7 +1576,7 @@ end script -- StdoutLogger
 (*!
 	@abstract
 		<em>[script]</em> Saves the current fixture while compiling
-	 	test cases in a fixture.
+		test cases in a fixture.
 *)
 property _currentFixture : missing value
 
@@ -1603,7 +1602,7 @@ property suite : ASUnitSentinel
 	@abstract
 		The base class for test components.
 	@discussion Test suites are a composite of components.
-	 	The basic unit is a single @link TestCase @/link, which may be tested as is.
+		The basic unit is a single @link TestCase @/link, which may be tested as is.
 		Several instances of @link TestCase @/link are grouped in a @link TestSuite @/link,
 		which can test all its tests. A @link TestSuite @/link object may contain other
 		@link TestSuite @/link objects, which may contain other suites.
@@ -1735,12 +1734,12 @@ end script -- TestCase
 	@discussion
 		A user test case inherits from the user fixture, which inherit from <tt>TestCase</tt>.
 		Test cases are automatically registered while compiling a script, using two simple rules:
-		
+
 			1. Each fixture should call <tt>registerFixture()</tt> to register the fixture
 				and set its parent to <tt>TestCase</tt>.
 			2. Each tests case should call <tt>registerTestCase()</tt> to register the test case
 				and set its parent to the current fixture.
-   
+
 		To create a fixture inheriting from a user defined <tt>TestCase</tt>,
 		create a script inheriting from <tt>TestCase</tt>, then create the concrete fixture script
 		inheriting from your custom <tt>TestCase</tt> script:
@@ -1750,7 +1749,7 @@ end script -- TestCase
 			property parent: makeFixture()
 			-- define your custom handlers here
 		end
-		
+
 		script |concrete fixture|
 			property parent: registerFixtureOfKind(me, |user defined TestCase|)
 			-- define your test cases here
@@ -1787,7 +1786,7 @@ end TestSet
 		Creates an unregistered @link TestCase @/link inheriting from the current fixture.
 	@discussion
 		You can run the test case or add it manually to a suite.
-	 	This feature is essential for ASUnit own unit tests.
+		This feature is essential for ASUnit own unit tests.
 *)
 on makeTestCase()
 	return my _currentFixture
@@ -1815,7 +1814,7 @@ end UnitTest
 		Creates a test suite.
 	@discussion
 		Each test script should define a <tt>suite</tt> property to support
-	 	automatic registration of test cases. If a suite is not defined,
+		automatic registration of test cases. If a suite is not defined,
 		tests will have to be registered with a suite manually. You may define
 		your own suite class, inheriting from @link TestSuite @/link.
 		Each test script should define a <tt>suite</tt> property and initialize it
@@ -1849,7 +1848,7 @@ on makeTestSuite(aName)
 				Adds a test case or test suite to this suite.
 			@param
 				aTest <em>[script]</em> May be a @link TestCase @/link object,
-			 	or a @link TestSuite @/link object containing other @link TestCase @/link
+				or a @link TestSuite @/link object containing other @link TestCase @/link
 				and @link TestSuite @/link objects.
 		*)
 		on add(aTest)
