@@ -122,9 +122,15 @@ script BuildTests
 	property parent : Task(me)
 	property name : "test/build"
 	property description : "Build tests, but do not run them"
+	property dir : POSIX path of Â
+		((path to library folder from user domain) as text) & "Script Libraries"
 	
-	owarn("Due to bugs in OS X Yosemite, building tests requires ASUnit to be installed.")
-	tell install to exec:{}
+	set targetDir to joinPath(dir, "com.lifepillar")
+	set targetPath to joinPath(targetDir, "ASUnit.scptd")
+	if not pathExists(targetPath) then
+		owarn("Due to bugs in OS X Yosemite, building tests requires ASUnit to be installed.")
+		tell install to exec:{}
+	end if
 	makeScriptBundle from "test/Test ASUnit.applescript" at "test" with overwriting
 end script
 
