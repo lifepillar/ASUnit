@@ -202,4 +202,4 @@ names, as it was done in the example above.
 
 GNU GPL, see COPYING for details.
 
-Copyright © 2013–2015 Lifepillar, 2006 Nir Soffer
+Copyright © 2013–2022 Lifepillar, 2006 Nir Soffer
