@@ -30,6 +30,7 @@ script BuildASUnit
 	property name : "asunit"
 	property description : "Build ASUnit"
 	
+	ohai("Creating script bundle...")
 	makeScriptBundle from "ASUnit.applescript" at "build" with overwriting
 end script
 
@@ -66,8 +67,7 @@ script doc
 		shell for markdown given options:{"-o", "OldManual.html", "OldManual.md"}
 		shell for markdown given options:{"-o", "README.html", "README.md"}
 	else
-		error markdown & space & "not found." & linefeed & Â
-			"PATH: " & (do shell script "echo $PATH")
+		owarn("`markdown` executable not found. Skipping conversion from Markdown to HTML.")
 	end if
 end script
 
@@ -85,8 +85,11 @@ script dist
 		(run script POSIX file (joinPath(workingDirectory(), "ASUnit.applescript")))
 	set dir to n & "-" & v
 	makePath(dir)
-	copyItems at {"build/ASUnit.scptd", "COPYING", "OldManual.html", "Documentation", Â
-		"README.html", "examples", "templates"} into dir
+	copyItems at {"build/ASUnit.scptd", "COPYING", "Documentation", "examples", "templates"} into dir
+	if pathExists("OldManual.html") and pathExists("README.html") then
+		copyItems at {"OldManual.html", "README.html"} into dir
+	end if
+	copyItems at {"OldManual.md", "README.md"} into dir
 end script
 
 script gzip
