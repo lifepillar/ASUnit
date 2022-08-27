@@ -1923,7 +1923,7 @@ on makeTestLoader()
 				An error if a test file does not have a <tt>suite</tt> property.
 		*)
 		on loadTestsFromFile(aFile)
-			-- TODO: Should check for comforming suite?
+			-- TODO: Should check for conforming suite?
 			set testScript to load script file (aFile as text)
 			try
 				set aSuite to testScript's suite
