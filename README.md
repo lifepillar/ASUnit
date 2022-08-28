@@ -192,9 +192,10 @@ Such handlers can be used for initialization of
 data structures and clean up operations, and help ensure that each unit test
 is not affected by the behavior of the others.
 
-Note that the names of the scripts are used in the output. For this reason,
-you may want to use short sentences enclosed between vertical bars as script
-names, as it was done in the example above.
+Note that the names of the scripts are used in the output. For this reason, you
+may want to use short sentences enclosed between vertical bars as script names,
+as it was done in the example above. Alternatively, you may define the `name`
+property of the script explicitly.
 
 
 ### License
