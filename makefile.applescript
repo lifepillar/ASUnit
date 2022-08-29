@@ -63,11 +63,12 @@ script doc
 	property markdown : missing value
 	
 	set markdown to which("markdown")
+	if markdown is missing value then set markdown to which("pandoc")
 	if markdown is not missing value then
 		shell for markdown given options:{"-o", "OldManual.html", "OldManual.md"}
 		shell for markdown given options:{"-o", "README.html", "README.md"}
 	else
-		owarn("`markdown` executable not found. Skipping conversion from Markdown to HTML.")
+		owarn("Skipping conversion from Markdown to HTML (no conversion tool found in $PATH).")
 	end if
 end script
 
