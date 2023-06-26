@@ -202,4 +202,4 @@ property of the script explicitly.
 
 GNU GPL, see COPYING for details.
 
-Copyright © 2013–2022 Lifepillar, 2006 Nir Soffer
+Copyright © 2013–2023 Lifepillar, 2006 Nir Soffer
