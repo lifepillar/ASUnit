@@ -2,7 +2,7 @@
 
 - - -
 **As of version 0.5, this document is partially obsolete.**
-**Please refer to the README.**
+**Please refer to the [README](README.md).**
 **The original version of this document is available [here].**
 
 [here]: http://nirs.freeshell.org/asunit/ "here"
