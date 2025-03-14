@@ -1,7 +1,7 @@
 (*!
 	@header ASUnit
 		An AppleScript testing framework.
-	@abstract License: GNU GPL, see COPYING for details.
+	@abstract License: GNU GPL-2.0, see COPYING for details.
 	@author Nir Soffer, Lifepillar
 	@copyright 2013-2023 Lifepillar, 2006 Nir Soffer
 	@version 1.2.4
@@ -88,7 +88,7 @@ on makeTestResult(aName)
 				Makes the given object an observer of TestResult.
 			@discussion
 				Observers of TestResult are sent notifications whenever
-				certain events occur, like starting a test, completing a test, etcÉ
+				certain events occur, like starting a test, completing a test, etcÃ‰
 				An observer should be an object that inherits from @link Observer @/link,
 				or at least conforms to its interface.
 			@param
@@ -532,7 +532,7 @@ on makeAssertions(theParent)
 			else
 				set min to e2
 			end if
-			if n > min * eps then Â
+			if n > min * eps then Ã‚
 				fail("The relative error is " & asText(n / min) & " > " & asText(eps))
 			countAssertion()
 		end assertEqualRelError
@@ -585,7 +585,7 @@ on makeAssertions(theParent)
 				fail("Can't get class of" & space & pp(expr) & ".")
 			end try
 			if k is not klass then
-				fail("Expected class: " & pp(klass) & linefeed & Â
+				fail("Expected class: " & pp(klass) & linefeed & Ã‚
 					"  Actual class: " & pp(k))
 			end if
 			countAssertion()
@@ -609,7 +609,7 @@ on makeAssertions(theParent)
 				countAssertion()
 				return
 			end try
-			if k is klass then Â
+			if k is klass then Ã‚
 				fail("Expected class of " & pp(expr) & linefeed & "to be different from " & pp(klass) & ".")
 			countAssertion()
 		end refuteInstanceOf
@@ -662,7 +662,7 @@ on makeAssertions(theParent)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(pp(expr) & space & "is not a kind of" & space & pp(klass) & "." & linefeed & Â
+			fail(pp(expr) & space & "is not a kind of" & space & pp(klass) & "." & linefeed & Ã‚
 				formatInheritanceChain(inheritanceChain))
 		end assertKindOf
 		
@@ -706,7 +706,7 @@ on makeAssertions(theParent)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(pp(expr) & space & "is a kind of" & space & pp(klass) & "." & linefeed & Â
+			fail(pp(expr) & space & "is a kind of" & space & pp(klass) & "." & linefeed & Ã‚
 				formatInheritanceChain(inheritanceChain))
 		end refuteKindOf
 		
@@ -745,7 +745,7 @@ on makeAssertions(theParent)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(pp(descendant) & space & "does not inherit from" & space & pp(ancestor) & "." & linefeed & Â
+			fail(pp(descendant) & space & "does not inherit from" & space & pp(ancestor) & "." & linefeed & Ã‚
 				formatInheritanceChain(inheritanceChain))
 		end assertInheritsFrom
 		
@@ -784,7 +784,7 @@ on makeAssertions(theParent)
 					error "Unexpected error: " & errMsg number errNum
 				end try
 			end repeat
-			fail(pp(anotherObj) & space & "inherits from" & space & pp(obj) & "." & linefeed & Â
+			fail(pp(anotherObj) & space & "inherits from" & space & pp(obj) & "." & linefeed & Ã‚
 				formatInheritanceChain(inheritanceChain))
 		end refuteInheritsFrom
 		
@@ -963,7 +963,7 @@ on makeAssertions(theParent)
 				try
 					set referencedObject to contents of anObject
 				on error
-					return "Çundefined referenceÈ"
+					return "Ã‡undefined referenceÃˆ"
 				end try
 				
 				if anObject is not equal to referencedObject then
@@ -971,7 +971,7 @@ on makeAssertions(theParent)
 				end if
 				
 				-- Is it an Objective-C reference?
-				if isCocoaRef(anObject) then return "Çclass ocidÈ"
+				if isCocoaRef(anObject) then return "Ã‡class ocidÃˆ"
 				
 				-- Is it a file reference?
 				try
@@ -980,7 +980,7 @@ on makeAssertions(theParent)
 					end if
 				end try
 				try
-					anObject as Çclass furlÈ
+					anObject as Ã‡class furlÃˆ
 					return "file" & space & asText(anObject)
 				end try
 				
@@ -1009,18 +1009,18 @@ on makeAssertions(theParent)
 				set klass to class of anObject
 			on error
 				try
-					return "Ç" & asText(anObject's name) & "È"
+					return "Ã‡" & asText(anObject's name) & "Ãˆ"
 				end try
 				try
-					return "Ç" & asText(anObject's id) & "'È"
+					return "Ã‡" & asText(anObject's id) & "'Ãˆ"
 				end try
 				try
-					return "Ç" & asText(anObject's description) & "È"
+					return "Ã‡" & asText(anObject's description) & "Ãˆ"
 				end try
 				try
 					return asText(anObject)
 				on error -- Give up
-					return "ÇobjectÈ"
+					return "Ã‡objectÃˆ"
 				end try
 			end try
 			
@@ -1037,7 +1037,7 @@ on makeAssertions(theParent)
 			end if
 			
 			if klass is record then
-				return "Çrecord " & _pp(anObject as list, depth + 1) & "È"
+				return "Ã‡record " & _pp(anObject as list, depth + 1) & "Ãˆ"
 			end if -- list, RGB color
 			
 			if klass is script or klass is application or klass is null then
@@ -1057,20 +1057,20 @@ on makeAssertions(theParent)
 				end try
 				
 				if klass is script then
-					return "Çscript" & space & res & "È"
+					return "Ã‡script" & space & res & "Ãˆ"
 				else
-					return "Çapplication" & space & res & "È"
+					return "Ã‡application" & space & res & "Ãˆ"
 				end if
 			end if -- script, application, null
 			
-			if klass is handler then return "ÇhandlerÈ"
+			if klass is handler then return "Ã‡handlerÃˆ"
 			
 			try
 				set res to asText(anObject)
 			on error
-				if klass is anObject then return "Çobject of class selfÈ"
+				if klass is anObject then return "Ã‡object of class selfÃˆ"
 				try
-					return "Çobject of class" & space & _pp(klass, depth + 1) & "È"
+					return "Ã‡object of class" & space & _pp(klass, depth + 1) & "Ãˆ"
 				on error errMsg
 					return "ERROR:" & errMsg -- We should never get here
 				end try
@@ -1082,19 +1082,19 @@ on makeAssertions(theParent)
 					set tid to AppleScript's text item delimiters
 					set AppleScript's text item delimiters to space
 					set x to text items of res
-					set AppleScript's text item delimiters to Çdata utxtFF65È as Unicode text -- small bullet
+					set AppleScript's text item delimiters to Ã‡data utxtFF65Ãˆ as Unicode text -- small bullet
 					set res to x as text
 					set AppleScript's text item delimiters to tab
 					set x to text items of res
-					set AppleScript's text item delimiters to Çdata utxt21A6È as Unicode text -- rightwards arrow from bar
+					set AppleScript's text item delimiters to Ã‡data utxt21A6Ãˆ as Unicode text -- rightwards arrow from bar
 					set res to x as text
 					set AppleScript's text item delimiters to linefeed
 					set x to text items of res
-					set AppleScript's text item delimiters to Çdata utxt00ACÈ as Unicode text -- not sign
+					set AppleScript's text item delimiters to Ã‡data utxt00ACÃˆ as Unicode text -- not sign
 					set res to x as text
 					set AppleScript's text item delimiters to return
 					set x to text items of res
-					set AppleScript's text item delimiters to Çdata utxt21A9È as Unicode text -- hook arrow
+					set AppleScript's text item delimiters to Ã‡data utxt21A9Ãˆ as Unicode text -- hook arrow
 					set res to x as text
 					set AppleScript's text item delimiters to tid
 				end if
@@ -1338,11 +1338,11 @@ script TestLogger
 			set elapsed to runSeconds()
 			set timeMsg to (elapsed as text) & " second"
 			if elapsed is not 1 then set timeMsg to timeMsg & "s"
-			set counts to {runCount() & " tests, ", Â
-				passCount() & " passed (", Â
-				assertionCount() & " assertions), ", Â
-				failureCount() & " failures, ", Â
-				errorCount() & " errors, ", Â
+			set counts to {runCount() & " tests, ", Ã‚
+				passCount() & " passed (", Ã‚
+				assertionCount() & " assertions), ", Ã‚
+				failureCount() & " failures, ", Ã‚
+				errorCount() & " errors, ", Ã‚
 				skipCount() & " skips."}
 		end tell
 		printLine("Finished in " & timeMsg & ".")
@@ -1464,7 +1464,7 @@ script ScriptEditorLogger
 			tell my textView
 				set selection to insertion point -1
 				set contents of selection to aString
-				if aColor is not missing value then Â
+				if aColor is not missing value then Ã‚
 					set color of contents of selection to aColor
 				set selection to insertion point -1
 			end tell
@@ -1528,7 +1528,7 @@ end script -- ConsoleLogger
 (*! @abstract Prints colorful test results to the standard output. *)
 script StdoutLogger
 	property parent : TestLogger
-	property esc : Çdata utxt001BÈ as Unicode text
+	property esc : Ã‡data utxt001BÃˆ as Unicode text
 	property black : esc & "[0;30m"
 	property blue : esc & "[0;34m"
 	property cyan : esc & "[0;36m"
@@ -1881,9 +1881,9 @@ on makeTestLoader()
 			compileSourceFiles(aFolder)
 			
 			tell application "Finder"
-				set testFiles to files of aFolder Â
-					where name starts with my prefix and name ends with Â
-					".scpt" and name does not start with Â
+				set testFiles to files of aFolder Ã‚
+					where name starts with my prefix and name ends with Ã‚
+					".scpt" and name does not start with Ã‚
 					"Test Load" and name does not start with "TestLoad"
 			end tell
 			repeat with aFile in testFiles
@@ -1896,16 +1896,16 @@ on makeTestLoader()
 		(*! @abstract Compiles all the test scripts in the specified folder. *)
 		on compileSourceFiles(aFolder)
 			tell application "Finder"
-				set testFiles to files of aFolder Â
-					where name starts with my prefix and name ends with Â
-					".applescript" and name does not start with Â
+				set testFiles to files of aFolder Ã‚
+					where name starts with my prefix and name ends with Ã‚
+					".applescript" and name does not start with Ã‚
 					"Test Load" and name does not start with "TestLoad"
 			end tell
 			repeat with aFile in testFiles
-				set outfile to (text 1 thru -(2 + (length of (aFile's name extension as text))) Â
+				set outfile to (text 1 thru -(2 + (length of (aFile's name extension as text))) Ã‚
 					of (aFile's name as text)) & ".scpt"
-				set cmd to "osacompile -d -o " & space & Â
-					quoted form of (POSIX path of (aFolder as alias) & outfile) & space & Â
+				set cmd to "osacompile -d -o " & space & Ã‚
+					quoted form of (POSIX path of (aFolder as alias) & outfile) & space & Ã‚
 					quoted form of POSIX path of (aFile as alias)
 				try
 					do shell script cmd
