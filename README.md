@@ -200,7 +200,7 @@ property of the script explicitly.
 
 ## Copyright
 
-Copyright © 2013–2023 Lifepillar, 2006 Nir Soffer
+Copyright © 2013–2025 Lifepillar, 2006 Nir Soffer
 
 ## License
 
