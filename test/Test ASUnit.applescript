@@ -2,7 +2,7 @@
 	@header ASUnit
 		ASUnit self tests.
 	@author NirSoffer, Lifepillar
-	@copyright 2013-2023 Lifepillar, 2006 Nir Soffer
+	@copyright 2013-2025 Lifepillar, 2006 Nir Soffer
 	@license GNU GPL-2.0, see COPYING for details.
 *)
 use scripting additions
