@@ -364,11 +364,11 @@ See the source of `TextTestRunner` for example.
 
 ## Copyright
 
-Copyright © 2006 Nir Soffer
+Copyright © 2006 Nir Soffer. All rights reserved.
 
 ## License
 
-[GNU GPL-2.0][GNU-GPLv2], see COPYING for details
+This software is licensed under the [GNU GPL-2.0][GNU-GPLv2] License, see COPYING for details.
 
 [//]: # (Cross reference section)
 
