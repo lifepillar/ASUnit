@@ -2,7 +2,7 @@
 	@header ASUnit
 		An AppleScript testing framework.
 	@author Nir Soffer, Lifepillar
-	@copyright 2013-2023 Lifepillar, 2006 Nir Soffer
+	@copyright 2013-2025 Lifepillar, 2006 Nir Soffer
 	@license GNU GPL-2.0, see COPYING for details.
 	@version 1.2.4
 	@charset utf-8
