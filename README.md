@@ -200,11 +200,11 @@ property of the script explicitly.
 
 ## Copyright
 
-Copyright © 2013–2025 Lifepillar, 2006 Nir Soffer
+Copyright © 2013–2025 Lifepillar, 2006 Nir Soffer. All rights reserved.
 
 ## License
 
-[GNU GPL-2.0][GNU-GPLv2], see COPYING for details.
+This software is licensed under the [GNU GPL-2.0][GNU-GPLv2] License, see COPYING for details.
 
 [//]: # (Cross reference section)
 
