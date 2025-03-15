@@ -366,4 +366,9 @@ See the source of `TextTestRunner` for example.
 
 **copyright:** © 2006 Nir Soffer
 
-**license:** GNU GPL, see COPYING for details
+**license:** [GNU GPL-2.0][GNU-GPLv2], see COPYING for details
+
+
+[//]: # (Cross reference section)
+
+[GNU-GPLv2]: https://opensource.org/license/gpl-2-0
