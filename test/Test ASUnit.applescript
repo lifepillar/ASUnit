@@ -1,9 +1,9 @@
 (*!
 	@header ASUnit
 		ASUnit self tests.
-	@abstract License: GNU GPL-2.0, see COPYING for details.
 	@author NirSoffer, Lifepillar
 	@copyright 2013-2023 Lifepillar, 2006 Nir Soffer
+	@license GNU GPL-2.0, see COPYING for details.
 *)
 use scripting additions
 use ASUnit : script "com.lifepillar/ASUnit"
