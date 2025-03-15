@@ -1,7 +1,7 @@
 (*!
 	@header ASUnit
 		ASUnit self tests.
-	@abstract License: GNU GPL, see COPYING for details.
+	@abstract License: GNU GPL-2.0, see COPYING for details.
 	@author NirSoffer, Lifepillar
 	@copyright 2013-2023 Lifepillar, 2006 Nir Soffer
 *)
@@ -88,7 +88,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			ASUnit's Observer's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"Observer should not define TEST_FAILED.")
 		assertEqual(AppleScript, ASUnit's Observer's parent)
 		assertEqual("Observer", ASUnit's Observer's name)
@@ -100,7 +100,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			ASUnit's Visitor's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"Visitor should not define TEST_FAILED.")
 		assertEqual(AppleScript, ASUnit's Visitor's parent)
 		assertEqual("Visitor", ASUnit's Visitor's name)
@@ -114,7 +114,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			TestResult's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"TestResult should not define TEST_FAILED.")
 		assertEqual(ASUnit's Visitor, TestResult's parent)
 		assertEqual("Name of test result", TestResult's name)
@@ -128,7 +128,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			TestAssertions's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"TestAssertions should not define TEST_FAILED.")
 		assertEqual(ASUnit's TestCase, TestAssertions's parent)
 		assertEqual("TestAssertions", TestAssertions's name)
@@ -140,7 +140,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			ASUnit's TestLogger's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"TestLogger should not define TEST_FAILED.")
 		assertEqual(ASUnit's Observer, ASUnit's TestLogger's parent)
 		assertEqual("TestLogger", ASUnit's TestLogger's name)
@@ -152,7 +152,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			ASUnit's ScriptEditorLogger's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"ScriptEditorLogger should not define TEST_FAILED.")
 		assertEqual(ASUnit's TestLogger, ASUnit's ScriptEditorLogger's parent)
 		assertEqual("ScriptEditorLogger", ASUnit's ScriptEditorLogger's name)
@@ -164,7 +164,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			ASUnit's ConsoleLogger's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"ConsoleLogger should not define TEST_FAILED.")
 		assertEqual(ASUnit's TestLogger, ASUnit's ConsoleLogger's parent)
 		assertEqual("ConsoleLogger", ASUnit's ConsoleLogger's name)
@@ -176,7 +176,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			ASUnit's ASUnitSentinel's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"ASUnitSentinel should not define TEST_FAILED.")
 		assertEqual(AppleScript, ASUnit's ASUnitSentinel's parent)
 		refuteInheritsFrom(ASUnit, ASUnit's ASUnitSentinel)
@@ -187,7 +187,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			ASUnit's TestComponent's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"TestComponent should not define TEST_FAILED.")
 		assertEqual(AppleScript, ASUnit's TestComponent's parent)
 		assertEqual("TestComponent", ASUnit's TestComponent's name)
@@ -199,7 +199,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			ASUnit's TestCase's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"TestCase should not define TEST_FAILED.")
 		assertEqual(ASUnit's TestComponent, ASUnit's TestCase's parent)
 		assertEqual("TestCase", ASUnit's TestCase's name)
@@ -213,7 +213,7 @@ script |ASUnit architecture|
 		script DoesNotInheritFromTopLevel
 			TestSuite's TEST_FAILED
 		end script
-		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, ¬
+		shouldRaise(cantGetVar, DoesNotInheritFromTopLevel, √Ç
 			"TestSuite should not define TEST_FAILED.")
 		assertEqual(ASUnit's TestComponent, TestSuite's parent)
 		assertEqual("Name of test suite", TestSuite's name)
@@ -380,7 +380,7 @@ script |assert instance of|
 		-- should be 'application' according to The AppleScript Language Guide
 		assertInstanceOf(null, application "Finder") -- AS bug?
 		set f to POSIX file "/Users/myUser/Feb_Meeting_Notes.rtf"
-		assertInstanceOf(«class furl», f) -- shouldn't be 'file'?
+		assertInstanceOf(√áclass furl√à, f) -- shouldn't be 'file'?
 		assertInstanceOf(grams, 1 as grams)
 		refuteInstanceOf(number, 1)
 		refuteInstanceOf(real, 1)
@@ -611,14 +611,14 @@ script skipping
 		property parent : UnitTest(me)
 		set aResult to |skipping test helper|'s test's test()
 		should(aResult's hasPassed(), "test failed")
-		should(aResult's skipCount() = 1, "skipCount ≠ 1")
+		should(aResult's skipCount() = 1, "skipCount ¬≠ 1")
 	end script
 	
 	script |skipping setup|
 		property parent : UnitTest(me)
 		set aResult to |skipping setup helper|'s test's test()
 		should(aResult's hasPassed(), "test failed")
-		should(aResult's skipCount() = 1, "skipCount ≠ 1")
+		should(aResult's skipCount() = 1, "skipCount ¬≠ 1")
 	end script
 	
 end script
@@ -675,21 +675,21 @@ script errors
 		property parent : UnitTest(me)
 		set aResult to |errors setUp helper|'s test's test()
 		shouldnt(aResult's hasPassed(), "error in setup ignored")
-		should(aResult's errorCount() = 1, "errorCount ≠ 1")
+		should(aResult's errorCount() = 1, "errorCount ¬≠ 1")
 	end script
 	
 	script |error in test case|
 		property parent : UnitTest(me)
 		set aResult to |errors test case helper|'s test's test()
 		shouldnt(aResult's hasPassed(), "error in test case ignored")
-		should(aResult's errorCount() = 1, "errorCount ≠ 1")
+		should(aResult's errorCount() = 1, "errorCount ¬≠ 1")
 	end script
 	
 	script |error in tearDown|
 		property parent : UnitTest(me)
 		set aResult to |errors tearDown helper|'s test's test()
 		shouldnt(aResult's hasPassed(), "error in tearDown ignored")
-		should(aResult's errorCount() = 1, "errorCount ≠ 1")
+		should(aResult's errorCount() = 1, "errorCount ¬≠ 1")
 	end script
 	
 end script
@@ -808,14 +808,14 @@ script |tearDown|
 	script |run after skipping test|
 		property parent : UnitTest(me)
 		set aResult to (|tearDown helper|'s |skipping test|'s test())
-		if aResult's skipCount() ≠ 1 then error "skipping test did not skip, can't test tearDown"
+		if aResult's skipCount() ¬≠ 1 then error "skipping test did not skip, can't test tearDown"
 		should(|tearDown helper|'s tearDownDidRun, name)
 	end script
 	
 	script |run after skip in setup|
 		property parent : UnitTest(me)
 		set aResult to (|skip in setUp helper|'s test's test())
-		if aResult's skipCount() ≠ 1 then error "there was no skip, can't test tearDown"
+		if aResult's skipCount() ¬≠ 1 then error "there was no skip, can't test tearDown"
 		should(|skip in setUp helper|'s tearDownDidRun, name)
 	end script
 	
@@ -885,11 +885,11 @@ script |analyze results|
 		aSuite's add(|analyze helper|'s |error|)
 		aSuite's add(|analyze helper|'s failure)
 		set aResult to aSuite's test()
-		should(aResult's runCount() = 5, "runCount ≠ 5")
-		should(aResult's passCount() = 2, "passCount ≠ 2")
-		should(aResult's skipCount() = 1, "skipCount ≠ 1")
-		should(aResult's failureCount() = 1, "failureCount ≠ 1")
-		should(aResult's errorCount() = 1, "errorCount ≠ 1")
+		should(aResult's runCount() = 5, "runCount ¬≠ 5")
+		should(aResult's passCount() = 2, "passCount ¬≠ 2")
+		should(aResult's skipCount() = 1, "skipCount ¬≠ 1")
+		should(aResult's failureCount() = 1, "failureCount ¬≠ 1")
+		should(aResult's errorCount() = 1, "errorCount ¬≠ 1")
 	end script
 	
 	script |suite with success should pass|
@@ -1043,11 +1043,11 @@ script |shouldRaise|
 			error number 9876
 		end script
 		
-		shouldRaise({1, 2, 3, 1000, 9876, 10000}, Raiser, ¬
+		shouldRaise({1, 2, 3, 1000, 9876, 10000}, Raiser, √Ç
 			"The script should have raised exception 9876.")
-		shouldRaise({}, Raiser, ¬
+		shouldRaise({}, Raiser, √Ç
 			"The script should have raised exception 9876")
-		shouldNotRaise({1, 2, 3, 1000, 10000}, Raiser, ¬
+		shouldNotRaise({1, 2, 3, 1000, 10000}, Raiser, √Ç
 			"The script has raised a forbidden exception.")
 	end script
 	
@@ -1142,18 +1142,18 @@ script |pretty print|
 	script |pp alias|
 		property parent : UnitTest(me)
 		assertEqual("alias" & space & ((path to me) as text), pp(path to me))
-		assertEqual("alias" & space & ((path to me) as text), ¬
+		assertEqual("alias" & space & ((path to me) as text), √Ç
 			pp(a reference to (path to me)))
-		assertEqual("alias" & space & ((path to me) as text), ¬
+		assertEqual("alias" & space & ((path to me) as text), √Ç
 			pp(a reference to (a reference to (path to me))))
 	end script
 	
 	script |pp application|
 		property parent : UnitTest(me)
-		assertEqual("«application com.apple.finder»", pp(application "Finder"))
-		assertEqual("«application com.apple.finder»", ¬
+		assertEqual("√áapplication com.apple.finder√à", pp(application "Finder"))
+		assertEqual("√áapplication com.apple.finder√à", √Ç
 			pp(a reference to (application "Finder")))
-		assertEqual("«application com.apple.finder»", ¬
+		assertEqual("√áapplication com.apple.finder√à", √Ç
 			pp(a reference to (a reference to (application "Finder"))))
 	end script
 	
@@ -1184,7 +1184,7 @@ script |pretty print|
 	script |pp constant|
 		property parent : UnitTest(me)
 		set x to missing value
-		assertEqual("«" & current application's name & "»", pp(current application))
+		assertEqual("√á" & current application's name & "√à", pp(current application))
 		assertEqual("missing value", pp(missing value))
 		assertEqual("missing value", pp(x))
 		assertEqual("null", pp(null))
@@ -1192,10 +1192,10 @@ script |pretty print|
 		assertEqual(pi as text, pp(pi))
 		assertEqual(quote, pp(quote))
 		assert(my showInvisibles, "Show invisibles should be turned on by default")
-		assertEqual(«data utxt00AC» as Unicode text, pp(linefeed)) -- not sign
-		assertEqual(«data utxt21A9» as Unicode text, pp(return)) -- hook arrow
-		assertEqual(«data utxtFF65» as Unicode text, pp(space)) -- small bullet
-		assertEqual(«data utxt21A6» as Unicode text, pp(tab)) -- rightwards arrow from bar
+		assertEqual(√ádata utxt00AC√à as Unicode text, pp(linefeed)) -- not sign
+		assertEqual(√ádata utxt21A9√à as Unicode text, pp(return)) -- hook arrow
+		assertEqual(√ádata utxtFF65√à as Unicode text, pp(space)) -- small bullet
+		assertEqual(√ádata utxt21A6√à as Unicode text, pp(tab)) -- rightwards arrow from bar
 		set my showInvisibles to false
 		assertEqual(linefeed, pp(linefeed))
 		assertEqual(return, pp(return))
@@ -1226,8 +1226,8 @@ script |pretty print|
 		on f(x, y)
 		end f
 		
-		assertEqual("«handler»", pp(f))
-		assertEqual("a reference to «handler»", pp(a reference to f))
+		assertEqual("√áhandler√à", pp(f))
+		assertEqual("a reference to √áhandler√à", pp(a reference to f))
 	end script
 	
 	script |pp list|
@@ -1235,7 +1235,7 @@ script |pretty print|
 		assertEqual("{}", pp({}))
 		assertEqual("{1, " & (3.4 as text) & ", abc}", pp({1, 3.4, "abc"}))
 		assertEqual("{1, {2, {3, 4}}, 5}", pp({1, {2, {3, 4}}, 5}))
-		assertEqual("{«script pp list», «record {1, {«application com.apple.finder», {1, 2}}, x}», true}", ¬
+		assertEqual("{√áscript pp list√à, √árecord {1, {√áapplication com.apple.finder√à, {1, 2}}, x}√à, true}", √Ç
 			pp({me, {a:1, b:{application "Finder", {1, 2}}, c:"x"}, true}))
 	end script
 	
@@ -1256,13 +1256,13 @@ script |pretty print|
 		assertEqual("file" & space & (f as text), pp(f))
 		assertEqual("a reference to file" & space & (f as text), pp(f1))
 		assertEqual("a reference to file" & space & (f as text), pp(a reference to f))
-		assertEqual("a reference to a reference to file" & space & (f as text), ¬
+		assertEqual("a reference to a reference to file" & space & (f as text), √Ç
 			pp(f2))
 	end script
 	
 	script |pp record|
 		property parent : UnitTest(me)
-		assertEqual("«record {1, 2, 3}»", pp({a:1, b:2, c:3}))
+		assertEqual("√árecord {1, 2, 3}√à", pp({a:1, b:2, c:3}))
 	end script
 	
 	script |pp script|
@@ -1273,11 +1273,11 @@ script |pretty print|
 			property id : "com.lifepillar.ppscript"
 		end script
 		
-		assertEqual("«script pp script»", pp(me))
-		assertEqual("«script pp script»", pp(a reference to me))
-		assertEqual("«script pp script»", pp(a reference to (a reference to me)))
-		assertEqual("«script com.lifepillar.ppscript»", pp(ppScript))
-		assertEqual("a reference to «script com.lifepillar.ppscript»", pp(ppScriptRef))
+		assertEqual("√áscript pp script√à", pp(me))
+		assertEqual("√áscript pp script√à", pp(a reference to me))
+		assertEqual("√áscript pp script√à", pp(a reference to (a reference to me)))
+		assertEqual("√áscript com.lifepillar.ppscript√à", pp(ppScript))
+		assertEqual("a reference to √áscript com.lifepillar.ppscript√à", pp(ppScriptRef))
 	end script
 	
 	script |pp script called 'missing value'|
@@ -1289,21 +1289,21 @@ script |pretty print|
 			property name : "missing value"
 		end script
 		
-		assertEqual("«script missing value»", pp(ppScript))
-		assertEqual("a reference to «script missing value»", pp(ppScriptRef))
+		assertEqual("√áscript missing value√à", pp(ppScript))
+		assertEqual("a reference to √áscript missing value√à", pp(ppScriptRef))
 	end script
 	
 	script |pp ASUnit|
 		property parent : UnitTest(me)
 		property scriptRef : a reference to TestASUnit's ASUnit
 		
-		assertEqual("a reference to «script" & space & ASUnit's id & "»", pp(TestASUnit's ASUnit))
-		assertEqual("a reference to a reference to «script" & space & ASUnit's id & "»", pp(scriptRef))
+		assertEqual("a reference to √áscript" & space & ASUnit's id & "√à", pp(TestASUnit's ASUnit))
+		assertEqual("a reference to a reference to √áscript" & space & ASUnit's id & "√à", pp(scriptRef))
 	end script
 	
 	script |pp text|
 		property parent : UnitTest(me)
-		assertEqual("àèìòùñ©", pp("àèìòùñ©"))
+		assertEqual("¬à¬è¬ì¬ò¬ù¬ñ¬©", pp("¬à¬è¬ì¬ò¬ù¬ñ¬©"))
 	end script
 	
 	script |pp unit types|
@@ -1357,7 +1357,7 @@ script |pretty print|
 			property class : me -- Weird, but legal
 		end script
 		
-		assertEqual("«object of class self»", pp(Self))
+		assertEqual("√áobject of class self√à", pp(Self))
 	end script
 	
 	script |pp recursive undefined|
@@ -1371,8 +1371,8 @@ script |pretty print|
 			property class : SX
 		end script
 		
-		assertEqual("«object of class «undefined reference»»", pp(SX))
-		assertEqual("«object of class «object of class «undefined reference»»»", pp(SY))
+		assertEqual("√áobject of class √áundefined reference√à√à", pp(SX))
+		assertEqual("√áobject of class √áobject of class √áundefined reference√à√à√à", pp(SY))
 	end script
 	
 	property PPRL : a reference to |pp recursive loop|
@@ -1389,8 +1389,8 @@ script |pretty print|
 		end script
 		
 		set my maxRecursionDepth to 4
-		assertEqual("«object of class a reference to «object of class «object of class a reference to ...»»»", pp(SX))
-		assertEqual("«object of class «object of class a reference to «object of class «object of class ...»»»»", pp(SY))
+		assertEqual("√áobject of class a reference to √áobject of class √áobject of class a reference to ...√à√à√à", pp(SX))
+		assertEqual("√áobject of class √áobject of class a reference to √áobject of class √áobject of class ...√à√à√à√à", pp(SY))
 	end script
 	
 	script |Pretty print document|
