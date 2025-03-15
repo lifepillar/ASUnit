@@ -362,12 +362,13 @@ single test cases results, you should set your runner as observer of the `TestRe
 See the source of `TextTestRunner` for example. 
 
 
+## Copyright
+
+Copyright © 2006 Nir Soffer
+
 ## License
 
-**copyright:** © 2006 Nir Soffer
-
-**license:** [GNU GPL-2.0][GNU-GPLv2], see COPYING for details
-
+[GNU GPL-2.0][GNU-GPLv2], see COPYING for details
 
 [//]: # (Cross reference section)
 
