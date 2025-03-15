@@ -1,9 +1,10 @@
 (*!
 	@header ASUnit
 		An AppleScript testing framework.
+	@abstract A free and open source unit testing tool for AppleScript.
 	@author Nir Soffer, Lifepillar
-	@copyright 2013-2025 Lifepillar, 2006 Nir Soffer
-	@license GNU GPL-2.0, see COPYING for details.
+	@copyright 2013-2025 Lifepillar, 2006 Nir Soffer. All rights reserved.
+	@license Licensed under GNU GPL-2.0 License, see COPYING for details.
 	@version 1.2.4
 	@charset utf-8
 *)
