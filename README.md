@@ -13,83 +13,91 @@ ASUnit's [API][ASUnit-api-ref] is thoroughly commented using [HeaderDoc][Wikiped
 Any single one of these three methods will get a copyh of the repository; your choice.
 
 To get ASUnit, you may clone the repository from GitHub:
-
-    git clone https://github.com/lifepillar/ASUnit.git
+```sh
+git clone https://github.com/lifepillar/ASUnit.git
+```
 
 Instead, you may download a compressed tarball from our [tagged commits][ASUnit-tags].
 The top choice is the most recent; make `VERSION` be the same as its major.minor.bug.
 For example, use these steps to download "1.2.4.tar.gz":
+```sh
+ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
+VERSION="1.2.4"
+TARBALL="${VERSION}.tar.gz"
+TARBALL_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
+cd ~/Downloads
+curl -O "${TARBALL_URL}"
+tar zxvf "${TARBALL}"
+```
 
-    ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
-    VERSION="1.2.4"
-    TARBALL="${VERSION}.tar.gz"
-    TARBALL_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
-    cd ~/Downloads
-    curl -O "${TARBALL_URL}"
-    tar zxvf "${TARBALL}"
-    
-Alternatively, you could download a `zip` archive if that's more your style.
+Alternatively, if you prefer working with `zip` archives, they're here too.
 For example, use these steps to download "1.2.4.zip":
+```sh
+ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
+VERSION="1.2.4"
+ZIPFILE="${VERSION}.zip"
+ZIPFILE_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${ZIPFILE}"
+cd ~/Downloads
+curl -O "${ZIPFILE_URL}"
+unzip "${ZIPFILE}"
+```
 
-    ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
-    VERSION="1.2.4"
-    ZIPFILE="${VERSION}.zip"
-    ZIPFILE_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
-    cd ~/Downloads
-    curl -O "${ZIPFILE_URL}"
-    unzip "${ZIPFILE}"
-    
 ## Installation
 
 To build and install ASUnit, you have two options. If you have installed
 [ASMake][], you may just write:
-
-    cd ASUnit
-    ./asmake install
+```sh
+cd ASUnit
+./asmake install
+```
 
 Otherwise, you can install it manually with the following commands:
+```sh
+SCRIPT_LIBS_DIR="${HOME}/Library/Script\ Libraries/"
+ASUNIT_LIB_DIR="${SCRIPT_LIBS_DIR}/com.lifepillar"
+mkdir -p "${ASUNIT_LIB_DIR}"
 
-    SCRIPT_LIBS_DIR="${HOME}/Library/Script\ Libraries/"
-    ASUNIT_LIB_DIR="${SCRIPT_LIBS_DIR}/com.lifepillar"
-    mkdir -p "${ASUNIT_LIB_DIR}"
-    cd ASUnit
-    ASUNIT_SRC="ASUnit.applescript"
-    ASUNIT_LIB="ASUnit.scptd"
-    osacompile -o ${ASUNIT_LIB} -x ${ASUNIT_SRC}
-    mv ${ASUNIT_LIB} "${ASUNIT_LIB_DIR}"
-
+cd ASUnit
+ASUNIT_SRC="ASUnit.applescript"
+ASUNIT_LIB="ASUnit.scptd"
+osacompile -o ${ASUNIT_LIB} -x ${ASUNIT_SRC}
+mv ${ASUNIT_LIB} "${ASUNIT_LIB_DIR}"
+```
 In either case, the file `ASUnit.scptd` will be installed in `"~/Library/Script Libraries/com.lifepillar"`.
 
 **Note:** If you get an error like the following:
-
+``` error
     The file “ASUnit.applescript” couldn’t be opened because
     the text encoding of its contents can’t be determined. (-2700)
-
+```
 open the file with Script Editor, save it and try again.
 
 ## Importing ASUnit in a test script
 
-To use ASUnit with AppleScript 2.3 or later (OS X 10.9 or later), add
-
+To use ASUnit, add one of the two choices to your script.
+If you have AppleScript 2.3 or later (OS X 10.9 "Mavericks" or later):
+```applescript
     property parent : script "com.lifepillar/ASUnit"
-
-at the top of your test script. For previous systems, use:
-
+```
+If you have an older pre-Mavericks system, use this instead:
+```applescript
     property parent : ¬
       load script (((path to library folder from user domain) as text) ¬
         & "Script Libraries:com.lifepillar:ASUnit.scptd") as alias
+```
 
 ## Running the tests
 
 Your test script must define a `suite` property and pass it to ASUnit's
 `autorun()` handler:
-
+```applescript
     property suite : makeTestSuite("A description for my tests")
     autorun(suite)
+```
 
 You may run the test script inside AppleScript Editor,
 from the command-line using `osascript`, or in other
-environments ([Script Debugger], AppleScriptObjC Explorer, …).
+environments ([Script Debugger][ScriptDebugger], `AppleScriptObjC Explorer`, …).
 
 When you have several test files, you may run them all at once using
 a _test loader_ (there is no need to compile them in advance).
@@ -120,7 +128,7 @@ in [OldManual.md](./OldManual.md) for an example.
 A test template is provided in the `templates` folder.
 See the `examples` folder for complete examples.
 The general structure of a test script is as follows:
-
+```applescript
     script |One test set|
       property parent : TestSet(me)
 
@@ -150,6 +158,7 @@ The general structure of a test script is as follows:
       property parent : TestSet(me)
        -- More tests…
     end
+```
 
 Each unit test is a script that inherits from `UnitTest(me)`. Inside such scripts,
 you may use a number of assertion handlers:
@@ -190,7 +199,7 @@ which is printed when the assertion fails.
 
 A clarification is in order for the last three types of assertions.
 Consider the following two scripts:
-
+```applescript
     script A
       property class : "Father"
     end script
@@ -199,9 +208,10 @@ Consider the following two scripts:
       property parent : A
       property class : "Child"
     end script
+```
 
 Then, these assertions must succeed:
-
+```applescript
     assertInstanceOf("Father", A)
     assertInstanceOf("Child", B)
     refuteInstanceOf("Father", B)
@@ -210,6 +220,7 @@ Then, these assertions must succeed:
     assertKindOf(script, A)
     assertInheritsFrom(A, B)
     refuteInheritsFrom(B, A)
+```
 
 Related unit tests can be grouped together into a script that must
 inherit from `TestSet(me)`. One advantage of grouping
@@ -223,7 +234,6 @@ Note that the names of the scripts are used in the output. For this reason, you
 may want to use short sentences enclosed between vertical bars as script names,
 as it was done in the example above. Alternatively, you may define the `name`
 property of the script explicitly.
-
 
 ## Copyright
 
