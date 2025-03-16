@@ -1,37 +1,64 @@
-## ASUnit, the AppleScript unit testing framework
+# ASUnit
+### the AppleScript unit testing framework
 
-[ASUnit](http://nirs.freeshell.org/asunit/) is a unit testing framework for
-AppleScript originally written by Nir Soffer.
+[ASUnit][] is a unit testing framework for AppleScript; the original [codebase][ASUnit-original] was written by Nir Soffer.
 For a detailed description of the architecture of the original ASUnit framework,
 read the file `OldManual.md`. Some advanced features of ASUnit (e.g., custom
 TestCases and Visitors) are still described only in that document.
 
-ASUnit's source code is [thoroughly commented](http://lifepillar.me/ASUnit/)
-using HeaderDoc.
+ASUnit's [API][ASUnit-api-ref] is thoroughly commented using [HeaderDoc][Wikipedia-HeaderDoc].
 
-## Obtaining and installing
+## Download
 
-To get ASUnit, you may clone it from the GitHub repository:
+Any single one of these three methods will get a copyh of the repository; your choice.
+
+To get ASUnit, you may clone the repository from GitHub:
 
     git clone https://github.com/lifepillar/ASUnit.git
 
-Alternatively, you may download a [tarball](https://github.com/lifepillar/ASUnit/releases)
-containing the source code.
+Instead, you may download a compressed tarball from our [tagged commits][ASUnit-tags].
+The top choice is the most recent; make `VERSION` be the same as its major.minor.bug.
+For example, use these steps to download "1.2.4.tar.gz":
+
+    ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
+    VERSION="1.2.4"
+    TARBALL="${VERSION}.tar.gz"
+    TARBALL_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
+    cd ~/Downloads
+    curl -O "${TARBALL_URL}"
+    tar zxvf "${TARBALL}"
+    
+Alternatively, you could download a `zip` archive if that's more your style.
+For example, use these steps to download "1.2.4.zip":
+
+    ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
+    VERSION="1.2.4"
+    ZIPFILE="${VERSION}.zip"
+    ZIPFILE_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
+    cd ~/Downloads
+    curl -O "${ZIPFILE_URL}"
+    unzip "${ZIPFILE}"
+    
+## Installation
 
 To build and install ASUnit, you have two options. If you have installed
-[ASMake](https://github.com/lifepillar/ASMake), you may just write:
+[ASMake][], you may just write:
 
     cd ASUnit
     ./asmake install
 
 Otherwise, you can install it manually with the following commands:
 
+    SCRIPT_LIBS_DIR="${HOME}/Library/Script\ Libraries/"
+    ASUNIT_LIB_DIR="${SCRIPT_LIBS_DIR}/com.lifepillar"
+    mkdir -p "${ASUNIT_LIB_DIR}"
     cd ASUnit
-    osacompile -o ASUnit.scptd -x ASUnit.applescript
-    mkdir -p ~/Library/'Script Libraries'/com.lifepillar
-    mv ASUnit.scptd ~/Library/Script\ Libraries/com.lifepillar
+    ASUNIT_SRC="ASUnit.applescript"
+    ASUNIT_LIB="ASUnit.scptd"
+    osacompile -o ${ASUNIT_LIB} -x ${ASUNIT_SRC}
+    mv ${ASUNIT_LIB} "${ASUNIT_LIB_DIR}"
 
-In either case, the file `ASUnit.scptd` will be installed in `~/Library/Script Libraries/com.lifepillar`.
+In either case, the file `ASUnit.scptd` will be installed in `"~/Library/Script Libraries/com.lifepillar"`.
 
 **Note:** If you get an error like the following:
 
@@ -40,7 +67,7 @@ In either case, the file `ASUnit.scptd` will be installed in `~/Library/Script L
 
 open the file with Script Editor, save it and try again.
 
-### Importing ASUnit in a test script
+## Importing ASUnit in a test script
 
 To use ASUnit with AppleScript 2.3 or later (OS X 10.9 or later), add
 
@@ -52,8 +79,7 @@ at the top of your test script. For previous systems, use:
       load script (((path to library folder from user domain) as text) ¬
         & "Script Libraries:com.lifepillar:ASUnit.scptd") as alias
 
-
-### Running the tests
+## Running the tests
 
 Your test script must define a `suite` property and pass it to ASUnit's
 `autorun()` handler:
@@ -65,11 +91,11 @@ You may run the test script inside AppleScript Editor,
 from the command-line using `osascript`, or in other
 environments ([Script Debugger], AppleScriptObjC Explorer, …).
 
-[Script Debugger]: https://www.latenightsw.com "Script Debugger"
-
 When you have several test files, you may run them all at once using
 a _test loader_ (there is no need to compile them in advance).
 See `Test Loader.applescript` in the `examples` folder.
+
+### Logging
 
 By default, if you run the tests in AppleScript Editor the output is written
 to a new AppleScript Editor document; if you run the tests in the Terminal
@@ -89,8 +115,7 @@ generate the output you want. A more advanced alternative consists in
 subclassing _Visitor_: see the section _Creating new operations on a test suite_
 in [OldManual.md](./OldManual.md) for an example.
 
-
-### Writing the tests
+## Writing the tests
 
 A test template is provided in the `templates` folder.
 See the `examples` folder for complete examples.
@@ -128,6 +153,8 @@ The general structure of a test script is as follows:
 
 Each unit test is a script that inherits from `UnitTest(me)`. Inside such scripts,
 you may use a number of assertion handlers:
+
+### Assertions
 
 - `skip(msg)`: skips the current test.
 - `fail(msg)`: makes the test unconditionally fail.
@@ -208,4 +235,14 @@ This software is licensed under the [GNU GPL-2.0][GNU-GPLv2] License, see COPYIN
 
 [//]: # (Cross reference section)
 
+[ASMake]: https://github.com/lifepillar/ASMake/
+[ASUnit]: https://github.com/lifepillar/ASUnit/
+[ASUnit-api-ref]: https://lifepillar.me/ASUnit/
+[ASUnit-tags]: https://github.com/lifepillar/ASUnit/tags
+[ASUnit-original]: http://nirs.freeshell.org/asunit/
+[Console-doc]: https://support.apple.com/guide/console/welcome/mac
 [GNU-GPLv2]: https://opensource.org/license/gpl-2-0
+[HeaderDoc-doc]: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/HeaderDoc/intro/intro.html
+[ScriptDebugger]: https://www.latenightsw.com "Script Debugger"
+[ScriptEditor-doc]: https://support.apple.com/guide/script-editor/welcome/mac
+[Wikipedia-HeaderDoc]: https://en.wikipedia.org/wiki/HeaderDoc
