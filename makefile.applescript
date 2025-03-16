@@ -1,7 +1,7 @@
 #!/usr/bin/osascript
 use AppleScript version "2.4"
 use scripting additions
-use ASMake : script "com.lifepillar/ASMake" version "0.2.1"
+use ASMake : script "com.lifepillar/ASMake" version "0.2.2"
 property parent : ASMake
 property TopLevel : me
 
@@ -31,7 +31,7 @@ script BuildASUnit
 	property description : "Build ASUnit"
 	
 	ohai("Creating script bundle...")
-	makeScriptBundle from "ASUnit.applescript" at "build" with overwriting
+	makeScriptBundle from "ASUnit.applescript" at "build" with overwriting given encoding: my NSMacOSRomanStringEncoding
 end script
 
 script build
