@@ -75,6 +75,12 @@ In either case, the file `ASUnit.scptd` will be installed in `~/Library/Script L
 >
 > *The file “ASUnit.applescript” couldn’t be opened because
 > the text encoding of its contents can’t be determined. (-2700)*
+>
+> You can confirm the desired text encoding with this command, shown with shell prompt:
+> ```console
+> $ xattr -p com.apple.TextEncoding ASUnit.applescript
+> macintosh;0
+>```
 
 ## Importing ASUnit
 
