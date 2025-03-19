@@ -21,39 +21,39 @@ manual](./OldManual.md); some advanced features of **ASUnit** (e.g., custom
 
 1. To get **ASUnit**, you may clone the repository from GitHub:
 
-   ```sh
-   git clone https://github.com/lifepillar/ASUnit.git
-   ```
+```sh
+git clone https://github.com/lifepillar/ASUnit.git
+```
 
    This is the preferred choice if you plan to contribute to the code.
 
 2. Instead, if you just want to make use of the framework, you may prefer to
    download [a compressed tarball][ASUnit-tags]. To do that from the terminal:
 
-   ```sh
-   VERSION="1.2.4"
-   TARBALL="${VERSION}.tar.gz"
-   ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
-   TARBALL_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
-   cd ~/Downloads
-   curl -O "${TARBALL_URL}"
-   tar zxvf "${TARBALL}"
-   ```
+```sh
+VERSION="1.2.4"
+TARBALL="${VERSION}.tar.gz"
+ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
+TARBALL_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
+cd ~/Downloads
+curl -O "${TARBALL_URL}"
+tar zxvf "${TARBALL}"
+```
 
    Set `VERSION` above to the version you want to download.
 
 3. Alternatively, if you prefer working with `zip` archives, they're here
    too. For example, use these steps to download "1.2.4.zip":
 
-    ```sh
-    VERSION="1.2.4"
-    ZIPFILE="${VERSION}.zip"
-    ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
-    ZIPFILE_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${ZIPFILE}"
-    cd ~/Downloads
-    curl -O "${ZIPFILE_URL}"
-    unzip "${ZIPFILE}"
-    ```
+```sh
+VERSION="1.2.4"
+ZIPFILE="${VERSION}.zip"
+ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
+ZIPFILE_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${ZIPFILE}"
+cd ~/Downloads
+curl -O "${ZIPFILE_URL}"
+unzip "${ZIPFILE}"
+```
 
 
 ## Install
@@ -62,12 +62,14 @@ To build and install **ASUnit**, you can do that in two different ways.
 
 If you use `AppleScript` 2.4 (OS X 10.10 "Yosemite") or later and have installed
 [ASMake][], you may just write:
+
 ```sh
 cd ASUnit
 ./asmake install
 ```
 
 Otherwise, you can install it manually with the following commands:
+
 ```sh
 SCRIPT_LIBS_DIR="${HOME}/Library/Script\ Libraries/"
 ASUNIT_LIB_DIR="${SCRIPT_LIBS_DIR}/com.lifepillar"
