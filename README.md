@@ -15,7 +15,7 @@ To get ASUnit, you may clone it from the GitHub repository:
 
     git clone https://github.com/lifepillar/ASUnit.git
 
-Alternatively, you may download a [tarball](https://github.com/lifepillar/ASUnit/releases)
+Alternatively, you may download a [tarball](https://github.com/lifepillar/ASUnit/tags)
 containing the source code.
 
 To build and install ASUnit, you have two options. If you have installed
