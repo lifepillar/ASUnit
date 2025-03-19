@@ -1,9 +1,10 @@
 (*!
 	@header ASUnit
 		ASUnit self tests.
-	@abstract License: GNU GPL, see COPYING for details.
+	@abstract Unit tests for this AppleScript source unit testing tool.
 	@author NirSoffer, Lifepillar
-	@copyright 2013-2023 Lifepillar, 2006 Nir Soffer
+	@copyright 2013 Lifepillar, 2006 Nir Soffer. All rights reserved.
+	Licensed under GNU GPL-2.0 License, see COPYING for details.
 *)
 use scripting additions
 use ASUnit : script "com.lifepillar/ASUnit"

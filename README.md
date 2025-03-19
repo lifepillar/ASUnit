@@ -198,8 +198,14 @@ as it was done in the example above. Alternatively, you may define the `name`
 property of the script explicitly.
 
 
-### License
+## Copyright
 
-GNU GPL, see COPYING for details.
+Copyright © 2013 Lifepillar, 2006 Nir Soffer. All rights reserved.
 
-Copyright © 2013–2023 Lifepillar, 2006 Nir Soffer
+## License
+
+This software is licensed under the [GNU GPL-2.0][GNU-GPLv2] License, see COPYING for details.
+
+[//]: # (Cross reference section)
+
+[GNU-GPLv2]: https://opensource.org/license/gpl-2-0
