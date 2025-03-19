@@ -1,3 +1,5 @@
+![ASUnit Logo](./assets/asunit_logo-208x64.png)
+
 # ASUnit
 
 [ASUnit][] is a unit testing framework for `AppleScript` derived from the original [codebase][ASUnit-original][^1].
