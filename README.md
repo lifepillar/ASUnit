@@ -40,7 +40,7 @@ curl -O "${TARBALL_URL}"
 tar zxvf "${TARBALL}"
 ```
 
-   Set `VERSION` above to the version you want to download.
+   Change `VERSION` above to match the version you want to download.
 
 3. Alternatively, if you prefer working with `zip` archives, they're here
    too. For example, use these steps to download "1.2.4.zip":
@@ -58,17 +58,17 @@ unzip "${ZIPFILE}"
 
 ## Install
 
-To build and install **ASUnit**, you can do that in two different ways.
+To build and install **ASUnit**, you can proceed in two different ways.
 
-If you use `AppleScript` 2.4 (OS X 10.10 "Yosemite") or later and have installed
-[ASMake][], you may just write:
+1. If you use `AppleScript` 2.4 (OS X 10.10 "Yosemite") or later and have
+installed [ASMake][], you may just write:
 
 ```sh
 cd ASUnit
 ./asmake install
 ```
 
-Otherwise, you can install it manually with the following commands:
+2. Otherwise, you can install it manually with the following commands:
 
 ```sh
 SCRIPT_LIBS_DIR="${HOME}/Library/Script\ Libraries/"
@@ -110,15 +110,15 @@ in order to import the library.
 If you have `AppleScript` 2.3 (OS X 10.9 "Mavericks") or later, use this:
 
 ```applescript
-    property parent : script "com.lifepillar/ASUnit"
+property parent : script "com.lifepillar/ASUnit"
 ```
 
 Otherwise, if you have an older, pre-Mavericks system, use this instead:
 
 ```applescript
-    property parent : ¬
-      load script (((path to library folder from user domain) as text) ¬
-        & "Script Libraries:com.lifepillar:ASUnit.scptd") as alias
+property parent : ¬
+  load script (((path to library folder from user domain) as text) ¬
+    & "Script Libraries:com.lifepillar:ASUnit.scptd") as alias
 ```
 
 
@@ -128,12 +128,12 @@ Your test script must define a `suite` property and pass it to **ASUnit**'s
 `autorun()` handler:
 
 ```applescript
-    property suite : makeTestSuite("A description for my tests")
-    autorun(suite)
+property suite : makeTestSuite("A description for my tests")
+autorun(suite)
 ```
 
 You may run the test script inside *Script Editor*, from the command-line using
-`osascript`,<br> or in other environments (e.g., [Script
+`osascript`, or in other environments (e.g., [Script
 Debugger][ScriptDebugger], *AppleScriptObjC Explorer*).
 
 When you have several test files, you may run them all at once using a *test
@@ -167,8 +167,8 @@ manual](./OldManual.md#creating-new-operations-on-a-test-suite).
 ## Writing Tests
 
 A test template is provided in the [templates](./templates/) folder. See the
-[examples](./examples/) folder for complete examples.<br> The general structure
-of a test script is as follows:
+[examples](./examples/) folder for complete examples. The general structure of
+a test script is as follows:
 
 ```applescript
     script |One test set|
