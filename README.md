@@ -98,8 +98,9 @@ In either case, the file `ASUnit.scptd` will be installed in
 >
 > ```console
 > $ xattr -p com.apple.TextEncoding ASUnit.applescript
-> macintosh;0
 > ```
+>
+>The expected output should be `macintosh;0`.
 
 
 ## Importing ASUnit
