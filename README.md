@@ -1,83 +1,130 @@
-## ASUnit, the AppleScript unit testing framework
+# ASUnit
 
-[ASUnit](http://nirs.freeshell.org/asunit/) is a unit testing framework for
-AppleScript originally written by Nir Soffer.
-For a detailed description of the architecture of the original ASUnit framework,
-read the file `OldManual.md`. Some advanced features of ASUnit (e.g., custom
-TestCases and Visitors) are still described only in that document.
+[ASUnit][] is a unit testing framework for `AppleScript` derived from the original [codebase][ASUnit-original][^1].
+For a detailed description of the architecture of the original **ASUnit** framework,
+read the [old manual](./OldManual.md); some advanced features of **ASUnit** (e.g., custom `TestCase` and `Visitor`)
+are still described *only* in that document.
 
-ASUnit's source code is [thoroughly commented](http://lifepillar.me/ASUnit/)
-using HeaderDoc.
+**ASUnit**'s [API][ASUnit-api-ref] is now thoroughly commented using [HeaderDoc][Wikipedia-HeaderDoc].
 
-## Obtaining and installing
+## Download
 
-To get ASUnit, you may clone it from the GitHub repository:
+> [!NOTE]
+> Any single one of these three methods will get a copy of the repository; your choice -- pick one.
 
-    git clone https://github.com/lifepillar/ASUnit.git
+1) To get **ASUnit**, you may clone the repository from GitHub:
+```sh
+git clone https://github.com/lifepillar/ASUnit.git
+```
 
-Alternatively, you may download a [tarball](https://github.com/lifepillar/ASUnit/tags)
-containing the source code.
+2) Instead, if you just want to make use of the framework, you may prefer to download a
+compressed tarball from our [tagged commits][ASUnit-tags].
+The first choice (at top of list) is the most recent; make `VERSION` be the same
+as its major.minor.bug tagged commit.<br>
+For example, use these steps to download "1.2.4.tar.gz":
+```sh
+VERSION="1.2.4"
+TARBALL="${VERSION}.tar.gz"
+ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
+TARBALL_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
+cd ~/Downloads
+curl -O "${TARBALL_URL}"
+tar zxvf "${TARBALL}"
+```
 
-To build and install ASUnit, you have two options. If you have installed
-[ASMake](https://github.com/lifepillar/ASMake), you may just write:
+3) Alternatively, if you prefer working with `zip` archives, they're here too.<br>
+For example, use these steps to download "1.2.4.zip":
+```sh
+VERSION="1.2.4"
+ZIPFILE="${VERSION}.zip"
+ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
+ZIPFILE_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${ZIPFILE}"
+cd ~/Downloads
+curl -O "${ZIPFILE_URL}"
+unzip "${ZIPFILE}"
+```
 
-    cd ASUnit
-    ./asmake install
+## Install
+
+To build and install **ASUnit**, you can do that in two different ways.
+
+If you use `AppleScript` 2.4 (OS X 10.10 "Yosemite") or later and have installed
+[ASMake][], you may just write:
+```sh
+cd ASUnit
+./asmake install
+```
 
 Otherwise, you can install it manually with the following commands:
+```sh
+SCRIPT_LIBS_DIR="${HOME}/Library/Script\ Libraries/"
+ASUNIT_LIB_DIR="${SCRIPT_LIBS_DIR}/com.lifepillar"
+mkdir -p "${ASUNIT_LIB_DIR}"
 
-    cd ASUnit
-    osacompile -o ASUnit.scptd -x ASUnit.applescript
-    mkdir -p ~/Library/'Script Libraries'/com.lifepillar
-    mv ASUnit.scptd ~/Library/Script\ Libraries/com.lifepillar
-
+cd ASUnit
+ASUNIT_TEXT="ASUnit.applescript"
+ASUNIT_BNDL="ASUnit.scptd"
+osacompile -o ${ASUNIT_BNDL} -x ${ASUNIT_TEXT}
+mv ${ASUNIT_BNDL} "${ASUNIT_LIB_DIR}"
+```
 In either case, the file `ASUnit.scptd` will be installed in `~/Library/Script Libraries/com.lifepillar`.
 
-**Note:** If you get an error like the following:
+> [!WARNING]
+> If you get an error about text encoding (like the one below),
+> open the file with `Script Editor`[^2], save it and try again.
+>
+> *The file “ASUnit.applescript” couldn’t be opened because
+> the text encoding of its contents can’t be determined. (-2700)*
+>
+> You can confirm the desired text encoding with this command, shown with shell prompt:
+> ```console
+> $ xattr -p com.apple.TextEncoding ASUnit.applescript
+> macintosh;0
+>```
 
-    The file “ASUnit.applescript” couldn’t be opened because
-    the text encoding of its contents can’t be determined. (-2700)
+## Importing ASUnit
 
-open the file with Script Editor, save it and try again.
+To use **ASUnit**, add *one* of the two properties below to your script
+in order to import the library.
 
-### Importing ASUnit in a test script
-
-To use ASUnit with AppleScript 2.3 or later (OS X 10.9 or later), add
-
+If you have `AppleScript` 2.3 (OS X 10.9 "Mavericks") or later, use this:
+```applescript
     property parent : script "com.lifepillar/ASUnit"
-
-at the top of your test script. For previous systems, use:
-
+```
+Otherwise, if you have an older, pre-Mavericks system, use this instead:
+```applescript
     property parent : ¬
       load script (((path to library folder from user domain) as text) ¬
         & "Script Libraries:com.lifepillar:ASUnit.scptd") as alias
+```
 
+## Running Tests
 
-### Running the tests
-
-Your test script must define a `suite` property and pass it to ASUnit's
+Your test script must define a `suite` property and pass it to **ASUnit**'s
 `autorun()` handler:
-
+```applescript
     property suite : makeTestSuite("A description for my tests")
     autorun(suite)
+```
 
-You may run the test script inside AppleScript Editor,
-from the command-line using `osascript`, or in other
-environments ([Script Debugger], AppleScriptObjC Explorer, …).
-
-[Script Debugger]: https://www.latenightsw.com "Script Debugger"
+You may run the test script inside `Script Editor`,
+from the command-line using `osascript`,<br>
+or in other environments (e.g., [Script Debugger][ScriptDebugger], `AppleScriptObjC Explorer`).
 
 When you have several test files, you may run them all at once using
-a _test loader_ (there is no need to compile them in advance).
-See `Test Loader.applescript` in the `examples` folder.
+a *test loader* (there is no need<br> to compile them in advance).
+See `Test Loader.applescript` in the [examples](./examples/) folder.
 
-By default, if you run the tests in AppleScript Editor the output is written
-to a new AppleScript Editor document; if you run the tests in the Terminal
-the output is sent to stdout; otherwise, the output is sent to the current
-application's console through `log` statements. You may, however, change this
-by setting the `suite's loggers` property. The value of this property
-must be a list of _loggers_ (you may send the output to more than one
-destination). Currently, ASUnit defines three loggers:
+### Logging
+
+By default, if you run the tests in [Script Editor][ScriptEditor-doc], the output is written
+to a new `Script Editor` document;<br> if you run the tests in the [Terminal][Terminal-doc],
+the output is sent to stdout;<br> otherwise, the output is sent to the current
+system logger through `log` statements; access them via [Console][Console-doc].
+
+You may, however, change this by setting the `suite's loggers` property. The value of this property
+must be a list of *loggers* (you may send the output to more than one
+destination). Currently, **ASUnit** defines three loggers:
 
 - `AppleScriptEditorLogger`: sends colored output to an AS Editor window;
 - `StdoutLogger`: sends colored output to stdout.
@@ -86,16 +133,14 @@ destination). Currently, ASUnit defines three loggers:
 Defining custom loggers should be fairly easy: you simply need to define a
 script that inherits from `TestLogger` and override the `print…()` handlers to
 generate the output you want. A more advanced alternative consists in
-subclassing _Visitor_: see the section _Creating new operations on a test suite_
-in [OldManual.md](./OldManual.md) for an example.
+subclassing *Visitor*: see an example in the [old manual](./OldManual.md#creating-new-operations-on-a-test-suite).
 
+## Writing Tests
 
-### Writing the tests
-
-A test template is provided in the `templates` folder.
-See the `examples` folder for complete examples.
+A test template is provided in the [templates](./templates/) folder.
+See the [examples](./examples/) folder for complete examples.<br>
 The general structure of a test script is as follows:
-
+```applescript
     script |One test set|
       property parent : TestSet(me)
 
@@ -125,9 +170,14 @@ The general structure of a test script is as follows:
       property parent : TestSet(me)
        -- More tests…
     end
+```
 
 Each unit test is a script that inherits from `UnitTest(me)`. Inside such scripts,
-you may use a number of assertion handlers:
+you may make a number of assertions.
+
+### Assertions
+
+For anyone unfamiliar with the logical biconditional `iff` seen below, it stands for [If and Only If][Wikipedia-iff].
 
 - `skip(msg)`: skips the current test.
 - `fail(msg)`: makes the test unconditionally fail.
@@ -163,7 +213,7 @@ which is printed when the assertion fails.
 
 A clarification is in order for the last three types of assertions.
 Consider the following two scripts:
-
+```applescript
     script A
       property class : "Father"
     end script
@@ -172,9 +222,10 @@ Consider the following two scripts:
       property parent : A
       property class : "Child"
     end script
+```
 
 Then, these assertions must succeed:
-
+```applescript
     assertInstanceOf("Father", A)
     assertInstanceOf("Child", B)
     refuteInstanceOf("Father", B)
@@ -183,6 +234,7 @@ Then, these assertions must succeed:
     assertKindOf(script, A)
     assertInheritsFrom(A, B)
     refuteInheritsFrom(B, A)
+```
 
 Related unit tests can be grouped together into a script that must
 inherit from `TestSet(me)`. One advantage of grouping
@@ -197,7 +249,6 @@ may want to use short sentences enclosed between vertical bars as script names,
 as it was done in the example above. Alternatively, you may define the `name`
 property of the script explicitly.
 
-
 ## Copyright
 
 Copyright © 2013 Lifepillar, 2006 Nir Soffer. All rights reserved.
@@ -206,6 +257,24 @@ Copyright © 2013 Lifepillar, 2006 Nir Soffer. All rights reserved.
 
 This software is licensed under the [GNU GPL-2.0][GNU-GPLv2] License, see COPYING for details.
 
+## Footnotes
+
+[^1]: The original framework codebase was written by Nir Soffer.
+[^2]: `Script Editor` was called `AppleScript Editor` from 2009 to 2014 but it's the same program.
+
+
 [//]: # (Cross reference section)
 
+[ASMake]: https://github.com/lifepillar/ASMake/
+[ASUnit]: https://github.com/lifepillar/ASUnit/
+[ASUnit-api-ref]: https://lifepillar.me/ASUnit/
+[ASUnit-tags]: https://github.com/lifepillar/ASUnit/tags
+[ASUnit-original]: http://nirs.freeshell.org/asunit/
+[Console-doc]: https://support.apple.com/guide/console/welcome/mac
 [GNU-GPLv2]: https://opensource.org/license/gpl-2-0
+[HeaderDoc-doc]: https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/HeaderDoc/intro/intro.html
+[ScriptDebugger]: https://www.latenightsw.com "Script Debugger"
+[ScriptEditor-doc]: https://support.apple.com/guide/script-editor/welcome/mac
+[Terminal-doc]: https://support.apple.com/guide/terminal/welcome/mac
+[Wikipedia-HeaderDoc]: https://en.wikipedia.org/wiki/HeaderDoc
+[Wikipedia-iff]: https://simple.wikipedia.org/wiki/If_and_only_if
