@@ -1,7 +1,7 @@
 (*!
 	@header ASUnit
 		ASUnit self tests.
-	@abstract License: GNU GPL, see COPYING for details.
+	@abstract License: GNU GPL-2.0, see COPYING for details.
 	@author NirSoffer, Lifepillar
 	@copyright 2013-2023 Lifepillar, 2006 Nir Soffer
 *)
