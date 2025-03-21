@@ -3,11 +3,11 @@
 
 # ASUnit
 
-[ASUnit][] is a unit testing framework for `AppleScript` derived from the
+[ASUnit][] is a unit testing framework for AppleScript derived from the
 original [codebase][ASUnit-original][^1]. For a detailed description of the
 architecture of the original ASUnit framework, read the [old
-manual](./OldManual.md); some advanced features of ASUnit (e.g., custom
-`TestCase` and `Visitor`) are still described only in that document.
+manual](./OldManual.md); some advanced features of ASUnit (such as custom
+`TestCase` and `Visitor` objects) are still described only in that document.
 
 ASUnit's API is now thoroughly commented using
 [HeaderDoc][Wikipedia-HeaderDoc].
