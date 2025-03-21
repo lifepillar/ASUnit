@@ -5,33 +5,32 @@
 
 [ASUnit][] is a unit testing framework for `AppleScript` derived from the
 original [codebase][ASUnit-original][^1]. For a detailed description of the
-architecture of the original **ASUnit** framework, read the [old
-manual](./OldManual.md); some advanced features of **ASUnit** (e.g., custom
-`TestCase` and `Visitor`) are still described *only* in that document.
+architecture of the original ASUnit framework, read the [old
+manual](./OldManual.md); some advanced features of ASUnit (e.g., custom
+`TestCase` and `Visitor`) are still described only in that document.
 
-**ASUnit**'s API is now thoroughly commented using
+ASUnit's API is now thoroughly commented using
 [HeaderDoc][Wikipedia-HeaderDoc].
 
 
 ## Download
 
-> [!NOTE]
-> Any single one of these three methods will get a copy of ASUnit; your
-> choice—pick one.
+Visit [Releases](https://github.com/lifepillar/ASUnit/releases) to download the
+current release.
 
-1. To get **ASUnit**, you may clone the repository from GitHub:
+Alternatively, clone the repository from GitHub:
 
 ```sh
 git clone https://github.com/lifepillar/ASUnit.git
 ```
 
-   This is the preferred choice if you plan to contribute to the code.
+### Advanced Download Method
 
-2. Instead, if you just want to make use of the framework, you may prefer to
-   download [a compressed tarball][ASUnit-tags]. To do that from the terminal:
+If for some reason you want to download a specific version of ASUnit from the
+terminal or with a shell script, you may adapt the following commands:
 
 ```sh
-VERSION="1.2.4"
+VERSION="1.2.5"
 TARBALL="${VERSION}.tar.gz"
 ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
 TARBALL_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${TARBALL}"
@@ -40,13 +39,10 @@ curl -O "${TARBALL_URL}"
 tar zxvf "${TARBALL}"
 ```
 
-   Change `VERSION` above to match the version you want to download.
-
-3. Alternatively, if you prefer working with `zip` archives, they're here
-   too. For example, use these steps to download "1.2.4.zip":
+Or, if you prefer a Zip archive:
 
 ```sh
-VERSION="1.2.4"
+VERSION="1.2.5"
 ZIPFILE="${VERSION}.zip"
 ASUNIT_BASE_URL="https://github.com/lifepillar/ASUnit/"
 ZIPFILE_URL="${ASUNIT_BASE_URL}/archive/refs/tags/${ZIPFILE}"
@@ -55,10 +51,13 @@ curl -O "${ZIPFILE_URL}"
 unzip "${ZIPFILE}"
 ```
 
+Change `VERSION` above to match the version you want to download.
+
 
 ## Install
 
-To build and install **ASUnit**, you can proceed in two different ways.
+Once you have downloaded ASUnit, to build and install it you may proceed in two
+different ways.
 
 1. If you use `AppleScript` 2.4 (OS X 10.10 "Yosemite") or later and have
 installed [ASMake][], you may just write:
@@ -71,42 +70,20 @@ cd ASUnit
 2. Otherwise, you can install it manually with the following commands:
 
 ```sh
-SCRIPT_LIBS_DIR="${HOME}/Library/Script\ Libraries/"
-ASUNIT_LIB_DIR="${SCRIPT_LIBS_DIR}/com.lifepillar"
-mkdir -p "${ASUNIT_LIB_DIR}"
-
 cd ASUnit
-ASUNIT_TEXT="ASUnit.applescript"
-ASUNIT_BNDL="ASUnit.scptd"
-osacompile -o ${ASUNIT_BNDL} -x ${ASUNIT_TEXT}
-mv ${ASUNIT_BNDL} "${ASUNIT_LIB_DIR}"
+osacompile -o ASUnit.scptd -x ASUnit.applescript
+mkdir -p "${HOME}/Library/Script Libraries/com.lifepillar"
+mv ASUnit.scptd "${HOME}/Library/Script Libraries/com.lifepillar"
 ```
 
 In either case, the file `ASUnit.scptd` will be installed in
 `~/Library/Script Libraries/com.lifepillar`.
 
-> [!WARNING]
-> If you get an error about text encoding like this one:
->
-> *The file “ASUnit.applescript” couldn’t be opened because
-> the text encoding of its contents can’t be determined. (-2700)*
->
-> open the file with *Script Editor*[^2], save it and try again.
->
-> You can confirm the desired text encoding with this command, shown with shell
-> prompt:
->
-> ```console
-> $ xattr -p com.apple.TextEncoding ASUnit.applescript
-> ```
->
->The expected output should be `macintosh;0`.
-
 
 ## Importing ASUnit
 
-To use **ASUnit**, add *one* of the two properties below to your script
-in order to import the library.
+To use ASUnit, add one of the two properties below to your script in order to
+import the library.
 
 If you have `AppleScript` 2.3 (OS X 10.9 "Mavericks") or later, use this:
 
@@ -114,7 +91,7 @@ If you have `AppleScript` 2.3 (OS X 10.9 "Mavericks") or later, use this:
 property parent : script "com.lifepillar/ASUnit"
 ```
 
-Otherwise, if you have an older, pre-Mavericks system, use this instead:
+If you have an older, pre-Mavericks system, use this instead:
 
 ```applescript
 property parent : ¬
@@ -125,7 +102,7 @@ property parent : ¬
 
 ## Running Tests
 
-Your test script must define a `suite` property and pass it to **ASUnit**'s
+Your test script must define a `suite` property and pass it to ASUnit's
 `autorun()` handler:
 
 ```applescript
@@ -133,28 +110,28 @@ property suite : makeTestSuite("A description for my tests")
 autorun(suite)
 ```
 
-You may run the test script inside *Script Editor*, from the command-line using
-`osascript`, or in other environments (e.g., [Script
-Debugger][ScriptDebugger], *AppleScriptObjC Explorer*).
+You may run the test script in various ways: inside Script Editor, from the
+command-line using `osascript`, or in other environments ([Script
+Debugger][ScriptDebugger], AppleScriptObjC Explorer).
 
 When you have several test files, you may run them all at once using a *test
-loader* (there is no need to compile them in advance). See *Test
-Loader.applescript* in the [examples](./examples/) folder.
+loader* (there is no need to compile them in advance). See `Test
+Loader.applescript` in the [examples](./examples/) folder.
 
 
 ### Logging
 
 By default, if you run the tests in [Script Editor][ScriptEditor-doc], the
-output is written to a new *Script Editor* document; if you run the tests
+output is written to a new Script Editor document; if you run the tests
 in the [Terminal][Terminal-doc], the output is sent to stdout; otherwise,
 the output is sent to the current system logger through `log` statements;
 access them via [Console][Console-doc].
 
 You may, however, change this by setting the `suite's loggers` property. The
 value of this property must be a list of *loggers* (you may send the output to
-more than one destination). Currently, **ASUnit** defines three loggers:
+more than one destination). Currently, ASUnit defines three loggers:
 
-- `AppleScriptEditorLogger`: sends colored output to a *Script Editor* window;
+- `AppleScriptEditorLogger`: sends colored output to a Script Editor window;
 - `StdoutLogger`: sends colored output to stdout.
 - `ConsoleLogger`: prints the output using `log` statements (most portable logger).
 
