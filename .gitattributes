@@ -1,1 +1,2 @@
 *.applescript diff
+*.applescript encoding=macroman
